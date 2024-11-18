@@ -1,0 +1,20 @@
+{{- $pages := . }}
+{{- $pagesstats := where $pages "Params.data.needexpert" "ne" "" }}
+<section class="list list-stats">
+    <div>
+        <span>{{ div (mul 100 (len (where $pagesstats "Params.data.mission-issue-present" "eq" "oui"))) (len $pagesstats) }}%</span>
+        Besoin Présent A11Y
+    </div>
+    <div>
+        <span>{{ div (mul 100 (len (where $pagesstats "Params.data.mission-issue-futur" "eq" "oui"))) (len $pagesstats) }}%</span>
+        Besoin Futur A11Y
+    </div>
+    <div>
+        <span>{{ div (mul 100 (len (where $pagesstats "Params.data.accountability" "eq" "oui"))) (len $pagesstats) }}%</span>
+        Considération Interne A11Y
+    </div>
+    <div>
+        <span>{{ div (mul 100 (len (where $pagesstats "Params.data.needexpert" "eq" "oui"))) (len $pagesstats) }}%</span>
+        Besoin Expert A11Y
+    </div>
+</section>

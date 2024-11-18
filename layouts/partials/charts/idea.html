@@ -1,0 +1,55 @@
+{{- $idea          := .data }}
+{{- $color         := .color }}
+{{- $knowledge    := slice "aucune" "réduite" "moyenne" "importante" "majeure" -}}
+<table>
+    <thead>
+        <th>Domaine d'application</th>
+        {{ range $key, $value := $idea.ext }}
+        <th>{{ humanize  $key }}</th>
+        {{ end }}
+    </thead>
+    <tbody>
+        <tr>
+            <td>En externe</td>
+            {{ range $key, $value := $idea.ext }}
+            <td>{{ . }}</td>
+            {{ end }}
+        </tr>
+        <tr>
+            <td>En interne</td>
+            {{ range $key, $value := $idea.int }}
+            <td>{{ . }}</td>
+            {{ end }}
+        </tr>
+    </tbody>
+</table>
+<canvas id="idea">
+    {{ $idea }}
+</canvas>
+<script>
+    var idea = document.getElementById("idea");
+    new Chart(idea, {
+        type: 'bar',
+        data: {
+            labels: ["En Interne", "En Externe"],
+            datasets: [{{ range seq 3 }}{
+              label: '{{ humanize (index $idea.external (sub . 1)) -}}',
+              backgroundColor: "{{ index $color (sub . 1) }}",
+              data: [{{ index $idea.int (index $idea.internal (sub . 1)) -}},{{ index $idea.ext (index $idea.external (sub . 1)) -}}],
+          }{{ if ne . (len $knowledge) }},{{ end }}
+          {{ end }}],
+        },
+        options: {
+            scales: {
+                x: {
+                    stacked: true,
+                },
+                y: {
+                    stacked: true
+                }
+            },
+            indexAxis: 'x',
+            responsive: true
+        }
+    });		
+  </script>

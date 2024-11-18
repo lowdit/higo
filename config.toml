@@ -1,0 +1,21 @@
+[module]
+  [module.hugoVersion]
+    extended = true
+    min = "0.128.0"
+
+
+[outputs]
+  _merge = 'deep'
+[cascade]
+  _merge = 'deep'
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[outputformats]
+  _merge = 'deep'
+[outputFormats.search]
+  baseName = "search"
+  mediaType = "application/json"
+  isPlainText = true
+  notAlternative = false

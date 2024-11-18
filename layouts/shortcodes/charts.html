@@ -1,0 +1,7 @@
+{{ if eq .Ordinal 0 }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js" onload="loaded=true;" ></script>
+{{ end }}
+{{ $color := slice "#003f5c" "#a05195" "#f95d6a" "#ff7c43" "#ffa600" "#00d29c" "#00a1a3" "#006e8c" }}
+{{ $pages := where (where ($.Site.GetPage "interviews").RegularPagesRecursive "Params.slugpath" "eq" "digital-accessibility") "Title" "ne" "Model" }}
+{{ $data := index (partial "charts/render.html" (dict "context" . "value" (.Get 0) "pages" $pages)) (.Get 0) }}
+{{ partial (printf "charts/%s.html" (.Get 0)) (dict "context" . "data" $data "color" $color "pages" $pages) }}

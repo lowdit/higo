@@ -1,0 +1,40 @@
+{{ define "main" }}
+<div class="container">
+  <section class="section hero">
+    <div class="hero-info">
+      <h1 class="hero-title">{{ .Title }}</h1>
+      {{ with .Params.subtitle }}
+      <p class="hero-subtitle">{{ . | markdownify}}</p>
+      {{ end }}
+      <nav class="btn-group">
+        <ul class="menu" id="js-menu">
+          {{ $currentPage := . }}
+          {{ range .Site.Menus.main }}
+          <li class="menu-item">
+            <a href="{{ .URL }}" class="btn-primary">{{ .Name }}</a>&nbsp;
+          </li>
+          {{ end }}
+        </ul>
+      </nav>
+    </div>
+    <div class="hero-owner">
+      {{ $avatar := .Site.Params.avatar }}
+      {{ $default_image := "images/default.png" }}
+      {{ $image := "" }}
+      {{ with $avatar }}
+        {{ $image = resources.Get $avatar }}
+      {{ else }}
+        {{ $image = resources.Get $default_image }}
+      {{ end }}
+      {{ if eq .Site.Params.grayscale_avatar true }}
+        {{ $image = $image | images.Filter (images.Grayscale)  }}
+      {{ end }}
+      {{ if eq .Site.Params.home_hero_socials true }}
+        {{ partial "general/social-links.html" . }}
+      {{ end }}
+    </div>
+  </section>
+  {{/* Shortcodes from page content  */}}
+  {{ partialCached "content.html" .Content .Content }}
+</div>
+{{ end }}

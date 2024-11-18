@@ -1,0 +1,54 @@
+{{- $level         := .data }}
+{{- $pages         := .pages }}
+{{- $color         := .color }}
+{{- $knowledge     := slice "aucune" "réduite" "moyenne" "importante" "majeure" }}
+<table>
+    <thead>
+        <th>Prise en compte</th>
+        {{ range $knowledge }}
+            <th>{{ humanize . }}</th>
+        {{ end }}
+    </thead>
+    <tbody>
+        <tr>
+            <td>Estimé</td>
+            {{ range $key, $value := $knowledge }}
+            <td>{{ index $level.knowledges . }}</td>
+            {{ end }}
+        </tr>
+        <tr>
+            <td>Réel</td>
+            {{ range $key, $value := $knowledge }}
+            <td>{{ index $level.actions . }}</td>
+            {{ end }}
+        </tr>
+    </tbody>
+</table>
+<canvas id="level"></canvas>
+<script>
+    var level = document.getElementById("level");
+    new Chart(level, {
+        type: 'bar',
+        data: {
+            labels: ["Mon niveau estimé - {{ (div (mul $level.kcount 100) (mul (len $pages) 4)) }}%","Mon niveau réel - {{ (div (mul $level.acount 100) (mul (len $pages) 4)) }}%"],
+            datasets: [{{ range seq (len $knowledge) }}{
+                label: '{{ humanize (index $knowledge (sub . 1)) -}}',
+                backgroundColor: "{{ index $color (sub . 1) }}",
+                data: [{{ index $level.knowledges (index $knowledge (sub . 1)) }},{{ index $level.actions (index $knowledge (sub . 1)) }}],
+            }{{ if ne . (len $knowledge) }},{{ end }}
+            {{ end }}],
+        },
+        options: {
+            scales: {
+                x: {
+                    stacked: true,
+                },
+                y: {
+                    stacked: true
+                }
+            },
+            indexAxis: 'x',
+            responsive: true
+        }
+    });		
+</script>

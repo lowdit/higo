@@ -1,0 +1,227 @@
+// -----------------------------------------------------------------------------
+// This file contains very basic styles.
+// -----------------------------------------------------------------------------
+
+/**
+ * Set up a decent box model on the root element
+ */
+ html {
+  box-sizing: border-box;
+}
+
+/**
+ * Make all elements from the DOM inherit from the parent box-sizing
+ * Since `*` has a specificity of 0, it does not override the `html` value
+ * making all elements inheriting from the root box-sizing value
+ * See: https://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/
+ */
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  /* Flex properties on body/main/footer are for floating footer
+  to bottom of page if main content doesn't fill viewport vertically */
+  display: flex;
+  flex-direction: column;
+}
+
+main {   
+  flex: 1 0 auto; 
+}
+
+footer {
+  flex-shrink: 0;    
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: underline;
+
+  @include on-event {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+}
+
+:is(h1, h2, h3, h4, h5, h6) a {
+  text-decoration: none;
+}
+
+a:not([class]) {
+	text-underline-position: under;
+}
+
+h1,h2 {
+  font: normal 125% / 1.4 $title-font-stack;
+  font-weight: 800;
+}
+
+h1 {
+  @include font-size('xxl');
+}
+
+h2 {
+  @include font-size('xl');
+}
+
+h3 {
+  @include font-size('lg');
+}
+
+h4 {
+  @include font-size('md');
+}
+
+h5 {
+  @include font-size('base');
+}
+
+h6 {
+  @include font-size('sm');
+  margin-bottom: 0 !important;
+}
+
+table {
+  border-collapse: collapse;
+  overflow-x: auto;
+  width: 100%;
+  margin-inline: auto; 
+  table-layout: fixed;
+  overflow-wrap: break-word;
+}
+
+td, th {
+  border: 1px solid #555;
+  padding: 8px;
+  font-size: 0.8rem;
+  line-height: 1.4rem;
+  font-weight: bold;
+}
+
+th {
+  border-color: rgb(57, 22, 92) !important;
+}
+
+th, tfoot td {
+  border: 1px solid var(--color-contrast-medium);
+  background-color: rgb(57, 22, 92);
+  color: #fff;
+  font-size: 1rem;
+}
+
+tbody th {
+  font-size: 0.7rem;
+  background-color: rgba(57, 22, 92, 0.8);
+}
+
+tfoot td, tfoot tr {
+  color: #111;
+  background-color:#dedede ;
+  border: 1px solid #111;
+}
+
+thead td {
+  border: none !important;
+  background: none !important;
+}
+
+tr:last-child td {
+  border-bottom: 1px solid #111;
+}
+
+td {
+  text-align: center;
+}
+
+blockquote {
+  background: rgb(234, 245, 249);
+  padding: 0.5em 1.5rem;
+  margin: 1em auto 3em;
+  max-width: 80vw;
+  border: solid 2px rebeccapurple;
+  box-shadow: 13px 13px 0 0 white,
+              15px 15px 0 0 rebeccapurple,
+              15px 11px 0 0 rebeccapurple,
+              11px 15px 0 0 rebeccapurple;
+}
+
+blockquote p {
+  font-size: 110%;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+canvas {
+  margin: 2rem 0;
+}
+
+pre {
+  font-size: 1rem;
+  line-height: 1.6rem;
+  overflow-x: auto;
+}
+
+code {
+  overflow-x: scroll;
+}
+
+pre:not([style]) {
+  // If no highlighting is applied already
+  background-color:#272822;
+  color:#f8f8f2;
+  padding: 20px;
+}
+
+p > code, li > code {
+  background-color: var(--color-contrast-lower);
+  font-size: 1rem;
+  color: var(--color-inline-code);
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  row-gap: 10px;
+  margin: auto;
+  padding: 0rem;
+  max-width: 50rem;
+ 
+  p, fieldset {
+    margin-bottom: 1em;
+  }
+
+  label, input[type=text],
+  input[type=url],
+  input[type=tel],
+  input[type=date],
+  input[type=email],
+  input[type=password],
+  input[type=number], textarea, fieldset {
+    display: block;
+    width: 100%;
+  }
+
+  input, textarea {
+    border: 1px solid var(--color-contrast-medium-low);
+    padding: 10px 12px;
+    font-size: 1rem;
+    background-color: var(--color-contrast-lower);
+    color: var(--color-contrast-high);
+  }
+  
+  button {
+    cursor: pointer;
+  }
+}
+
+

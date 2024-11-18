@@ -1,0 +1,34 @@
+{{- $counter := 0 -}}
+{{- range where .Sections "Section" "assessment" }}
+{{- range $index, $page := .RegularPagesRecursive }}
+{{- if ne $page.Type "json" -}}
+{{- $title := .Title -}}
+{{- $url   := .Parent.Permalink -}}
+{{- range (($page.Fragments.Headings | jsonify ) | transform.Unmarshal)  }}
+    {{- $counter1 := 0 -}}
+    {{- range $key, $value := .Headings -}}
+    {{- if .ID -}}
+    {{ $counter = add $counter 1 -}}
+    {{ $.Scratch.SetInMap "json" (string $counter) (dict "id" $counter "level" .Level "url" (printf "%s#%s" $url .ID) "relUrl" (printf "%s#%s" $url .ID) "doc" (htmlEscape $title)  "title" (htmlEscape .Title) "tag" "" "description" (htmlEscape .Description)) }}
+    {{- end -}}
+    {{- range $key, $value := .Headings -}}
+    {{- if .ID }}
+    {{- $counter = add $counter 1 -}}
+    {{ $.Scratch.SetInMap "json" (string $counter) (dict "id" $counter "level" .Level "url" (printf "%s#%s" $url .ID) "relUrl" (printf "%s#%s" $url .ID) "doc" (htmlEscape $title)  "title" (htmlEscape .Title) "tag" "" "description" (htmlEscape .Description)) }}
+    {{- range $key, $value := .Headings -}}
+    {{- if .ID }}
+    {{- $counter = add $counter 1 -}}
+    {{- $.Scratch.SetInMap "json" (string $counter) (dict "id" $counter "level" .Level "url" (printf "%s#%s" $url .ID) "relUrl" (printf "%s#%s" $url .ID) "doc" (htmlEscape $title)  "title" (htmlEscape .Title) "tag" "" "description" (htmlEscape .Description)) }}
+    {{- end -}}
+    {{- range $key, $value := .Headings -}}
+    {{- if .ID }}
+    {{- $counter = add $counter 1 -}}
+    {{- $.Scratch.SetInMap "json" (string $counter) (dict "id" $counter "level" .Level "url" (printf "%s#%s" $url .ID) "relUrl" (printf "%s#%s" $url .ID) "doc" (htmlEscape $title)  "title" (htmlEscape .Title) "tag" "" "description" (htmlEscape .Description)) }}
+    {{- end -}}
+    {{- end -}}
+    {{- end -}}
+    {{- end -}}
+    {{- end -}}
+    {{- end -}}
+{{- end -}}{{- end -}}{{- end -}}{{- end -}}
+[{{- range $index, $value := $.Scratch.Get "json" }}{{- if and $index (gt $index 1) -}},{{- end }}{{ . | jsonify  }}{{- end -}}]

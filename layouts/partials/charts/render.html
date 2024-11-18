@@ -1,0 +1,129 @@
+{{- $s := newScratch -}}
+{{- $pages := .pages }}
+{{- $ := .context }}
+{{- $s.Set "issues" slice -}}
+{{- $s.Set "developfactor" slice -}}
+{{- $s.Set "successfactor" slice -}}
+{{- $s.Set "idea-internal" slice -}}
+{{- $s.Set "idea-external" slice -}}
+{{- $s.Set "estimated-action"    slice -}}
+{{- $s.Set "estimated-knowledge" slice -}}
+{{- $s.Set "action-count" slice -}}
+{{- $knowledge := slice "aucune" "réduite" "moyenne" "importante" "majeure" -}}
+  {{- range $pages -}}
+    {{ with .Params.data.issues }}{{- $s.Add "issues" . -}}{{ end }}
+    {{ with .Params.data.developfactors }}{{- $s.Add "developfactor" . -}}{{ end }}
+    {{ with .Params.data.successfactors }}{{- $s.Add "successfactor" . -}}{{ end }}
+    {{ if (index .Params.data "idea-internal") }}{{- $s.Add "idea-internal" (index .Params.data "idea-internal") -}}{{ end }}
+    {{ if (index .Params.data "idea-external") }}{{- $s.Add "idea-external" (index .Params.data "idea-external") -}}{{ end }}
+    {{ if (index .Params.data "real-knowledge-accessibility") }}{{- $s.Add "estimated-action" (index .Params.data "real-knowledge-accessibility") -}}{{ end }}
+    {{ if (index .Params.data "estimated-knowledge-accessibility") }}{{- $s.Add "estimated-knowledge" (index .Params.data "estimated-knowledge-accessibility") -}}{{ end }}
+  {{- end -}}
+  {{- range (uniq ($s.Get "issues")) -}}
+    {{- $s.Set (printf "%s" .) 0 -}}
+  {{- end -}}
+  {{- range (uniq ($s.Get "developfactor")) -}}
+    {{- $s.Set (printf "%s" .) 0 -}}
+  {{- end -}}
+  {{- range (uniq ($s.Get "successfactor")) -}}
+    {{- $s.Set (printf "%s" .) 0 -}}
+  {{- end -}}
+  {{- range (uniq ($s.Get "idea-internal")) -}}
+    {{- $s.Set (printf "int%s" .) 0 -}}
+  {{- end -}}
+  {{- range (uniq ($s.Get "idea-external")) -}}
+    {{- $s.Set (printf "ext%s" .) 0 -}}
+  {{- end -}}
+  {{- range (uniq ($s.Get "estimated-action")) -}}
+    {{- $s.Set (printf "action%s" .) 0 -}}
+    {{- $s.Set (printf "action-count-%s" .) 0 -}}
+  {{- end -}}
+  {{- range (uniq ($s.Get "estimated-knowledge")) -}}
+    {{- $s.Set (printf "knowledge%s" .) 0 -}}
+    {{- $s.Set (printf "knowledge-count-%s" .) 0 -}}
+  {{- end -}}
+  {{- range (uniq ($s.Get "idea-internal")) -}}
+    {{- $label :=  . -}}
+    {{- range $pages -}}
+      {{- $s.Add (printf "int%s" $label) (cond (in (index .Params.data "idea-internal") $label) 1 0) -}}
+      {{- $s.Add (printf "ext%s" $label) (cond (in (index .Params.data "idea-external") $label) 1 0) -}}
+      {{- $s.SetInMap "int" $label ($s.Get (printf "int%s" $label)) -}}
+      {{- $s.SetInMap "ext" $label ($s.Get (printf "ext%s" $label)) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- range $knowledge -}}
+    {{- $label :=  . -}}
+    {{- range $pages -}}
+      {{ $pages := . }}
+      {{- if eq (index .Params.data "real-knowledge-accessibility") $label }}
+      {{- $s.Add (printf "action-count-%s" $label) (index ($.Site.Data.level) (index .Params.data "real-knowledge-accessibility")) -}}
+      {{ end -}}
+      {{- if eq (index .Params.data "estimated-knowledge-accessibility") $label }}
+      {{- $s.Add (printf "knowledge-count-%s" $label) (index ($.Site.Data.level) (index .Params.data "estimated-knowledge-accessibility")) -}}
+      {{ end -}}
+      {{- $s.SetInMap "MapCount" (string $label) (printf "%s" (string ($s.Get (printf "action-count-%s" $label)))) -}}
+      {{- $s.SetInMap "MapKnowledge" (string $label) (printf "%s" (string ($s.Get (printf "knowledge-count-%s" $label)))) -}}
+      {{- $s.Add (printf "action%s" $label) (cond (in (index .Params.data "real-knowledge-accessibility") $label) 1 0) -}}
+      {{- $s.Add (printf "knowledge%s" $label) (cond (in (index .Params.data "estimated-knowledge-accessibility") $label) 1 0) -}}
+      {{  $s.SetInMap "action"    $label ($s.Get (printf "action%s"    $label)) }}
+      {{  $s.SetInMap "knowledge" $label ($s.Get (printf "knowledge%s" $label)) }}
+    {{- end -}}
+  {{- end -}}
+  {{- range (uniq ($s.Get "issues")) -}}
+    {{- $label :=  . -}}
+    {{- if $label }}
+    {{- range $pages -}}
+      {{- $s.Add (printf "%s" $label) (cond (in .Params.data.issues $label) 1 0) -}}
+      {{- $prefix := cond (gt ($s.Get (printf "%s" $label)) 9) "" "0" }}
+      {{- $s.SetInMap "MapIssue" (string $label) (printf "%s%s-%s" $prefix (string ($s.Get (printf "%s" $label))) $label) -}}
+    {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- range (uniq ($s.Get "developfactor")) -}}
+    {{- $label :=  . -}}
+    {{- if $label }}
+    {{- range $pages -}}
+      {{- $s.Add (printf "developfactor%s" $label) (cond (in .Params.data.developfactors $label) 1 0) -}}
+      {{- $prefix := cond (gt ($s.Get (printf "developfactor%s" $label)) 9) "" "0" }}
+      {{- $s.SetInMap "Mapdevelopfactor" (string $label) (printf "%s%s-%s" $prefix (string ($s.Get (printf "developfactor%s" $label))) $label) -}}
+    {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- range (uniq ($s.Get "successfactor")) -}}
+    {{- $label :=  . -}}
+    {{- if $label }}
+    {{- range $pages -}}
+      {{- $s.Add (printf "successfactor%s" $label) (cond (in .Params.data.successfactors $label) 1 0) -}}
+      {{- $prefix := cond (gt ($s.Get (printf "successfactor%s" $label)) 9) "" "0" }}
+      {{- $s.SetInMap "Mapsuccessfactor" (string $label) (printf "%s%s-%s" $prefix (string ($s.Get (printf "successfactor%s" $label))) $label) -}}
+    {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{ $s.Set "action-count" 0 }}
+  {{ range ($s.Get "MapCount") }}
+    {{ with . }}{{ $s.Add "action-count" (int .) }}{{ end }}
+  {{ end }}
+  {{ $s.Set "knowledge-count" 0 }}
+  {{ range ($s.Get "MapKnowledge") }}
+    {{ with . }}{{ $s.Add "knowledge-count" (int .) }}{{ end }}
+  {{ end }}
+
+{{ return dict
+    "issues"             (cond (not ($s.Get "MapIssue")) "" (sort ($s.Get "MapIssue") "value" "desc"))
+    "develop"            (sort ($s.Get "Mapdevelopfactor") "value" "desc")
+    "success"            (sort ($s.Get "Mapsuccessfactor") "value" "desc")
+    "idea"      (dict
+                        "internal"      (uniq (sort ($s.Get "idea-internal")))
+                        "external"      (uniq (sort ($s.Get "idea-external")))
+                        "int"           (($s.Get "int"))
+                        "ext"           (($s.Get "ext"))
+    ) 
+    "level" (dict
+                        "action"     (uniq (sort ($s.Get "estimated-action")))
+                        "knowledge"  (uniq (sort ($s.Get "estimated-knowledge")))
+                        "kcount"     ($s.Get "knowledge-count")
+                        "acount"     ($s.Get "action-count")
+                        "knowledges" ($s.Get "knowledge")
+                        "actions"    ($s.Get "action")
+    )
+}}

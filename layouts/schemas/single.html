@@ -1,0 +1,20 @@
+{{ define "main" }}
+<div class="container">
+  <section class="page-header--c">
+    <h1 class="page-header-title">{{ .Title }}</h1>
+  </section>
+</div>
+<section class="generic-single">
+  <div class="container markdown">
+    {{ partialCached "content.html" .Content .Content }}
+    <div class="grid-card">
+    {{ range resources.Match "{schemas/*.png,schemas/*.jpg,schemas/*.jpeg,schemas/*.webp}" }}
+        {{ $img :=  (.Resize "300x webp") }}
+        <div>
+            <a href="{{ .RelPermalink }}"><img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}" alt=""></a>
+        </div>
+    {{ end }}
+    </div>
+  </div>
+</section>
+{{- end -}}

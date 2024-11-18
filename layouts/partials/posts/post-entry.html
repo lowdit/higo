@@ -1,0 +1,13 @@
+<div class="post-entry">
+  <h3 class="mb0">
+    <a href="{{ .Permalink }}">{{ .Title }}</a>
+    {{ with .Date }}<br><small>{{ . | time.Format ":date_medium"}}</small>{{ end }}
+  </h3>
+  <p class="post-list-summary mt0">
+    {{- with .Params.Summary -}}
+      {{- . | markdownify -}}
+    {{- else -}}
+      {{- .Description | markdownify -}}
+    {{- end -}}
+  </p>
+</div>

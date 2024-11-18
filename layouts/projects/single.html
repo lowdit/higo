@@ -1,0 +1,599 @@
+{{ define "main" }}
+<style>
+  .list-indicators {
+    margin-bottom: 3em;
+    padding: 1rem;
+    background: rgb(209, 237, 245);
+  }
+  .list-indicators p {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+  }
+  .list-indicators p > * {
+    flex: 1;
+  }
+  .list-indicators span {
+    flex: 0.5;
+    min-width: 300px;
+  }
+  /*for meter track*/
+  meter,
+  meter::-webkit-meter-bar {
+      /*to remove the default background property */
+      background: none; 
+      width: 300px;
+      height: 35px;
+      border-radius: 4px;
+      overflow: hidden;
+      background-color: rgb(226, 226, 226);
+      border: 1px solid #999;
+      box-shadow: 0 5px 5px -5px rgba(0,0,0,0.1) inset;
+  }
+  
+  /*for meter bar*/
+  meter::-webkit-meter-optimum-value {
+      background: none; 
+      background-color: rgb(86, 73, 198);
+      background-color: rebeccapurple;
+  }
+  :-moz-meter-optimum::-moz-meter-bar {
+      background: none; 
+      background-color: rgb(86, 73, 198);
+      background-color: rebeccapurple;
+  }
+  
+  
+  meter::-webkit-meter-suboptimum-value{
+      background: none; 
+      background-color: rebeccapurple;
+  }
+  :-moz-meter-sub-optimum::-moz-meter-bar{
+      background: none; 
+      background-color: rebeccapurple;
+  }
+  
+  
+  meter::-webkit-meter-even-less-good-value{
+      background: none; 
+      background-color: rgb(153, 51, 65);
+      background-color: rebeccapurple;
+  }
+  :-moz-meter-sub-sub-optimum::-moz-meter-bar{
+      background: none;
+      background-color: rgb(153, 51, 65);
+      background-color: rebeccapurple;
+  }
+</style>
+
+<div class="container{{ if in .Permalink "ts/benckmark" }}--sm{{ end }}">
+  <section class="page-header">
+    <nav class="nav-transverse">
+      {{ $title := .Title }}
+      Menu :&nbsp;
+      <ul class="list-unstyled list-inline">
+      {{ range where .Parent.Pages "Params.genre" "ne" "page" }}
+      <li>
+        {{ if ne $title .Title }}<a href="{{ .Permalink }}">{{ end }}
+          {{ .Title }}
+        {{ if ne $title .Title }}</a>{{ end }}
+      </li>
+    {{ end }}
+    </ul>
+    </nav>
+    <div class="">
+      <h1 class="page-header-title">
+        {{- .Title -}}
+        <sup>{{ partial "general/label-drafts.html" . }}</sup>
+      </h1>
+      <div class="project-list-meta">
+        {{ with .Params.techstack }}
+        {{ range . }}
+          <span>{{ . }}</span>
+        {{ end }}
+        {{ end }}
+        {{ with .Param "project types" }}
+          {{ range first 1 . }}
+            <a href="{{ "project-types" | absURL }}/{{ . | urlize }}/">{{ . }}</a>
+          {{ end }}
+        {{ end }}
+      </div>
+      <p class="page-header-desc">
+        {{- with .Params.Summary -}}
+          {{- . -}}
+        {{- else -}}
+          {{- .Description -}}
+        {{- end -}}
+      </p>
+      {{ if or (.Params.live_url) (.Params.source_url) }}
+        <div class="btn-group">
+          {{ with .Params.live_url }}
+            <a class="btn-primary" href="{{ . }}">Live</a>
+          {{ end }}
+          {{ with .Params.source_url }}
+            <a class="btn-secondary" href="{{ . }}">Source</a>
+          {{ end }}
+        </div>
+      {{ end }}
+    </div>
+    {{ $.Scratch.Set "scores" 0 }}
+    {{ range .Params.scores }}
+      {{ $.Scratch.Add "scores" . }}
+    {{ end }}
+    {{ if .Params.scores }}
+    <h2>Indicateurs de succès/risques - {{ $.Scratch.Get "scores" }}/{{ mul (int (len .Params.scores)) 5 }}</h3>
+      <div class="list-indicators">
+      {{ range $key, $value := .Params.scores }}
+        <p>
+          <span>{{ index ($.Site.Data.scores) $key }}</span> 
+          <meter value="{{ . }}" min="0" max="5" low="2" high="4" optimum ="5" ></meter>
+        </p>
+      {{ end }}
+      </div>
+      <hr>
+      {{ end }}
+    </section>
+
+{{ if in .Permalink "ts/offers" }}
+{{ $offers    := .Params.offers }}
+{{ $modules   := .Site.Data.offers }}
+{{ $prevtitle := "" }}
+{{ $color   := slice "starter" "essential" "professional" }}
+{{ if $offers }}
+  <section>
+    <table>
+      <thead>
+        <tr>
+          <th>
+            <div class="hide">
+              Nos offres
+              <div class="svg-wrapper">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm1 17v-4h-8v-2h8v-4l6 5-6 5z"></path>
+                </svg>
+              </div>
+            </div>
+          </th>
+          {{ range $offers }}
+          <th>
+            <div class="heading">{{ .title }}</div>
+            <div class="info hide">
+              <div class="price monthly">
+                <div class="amount">{{ .price }}</div>
+              </div>
+              <div class="price yearly hide">
+                <div class="amount">$29 <span>month</span></div>
+                <div class="billing-msg">billed annually</div>
+                <button type="button hide">Get started</button>
+              </div>
+            </div>
+          </th>
+          {{ end }}
+        </tr>
+      </thead> 
+      <tbody>
+          {{- range $modules }}
+            {{- $title := .title }}
+            {{- range .activities }}
+              {{- $short := .short }}
+              {{- range $id, $values := $offers }}
+              {{- $.Scratch.Set (printf "short%s" $short) slice }}
+              {{- $.Scratch.Set (printf "title%s" $title) slice }}
+              {{- range .modules }}
+                {{- range (where $modules "slug" .) }}
+                  {{- range .activities }}
+                    {{- if eq $short .short }}
+                      {{ $.Scratch.Add (printf "title%s" $title) $title }}
+                      {{ $.Scratch.Add (printf "short%s" $short) .short }}
+                    {{ end }}
+                  {{ end }}
+                {{ end }}
+              {{ end }}
+              {{ end }}
+            {{ end }}
+            {{- range $id, $value := .activities }}
+            {{- if and (eq $id 0) (ne $title $prevtitle) }}
+            {{- if gt (len ($.Scratch.Get (printf "title%s" $title)) ) 0  }}
+            <tr class="subheader">
+              <td colspan="3">{{ $title }}</td>
+            </tr>
+            {{ $prevtitle = $title }}
+            {{ end }}
+            {{ end }}
+            {{ if gt (len ($.Scratch.Get (printf "short%s" .short))) 0  }}
+              <tr>
+                {{ $short := .short }}
+                <td>
+                    {{ .short }}
+                    <br>
+                    {{ with .description }}<span>{{ . }}</span>{{ end }}
+                </td>
+                {{ range $id, $values := $offers }}
+                <td>
+                {{ $notincluded := "false" }}
+                {{ range .modules }}
+                {{ range  (where $modules "slug" .) }}
+                  {{ range .activities }}
+                    {{ if eq $short .short }}
+                    <svg class="{{ index $color $id }}" viewBox="0 0 24 24">
+                      <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.959 17l-4.5-4.319 1.395-1.435 3.08 2.937 7.021-7.183 1.422 1.409-8.418 8.591z"></path>
+                    </svg>
+                    {{ $notincluded = true }}
+                    {{ end }}
+                  {{ end }}
+                {{ end }}
+                {{ end }}
+                {{ if eq $notincluded "false" }}
+                  <svg class="not-included" viewBox="0 0 24 24">
+                    <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.151 17.943l-4.143-4.102-4.117 4.159-1.833-1.833 4.104-4.157-4.162-4.119 1.833-1.833 4.155 4.102 4.106-4.16 1.849 1.849-4.1 4.141 4.157 4.104-1.849 1.849z"></path>
+                  </svg>
+                  {{ end }}
+                </td>
+                {{ end }}
+              </tr>
+              {{ end }}
+            {{ end }}
+          {{ end }}
+      </tbody>
+    </table>
+  </section>
+  {{ end }}
+  {{ end }}
+</div>
+<div class="container{{ if in .Permalink "ts/benckmark" }}--sm{{ end }}">
+  <article class="markdown">
+    {{ partialCached "content.html" .Content .Content }}
+    {{ with .Params.articles }}
+    <h2>Liste de articles</h2>
+      {{ range . }}
+      <h3>{{ .name }}</h3>
+      <p><strong>{{ .topic }}</strong>{{ if .url }} / <a href="{{ .url }}" title="Accéder à l'article {{ .name }}">Accéder à l'article</a>{{ end }}</p>
+      {{ .description | markdownify }}
+      {{ end }}    
+    {{ end }}
+    {{ with .Params.competitors }}
+      {{ range . }}
+      <h2>{{ .name }}</h2>
+        {{ range .countries }}
+          <h3>{{ .name }}</h3>
+          {{ range $id, $value := .competitor  }}
+          <p class="m0"><strong>{{ add $id 1 }}. {{ .name }}{{ with .url}} <small>- <a href="{{ . }}">{{ . }}</a></small>{{ end }}</strong></p>
+            {{ with .links }}
+            <p class="mb0"><small>Liens notables :</small></p>
+            <ul class="mt0">
+              {{ range .  }}
+                <li><small><a href="{{ . }}">{{ . }}</a></small></li>
+              {{ end }}
+            </ul>
+            {{ end }}
+          {{ end }}
+          
+        {{ end }}
+      {{ end }}
+    {{ end }}
+
+    {{ with .Params.conference }}
+      <h2>Liste de conférences</h2>
+      {{ range . }}
+      <h3>{{ .name }}</h3>
+      <ul>
+      {{ range .urls }}
+        <li><a href="{{ . }}">{{ . }}</a></li>
+      {{ end }}
+      </ul>
+      {{ end }}
+    {{ end }}
+    
+
+    {{ with .Params.persons }}
+      <h2>Liste de personnes</h2>
+      {{ range . }}
+      <h3>{{ .name }}</h3>
+      {{ if or .email .company .country}}
+      <p>
+        {{ with .email }}  <strong>Email :</strong> {{ . }}<br>{{ end }}
+        {{ with .company }}<strong>Entreprise :</strong> {{ . }}<br>{{ end }}
+        {{ with .country }}<strong>Pays :</strong> {{ . }}<br>{{ end }}
+      </p>
+      {{ end }}
+      <ul>
+      {{ range .urls }}
+        <li><a href="{{ . }}">{{ . }}</a></li>
+      {{ end }}
+      </ul>
+      {{ end }}
+    {{ end }}
+  </article>
+</div>
+<style>
+  :root {
+    --white: white;
+    --gray: #999;
+    --lightgray: lightgrey;
+    --darkgreen: #2a9d8f;
+    --popular: #ffdd40;
+    --starter: #f73859;
+    --essential: #00aeef;
+    --professional: #ff7f45;
+  }
+  
+  
+    button {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  table {
+    border-collapse: collapse;
+  }
+   
+  /* SWITCH STYLES
+  –––––––––––––––––––––––––––––––––––––––––––––––––– */
+  .switch-wrapper {
+    position: relative;
+    display: inline-flex;
+    padding: 4px;
+    border: 1px solid lightgrey;
+    margin-bottom: 40px;
+    border-radius: 30px;
+    background: var(--white);
+  }
+  
+  .switch-wrapper [type="radi"] {
+    position: absolute;
+    left: -9999px;
+  }
+  
+  .switch-wrapper [type="radio"]:checked#monthly ~ label[for="monthly"],
+  .switch-wrapper [type="radio"]:checked#yearly ~ label[for="yearly"] {
+    color: var(--white);
+  }
+  
+  .switch-wrapper [type="radio"]:checked#monthly ~ label[for="monthly"]:hover,
+  .switch-wrapper [type="radio"]:checked#yearly ~ label[for="yearly"]:hover {
+    background: transparent;
+  }
+  
+  .switch-wrapper
+    [type="radio"]:checked#monthly
+    + label[for="yearly"]
+    ~ .highlighter {
+    transform: none;
+  }
+  
+  .switch-wrapper
+    [type="radio"]:checked#yearly
+    + label[for="monthly"]
+    ~ .highlighter {
+    transform: translateX(100%);
+  }
+  
+  .switch-wrapper label {
+    font-size: 16px;
+    z-index: 1;
+    min-width: 100px;
+    line-height: 32px;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: color 0.25s ease-in-out;
+  }
+  
+  .switch-wrapper label:hover {
+    background: var(--lightgray);
+  }
+  
+  .switch-wrapper .highlighter {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: calc(50% - 4px);
+    height: calc(100% - 8px);
+    border-radius: 30px;
+    background: var(--darkgreen);
+    transition: transform 0.25s ease-in-out;
+  }
+  
+  /* TABLE STYLES
+  –––––––––––––––––––––––––––––––––––––––––––––––––– */
+  .table-wrapper {
+    background: var(--white);
+    overflow-x: auto;
+  }
+  
+  table {
+    width: 100%;
+    margin-block: 6rem;
+  }
+  
+  table tr {
+    display: flex;
+  }
+  
+  table th,
+  table td {
+    min-width: 15%;
+    background: none;
+    padding: 0;
+    border: none;
+    line-height: 1.5; 
+    color: #000;
+  }
+
+  table th:first-child,
+  table td:first-child { 
+    min-width: 55%;
+  }
+
+  table .subheader {
+    background: rgb(209, 237, 245);
+  }
+  
+  table th:nth-child(1) {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.5rem;
+    line-height: 1.3;
+    padding: 1rem 10px;
+  }
+  
+  table th:nth-child(1) .svg-wrapper {
+    margin-top: 10px;
+  }
+  
+  table th:nth-child(1) svg {
+    width: 22px;
+    height: 22px;
+  }
+  
+  table th .heading {
+    padding: 1rem;
+    color: var(--white);
+  }
+  
+  table th:nth-child(2) .heading {
+    background: var(--starter);
+  }
+  
+  table th:nth-child(3) .heading {
+    background: var(--essential);
+  }
+  
+  table th:nth-child(4) .heading {
+    background: var(--professional);
+  }
+  
+  table th .info {
+    position: relative;
+    padding: 1.5rem 0;
+    border-left: 1px solid var(--lightgray);
+  }
+  
+  table th .popular {
+    position: absolute;
+    top: 10px;
+    right: 0;
+    font-size: 11px;
+    background: var(--popular);
+    padding: 4px 8px;
+    border-radius: 2px;
+  }
+  
+  table th .amount {
+    font-size: 2rem;
+  }
+  
+  table th .amount span {
+    display: block;
+    transform: translateY(-8px);
+  }
+  
+  table th:nth-child(2) .amount {
+    color: var(--starter);
+  }
+  
+  table th:nth-child(3) .amount {
+    color: var(--essential);
+  }
+  
+  table th:nth-child(4) .amount {
+    color: var(--professional);
+  }
+  
+  table th .billing-msg,
+  table th .amount span {
+    font-weight: normal;
+    font-size: 0.8rem;
+  }
+  
+  table th button {
+    border-radius: 20px;
+    padding: 8px 20px;
+    margin-top: 10px;
+    transition: all 0.2s;
+  }
+  
+  table th:nth-child(2) button {
+    color: var(--starter);
+    border: 1px solid var(--starter);
+  }
+  
+  table th:nth-child(2) button:hover {
+    background: var(--starter);
+  }
+  
+  table th:nth-child(3) button {
+    color: var(--essential);
+    border: 1px solid var(--essential);
+  }
+  
+  table th:nth-child(3) button:hover {
+    background: var(--essential);
+  }
+  
+  table th:nth-child(4) button {
+    color: var(--professional);
+    border: 1px solid var(--professional);
+  }
+  
+  table th:nth-child(4) button:hover {
+    background: var(--professional);
+  }
+  
+  table th button:hover {
+    color: var(--white);
+  }
+  
+  table td {
+    padding: 10px;
+  }
+
+  table td span {
+    color: #555;
+  }
+  
+  table td:not(:first-child) {
+    border-left: 1px solid var(--lightgray);
+  }
+  
+  table td:first-child {
+    font-size: 1rem;
+    text-align: left;
+  }
+  
+  table svg {
+    width: 22px;
+    height: 24px;
+  }
+  
+  table svg.not-included {
+    fill: var(--gray);
+  }
+  
+  table svg.starter {
+    fill: var(--starter);
+  }
+  
+  table svg.essential {
+    fill: var(--essential);
+  }
+  
+  table svg.professional {
+    fill: var(--professional);
+  }
+  
+  table .hide {
+    display: none;
+  }
+  
+  /* MQ
+  –––––––––––––––––––––––––––––––––––––––––––––––––– */
+  @media screen and (min-width: 780px) {
+    table td {
+      padding: 20px;
+    }
+  }
+</style>
+  
+{{ end }}
+

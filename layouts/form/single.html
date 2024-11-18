@@ -1,0 +1,111 @@
+{{ define "main" }}
+<div class="container">
+  <section class="page-header--c">
+    <h1 class="page-header-title">{{ .Title }}</h1>
+  </section>
+</div>
+<div class="contact">
+  <div class="single-container markdown">{{ partialCached "content.html" .Content .Content }}</div>
+  <div id="comment-post">
+    <h3>Leave a comment</h3>
+    <p>Note : Your comment will not be displayed until a Github PullRequest have been merged.</p>
+    <noscript><p>Note2: Require Javascript to submit a comment.</p></noscript>
+    <script type="text/javascript">
+        var comment = function(button){
+          if ( !window.event.target.parentElement.reportValidity() ){
+            return;
+          }
+
+          let keywords = ["slug" {{ range .Params.questions }}, {{- if eq .type "radio" }}{{ printf "%s_%s" (urlize .label) .type }}{{ else }}{{ urlize .label }}{{ end }}{{ end }}];
+
+          let payload = {};
+          payload.data = {}
+          payload.date = new Date().toUTCString()
+          keywords.forEach(function(item, index) {
+            if (item.indexOf("_radio") !== -1 ) {
+                var radioitem = item.split('_')[0]
+                var ele = document.getElementsByName("fields["+radioitem+"]");
+                payload.data[radioitem] = false
+                for(i = 0; i < ele.length; i++) {
+                  if(ele[i].checked)
+                  payload.data[radioitem] = ele[i].value
+                }
+              }
+              else {
+                if (item == "slug"){
+                  payload[item] = document.getElementById("comment-"+item).value.trim();
+                }
+                else {
+                  payload.data[item] = document.getElementById("comment-"+item).value.trim(); 
+                } 
+              }
+          });
+          //keywords = keywords.map((item) => item.split('_')[0]);
+          //payload.keywords = keywords.splice(1, keywords.length)
+          //payload["email"] = SparkMD5.hash(payload["email"]);
+          //console.log(payload)
+          fetch("https://publicactiontrigger.azurewebsites.net/api/dispatches//brtrdkeller/digitalinclusion", {
+            method: 'POST',
+            mode: 'cors',
+            credentials: 'omit',
+            cache: 'no-cache',
+            redirect: 'error',
+            referrerPolicy: 'no-referrer',
+            body: JSON.stringify({ event_type: 'interview', client_payload: { data: payload } })
+          }).then(function(resp){
+            if(resp.ok){
+              document.getElementById("comment-result").textContent = "Success."
+              console.log(resp)
+            } else if (resp.status == 422){
+              resp.text().then(
+                function(msg){
+                  document.getElementById("comment-result").textContent = "Error: "+msg;
+                })
+            }
+          });
+        }
+
+    </script>
+    <form  class="single-container">
+      <fieldset>
+        <legend>Interview Accessibilité</legend>
+      <input id="comment-slug" name="options[slug]" type="hidden" value="{{ urlize (lower .Name) }}">
+        {{- range .Params.questions }}
+        {{- if eq .type "radio" }}
+        <fieldset id="comment-{{ urlize .label }}_{{ .type }}">
+          {{- $label := .label }}
+          <legend>{{ .label }}</legend>
+          {{- range .element }}
+            <p>                            
+              <label class="form-control">
+                <input name="fields[{{ urlize $label }}]" type="radio" value="{{ urlize .label }}">
+                {{ .label }}
+              </label>
+            </p>
+          {{ end -}}
+        </fieldset>
+        {{- else if eq .type "textarea" }}
+        <p>
+          <label>
+            {{ .label }}{{ if .required }} (required){{ end }}
+          </label>
+          <textarea id="comment-{{ urlize .label }}" name="fields[{{ urlize .label }}]" type="{{ .type }}" rows=5 placeholder="{{ .placeholder }}"{{ if .required }} required{{ end }}>
+          </textarea>
+        </p>
+        {{- else }}
+        <p>
+          <label>
+            {{ .label }}{{ if .required }} (required){{ end }}
+          </label>
+          <input id="comment-{{ urlize .label }}" name="fields[{{ urlize .label }}]" type="{{ .type }}" placeholder="{{ .placeholder }}"{{ if .required }} required{{ end }} />
+        </p>
+        {{ end }}
+        {{ end }}
+        
+        <input type="button" value="Submit" onclick="comment()" ></input>
+        <p id="comment-result"></p>
+        </fieldset>
+    </form>
+  </div>
+</div>
+{{ end }}

@@ -1,0 +1,20 @@
+{{ define "main" }}
+<div class="container">
+  <section class="page-header--c">
+    <h1 class="page-header-title">{{ .Title }}</h1>
+  </section>
+</div>
+<section class="generic-single">
+    <div class="container">
+    {{ range $.Site.Data.quote }}
+        <blockquote>
+        {{ .citation | markdownify }}
+        <footer>
+            <cite>{{ .author }}</cite>
+        </footer>
+        </blockquote>
+    {{ end }}
+    </div>
+    {{ partialCached "content.html" .Content .Content }}
+</section>
+{{- end -}}

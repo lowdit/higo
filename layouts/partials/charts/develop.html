@@ -1,0 +1,40 @@
+{{- $developfactor := .data }}
+{{ $               := .context }}
+{{- $color         := .color }}
+<table>
+  <thead>
+    <th>Sujet</th>
+    <th>Fréquence</th>
+  </thead>
+  <tbody>
+    {{ range $key, $value := $developfactor }}
+    <tr>
+      <td>{{ with index ($.Site.Data.scores) (lower (index (split (index $value) "-") 1)) }}{{ . }}{{ else }}{{ (index (split (index $value) "-") 1) }}{{ end }}</td>
+      {{ $cond := (split (index (split . "-") 0) "")}}
+      <td>{{ if eq (index $cond 0) "0" }}{{ index $cond 1 }}{{ else }}{{ (index (split . "-") 0) }}{{ end }}</td>
+    </tr>
+    {{ end }}
+  </tbody>
+</table>
+<canvas id="develop" class="chart-pie"></canvas>
+<script>
+    const develop = document.getElementById('develop');
+    new Chart(develop, {
+      type: 'pie',
+      data: {
+        labels: [{{ range $id, $value := first 4 $developfactor -}}{{ $value := index (last 1 (split . "-")) 0 }}{{ if ne $id 0 }},{{ end }}{{- if (index ($.Site.Data.scores) (lower $value)) -}}{{ (index ($.Site.Data.scores) (lower $value)) }}{{ else }}{{ $value }}{{ end -}}{{ end -}}],
+        datasets: [{
+          label: 'Fréquence',
+          backgroundColor: [{{ range $id, $value := $developfactor -}}{{ if ne $id 0 }},{{ end }}"{{ index $color $id }}"{{ end}}],
+          data: [{{ range $id, $value := first 4 $developfactor -}}{{ if ne $id 0 }},{{ end }}{{ index (split . "-") 0 -}}{{ end -}}],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        title: {
+          display: false,
+          text: 'Eléments clefs'
+        }
+      }
+    });
+  </script>

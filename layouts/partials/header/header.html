@@ -1,0 +1,404 @@
+<header class="container">
+  <nav class="main-nav" id="js-navbar">
+    <a class="logo" href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a>
+    {{ if eq .Section "assessment" }}
+    <search class="search" role="search">
+      <div class="search-input-wrap">
+        <input type="text" id="search-input" class="search-input" tabindex="0" placeholder="Search in Assessment" aria-label="Search ITA UNSSC" autocomplete="off">
+        <label for="search-input" class="search-label"><svg viewBox="0 0 24 24" class="search-icon">
+            <symbol id="svg-search" viewBox="0 0 24 24">
+              <title>Search</title>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
+                <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </symbol>
+          </svg></label>
+      </div>
+      <div id="search-results" class="search-results"></div>
+    </search>
+    <style>
+      .search-label .search-icon {
+          color: #959396;
+        }
+
+        .search {
+          position: relative !important;
+          width: auto !important;
+          height: auto;
+          padding: 0;
+          transition: none;
+        }
+
+        .search-input-wrap {
+          width: 100%;
+          max-width: 33.5rem;
+          height: auto;
+          border-radius: 0;
+          box-shadow: none;
+          transition: width ease 400ms;
+        }
+
+        .search-input {
+          padding: .5rem 1rem .5rem 3.5rem;
+          font-size: 0.875rem;
+          background-color: #fff;
+          transition: padding-left linear 200ms;
+        }
+
+        .search-input {
+          width: 100%;
+          height: 100%;
+          padding: .5rem 1rem .5rem 2.5rem;
+          font-size: 1rem;
+          color: #5c5962;
+          background-color: #fff;
+          border: 1px solid;
+          border-radius: 0;
+        }
+
+        @media (min-width: 50rem) {
+          .search-label {
+            padding-left: 2rem;
+            transition: padding-left linear 200ms;
+          }
+        }
+
+        .search-label {
+          position: absolute;
+          display: flex;
+          height: 100%;
+          padding-left: 1rem;
+        }
+
+        .search-label .search-icon {
+          width: 1.2rem;
+          height: 1.2rem;
+          align-self: center;
+          color: #959396;
+        }
+
+        .search-results {
+          position: absolute;
+          left: 0;
+          display: none;
+          width: 100%;
+          max-height: calc(100% - 4rem);
+          overflow-y: auto;
+          background-color: #fff;
+          border-bottom-right-radius: 4px;
+          border-bottom-left-radius: 4px;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 3px 10px rgba(0, 0, 0, 0.08)
+        }
+
+        @media (min-width: 50rem) {
+          .search-results {
+            top: 100%;
+            width: 33.5rem;
+            max-height: calc(100vh - 200%) !important
+          }
+        }
+
+        .search-results-list {
+          padding-left: 0;
+          margin-bottom: .25rem;
+          list-style: none
+        }
+
+        .search-results-list {
+          font-size: .875rem !important
+        }
+
+        @media (min-width: 31.25rem) {
+          .search-results-list {
+            font-size: 1rem !important
+          }
+        }
+
+        @media (min-width: 50rem) {
+          .search-results-list {
+            font-size: .75rem !important
+          }
+        }
+
+        @media (min-width: 50rem) and (min-width: 31.25rem) {
+          .search-results-list {
+            font-size: .875rem !important
+          }
+        }
+
+        .search-results-list-item {
+          padding: 0;
+          margin: 0
+        }
+
+        .search-result {
+          display: block;
+          padding: .25rem .75rem
+        }
+
+        .search-result:hover,
+        .search-result.active {
+          background-color: #ebedf5
+        }
+
+        .search-result-title {
+          display: block;
+          padding-top: .5rem;
+          padding-bottom: .5rem
+        }
+
+        @media (min-width: 31.25rem) {
+          .search-result-title {
+            display: inline-block;
+            width: 40%;
+            padding-right: .5rem;
+            vertical-align: top
+          }
+        }
+
+        .search-result-doc {
+          display: flex;
+          align-items: center;
+          word-wrap: break-word
+        }
+
+        .search-result-doc.search-result-doc-parent {
+          opacity: 0.5
+        }
+
+        .search-result-doc.search-result-doc-parent {
+          font-size: .75rem !important
+        }
+
+        @media (min-width: 31.25rem) {
+          .search-result-doc.search-result-doc-parent {
+            font-size: .875rem !important
+          }
+        }
+
+        @media (min-width: 50rem) {
+          .search-result-doc.search-result-doc-parent {
+            font-size: .6875rem !important
+          }
+        }
+
+        @media (min-width: 50rem) and (min-width: 31.25rem) {
+          .search-result-doc.search-result-doc-parent {
+            font-size: .75rem !important
+          }
+        }
+
+        .search-result-doc .search-result-icon {
+          width: 1rem;
+          height: 1rem;
+          margin-right: .5rem;
+          color: #7253ed;
+          flex-shrink: 0
+        }
+
+        .search-result-doc .search-result-doc-title {
+          overflow: auto
+        }
+
+        .search-result-section {
+          margin-left: 1.5rem;
+          word-wrap: break-word
+        }
+
+        .search-result-rel-url {
+          display: block;
+          margin-left: 1.5rem;
+          overflow: hidden;
+          color: #959396;
+          text-overflow: ellipsis;
+          white-space: nowrap
+        }
+
+        .search-result-rel-url {
+          font-size: .5625rem !important
+        }
+
+        @media (min-width: 31.25rem) {
+          .search-result-rel-url {
+            font-size: .625rem !important
+          }
+        }
+
+        .search-result-previews {
+          display: block;
+          padding-top: .5rem;
+          padding-bottom: .5rem;
+          padding-left: 1rem;
+          margin-left: .5rem;
+          color: #959396;
+          word-wrap: break-word;
+          border-left: 1px solid;
+          border-left-color: #eeebee
+        }
+
+        .search-result-previews {
+          font-size: .6875rem !important
+        }
+
+        @media (min-width: 31.25rem) {
+          .search-result-previews {
+            font-size: .75rem !important
+          }
+        }
+
+        @media (min-width: 31.25rem) {
+          .search-result-previews {
+            display: inline-block;
+            width: 60%;
+            padding-left: .5rem;
+            margin-left: 0;
+            vertical-align: top
+          }
+        }
+
+        .search-result-preview+.search-result-preview {
+          margin-top: .25rem
+        }
+
+        .search-result-highlight {
+          font-weight: bold
+        }
+
+        .search-no-result {
+          padding: .5rem .75rem
+        }
+
+        .search-no-result {
+          font-size: .75rem !important
+        }
+
+        @media (min-width: 31.25rem) {
+          .search-no-result {
+            font-size: .875rem !important
+          }
+        }
+
+        .search-button {
+          position: fixed;
+          right: 1rem;
+          bottom: 1rem;
+          display: flex;
+          width: 3.5rem;
+          height: 3.5rem;
+          background-color: #fff;
+          border: 1px solid rgba(114, 83, 237, 0.3);
+          border-radius: 1.75rem;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 3px 10px rgba(0, 0, 0, 0.08);
+          align-items: center;
+          justify-content: center
+        }
+
+        .search-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: 1;
+          width: 0;
+          height: 0;
+          background-color: rgba(0, 0, 0, 0.3);
+          opacity: 0;
+          transition: opacity ease 400ms, width 0s 400ms, height 0s 400ms
+        }
+
+        .search-active .search {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          padding: 0
+        }
+
+        .search-active .search-input-wrap {
+          height: 4rem;
+          border-radius: 0
+        }
+
+        @media (min-width: 50rem) {
+          .search-active .search-input-wrap {
+            width: 33.5rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 3px 10px rgba(0, 0, 0, 0.08)
+          }
+        }
+
+        .search-active .search-input {
+          background-color: #fff
+        }
+
+        @media (min-width: 50rem) {
+          .search-active .search-input {
+            padding-left: 2.3rem
+          }
+        }
+
+        @media (min-width: 50rem) {
+          .search-active .search-label {
+            padding-left: 0.6rem
+          }
+        }
+
+        .search-active .search-results {
+          display: block
+        }
+
+        .search-active .search-overlay {
+          width: 100%;
+          height: 100%;
+          opacity: 1;
+          transition: opacity ease 400ms, width 0s, height 0s
+        }
+
+        @media (min-width: 50rem) {
+          .search-active .main {
+            position: fixed;
+            right: 0;
+            left: 0
+          }
+        }
+
+        .search-active .main-header {
+          padding-top: 4rem
+        }
+
+        @media (min-width: 50rem) {
+          .search-active .main-header {
+            padding-top: 0
+          }
+        }
+    </style>
+    {{ end }}
+    <ul class="menu" id="js-menu">
+      {{ $currentPage := . }}
+      {{ range .Site.Menus.main }}
+      {{ if .HasChildren }}
+      <li class="menu-item">
+        <span class="menu-link">{{ .Name }}<span class="drop-icon">▾</span></span>
+        <ul class="sub-menu">
+          {{ range .Children }}
+          <li class="menu-item">
+            <a href="{{ .URL }}" class="menu-link">{{ .Name }}</a>
+          </li>
+          {{ end }}
+        </ul>
+      </li>
+      {{ else }}
+      <li class="menu-item">
+        <a href="{{ .URL }}" class="menu-link">{{ .Name }}</a>
+      </li>
+      {{ end }}
+      {{ end }}
+    </ul>
+    <span class="nav-toggle" id="js-navbar-toggle">
+      <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="30" height="30" fill="var(--color-contrast-high)">
+        <rect y="11" width="24" height="2" rx="1"/>
+        <rect y="4" width="24" height="2" rx="1"/>
+        <rect y="18" width="24" height="2" rx="1"/>
+      </svg>
+    </span>
+  </nav>
+</header>

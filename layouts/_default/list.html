@@ -1,0 +1,74 @@
+{{ define "main" -}}
+<div class="container--sm">
+  <section class="page-header">
+    <h1 class="page-header-title">{{ .Title }}</h1>
+    <p class="page-header-desc">
+      {{- with .Params.Summary -}}
+        {{- . -}}
+      {{- else -}}
+        {{- with .Description -}}
+          {{- . | markdownify -}}
+        {{- end -}}
+      {{- end -}}
+    </p>
+    {{- if (eq .Type "study") }}
+    {{ $slides := .Params.slides }}
+    <br>
+    <ul class="list-unstyled list-inline">
+    {{- $formats := slice "print" "presentation" }}
+    {{- range $id, $value := where (where .OutputFormats "Rel" "alternate") ".Format.BaseName" "in" $formats }}
+      {{ if eq $id 0 }}
+      >&nbsp;
+      {{- else }}
+      {{- if $slides }}&nbsp;-&nbsp;{{ end }}
+      {{ end }}
+      {{- if (eq .Format.BaseName "print") }}<li><a href="{{ .Permalink | safeURL }}">Lien vers la version à imprimer</a></li>{{ end }}
+      {{- if $slides }}{{- if (eq .Format.BaseName "presentation") }}<li><a href="{{ .Permalink | safeURL }}">Lien vers la version présentation</a></li>{{ end }}{{ end -}} 
+    {{- end }}
+   </ul>
+    {{- end }}
+  </section>
+  <section>
+    {{ $.Scratch.Set "menu" slice }}
+    {{ if eq .Type "study" }}
+      {{ range (.Paginate .RegularPagesRecursive).Pages }}
+        {{- if (eq .Parent.Type "study") }}
+          {{- $.Scratch.Add "menu" .Title }}
+        {{- end }}
+      {{- end }}
+      {{- if gt (len ($.Scratch.Get "menu")) 0 }}
+      <div class="tableofcontents">
+        <ol>
+          {{ range ($.Scratch.Get "menu") }}
+            <li><a href="#{{ anchorize . }}">{{ . }}</a></li>
+          {{ end }}
+        </ul>
+      </div>
+      {{- end }}
+      {{- end }}
+      {{ with .Content }}{{ . }}{{- end }}
+      {{ if eq .Type "study" }}
+        {{- range $id, $value := (.Paginate .RegularPagesRecursive).Pages }}
+          {{- if (eq .Parent.Type "study") }}
+            <h2 id="{{ anchorize .Title }}">
+              {{ add $id 1 }} - {{ .Title }}
+              <a href="#{{ anchorize .Title | safeURL }}"></a>
+            </h2>
+            {{ partialCached "content.html" .Content .Content }}
+            <br>
+            <hr>
+            <br>
+          {{- end }}
+        {{- end }}
+      {{- else }}
+      {{ $range := cond (ne (len .Sections) 0) .Sections .RegularPages }}
+      {{- range $id, $value := $range }}
+          {{ partial "posts/post-entry.html" . }}
+          <div class="post-entry-divider"></div>
+        {{- end }}
+      {{ end }}
+      {{- $pages := where (where (.GetPage "interviews").RegularPagesRecursive "Params.slugpath" "eq" "digital-accessibility") "Title" "ne" "Model" }}
+      {{ template "_internal/pagination.html" . }}
+  </section>
+</div>
+{{ end }}

@@ -1,0 +1,46 @@
+{{- $issues := .data }}
+{{- $       := .context }}
+{{- $color  := .color }}
+<table>
+    <thead>
+        <th>Sujet</th>
+        <th>Fréquence</th>
+    </thead>
+    <tbody>
+        {{ range $key, $value := $issues }}
+        <tr>
+          <td>{{ with index ($.Site.Data.scores) (lower (index (split (index $value) "-") 1)) }}{{ . }}{{ else }}{{ (index (split (index $value) "-") 1) }}{{ end }}</td>
+            {{ $cond := (split (index (split . "-") 0) "")}}
+            <td>{{ if eq (index $cond 0) "0" }}{{ index $cond 1 }}{{ else }}{{ (index (split . "-") 0) }}{{ end }}</td>
+        </tr>
+        {{ end }}
+    </tbody>
+</table>
+<canvas id="issues"></canvas>
+<script>
+    const issues = document.getElementById('issues');
+  
+    new Chart(issues, {
+      type: 'bar',
+      data: {
+        labels: [{{ range $id, $value := $issues -}}{{ $value := index (last 1 (split . "-")) 0 }}{{ if ne $id 0 }},{{ end }}{{- if (index ($.Site.Data.scores) (lower $value)) -}}{{ (index ($.Site.Data.scores) (lower $value)) }}{{ else }}{{ $value }}{{ end -}}{{ end -}}],
+        datasets: [{
+          label: 'Nombre de citation',
+          backgroundColor: "{{ index $color 1 }}",
+          data: [{{ range $id, $value := $issues -}}{{ if ne $id 0 }},{{ end }}{{ index (split . "-") 0 -}}{{ end -}}],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        title: {
+          display: false,
+          text: 'Eléments clefs'
+        },
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>

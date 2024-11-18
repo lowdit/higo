@@ -1,0 +1,80 @@
+{{ define "main" }}
+<div class="container">
+  <section class="page-header--c">
+    <h1 class="page-header-title">{{ .Title }}</h1>
+  </section>
+</div>
+<section class="generic-single">
+  <div class="single-container{{ if eq .Title "Roadmap"}} large{{ end }} markdown">
+    {{ partialCached "content.html" .Content .Content }}
+    {{ if eq .Type "modules" }}
+      {{ $ctx := . }}
+      {{- with $ctx.Params.sorte -}}
+        <p><strong>Type :</strong> {{ . }}</p>
+      {{- end -}}
+      {{- with $ctx.Description -}}
+        <p class="m0"><strong>Description</strong></p>
+        {{ . | markdownify }}
+      {{- end -}}
+      <div class="project-list-footer">
+      {{- with $ctx.Params.skills -}}
+        <p><strong>Compétences :</strong> {{ delimit . ", " }}</p>
+      {{- end -}}
+      {{- if and $ctx.Params.persons $ctx.Params.days -}}
+        <p><strong>Nombre de personnes à mobiliser :</strong> {{ $ctx.Params.persons }} personnes pendant {{ $ctx.Params.days }} jours</p>
+      {{- end -}}
+      {{- if and $ctx.Params.persons $ctx.Params.days -}}
+        <p><strong>Coût :</strong> {{ lang.FormatNumberCustom 0 (mul $ctx.Params.days 833.3333) }} euros</p>
+      {{- end -}}
+      {{- with $ctx.Params.profil -}}
+        <p><strong>Répartition du temps par profil :</strong></p>
+        <ul>
+        {{ range $key, $value := . }}
+          <li>{{ $key | humanize }}: {{ $value }}%</li>
+        {{ end }}
+        </ul>
+      {{- end -}}
+      {{- with $ctx.Params.workshops -}}
+        <p>
+            <strong>Ateliers potentiels :</strong> 
+            <ul>
+            {{ range . }}
+              {{ range (where (where $.Site.RegularPages "Section" "workshops") "Title" .) }}
+                <li> 
+                  <a href="{{ .Permalink }}">{{ .Title }}</a><br>
+                  <span>{{ .Description }}</span>
+                </li>
+              {{ end }}
+            {{ end }}
+          </ul>
+        </p>
+      {{- end -}}
+      {{- with $ctx.Params.urls -}}
+      <p>
+        <strong>Pour aller plus loin :</strong> 
+        <ul>
+        {{ range . }}
+          <li>{{ . | markdownify }}</li>
+        {{ end }}
+        </ul>
+      </p>
+      {{ end }}
+    {{ end }}
+    {{- with .Params.resources -}}
+      {{ range . }}
+      <h3>{{ .topic }}</h3>
+      <p>
+        {{ with .urls }}
+        <ul>
+          {{ range . }}
+            {{- $url := .url -}}
+            <li><a href="{{ .url }}">{{ with .name }}{{ . }}{{ else }}{{ $url }}{{ end }}</a></li>
+          {{ end }}
+        </ul>
+        {{ end }}
+      </p>
+      {{ end }}
+    {{ end }}
+  </div>
+</section>
+{{- end -}}

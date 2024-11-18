@@ -1,0 +1,22 @@
+.page-header {
+  margin: 0 0 5rem 0;
+}
+
+.page-header--c {
+  @extend .page-header;
+  text-align: center;
+}
+
+.page-header-title {
+  margin: 0;
+  color: var(--color-contrast-high);
+  font-size: 4.5rem;
+}
+
+.page-header-desc {
+  margin: 0;
+  margin-top: 15px;
+  color: var(--color-contrast-medium);
+  font-weight: 400;
+  @include font-size('base');
+}

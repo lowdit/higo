@@ -1,0 +1,9 @@
+
+{{ range where .context.Site.Data.quote "id" .value }}
+    <blockquote>
+    <p>{{ .citation | markdownify }}</p>
+    <footer>
+        <p><cite>{{ with .url }}<a href="{{ . }}">{{ end }}{{ .author }}{{ with .url }}</a>{{ end }}</cite></p>
+    </footer>
+    </blockquote>
+{{ end }}

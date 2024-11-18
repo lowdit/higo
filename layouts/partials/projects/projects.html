@@ -1,0 +1,160 @@
+<div class="container">
+  {{ $profilprice := .Params.profilprice }}
+  <section class="page-header">
+    <h1 class="page-header-title">
+      {{- if eq .Kind "term" -}}
+        {{- .Title }} Projects
+      {{- else -}}
+        {{- .Title -}}
+      {{- end -}}
+    </h1>
+    <p class="page-header-desc">
+      {{- with .Params.Summary -}}
+        {{- . -}}
+      {{- else -}}
+        {{- with .Description -}}
+          {{- . -}}
+        {{- else -}}
+          {{- if eq .Kind "term" -}}
+            {{- .Title }} projects
+          {{- end }}
+        {{- end -}}
+      {{- end -}}
+    </p>
+  </section>
+  <section>
+    {{ partialCached "content.html" .Content .Content }}
+    {{ if in .Permalink "ts/offers" }}
+    
+    {{ with .Pages }}
+      {{ range (where (where . ".Params.sitemapExclude" "ne" "true" ) "Params.genre" "eq" "page") }}
+      <div class="container--sm section-offers">
+      <details>
+      <summary><h2 class="d-inline">{{ .Title }}</h2></summary>
+      {{ partialCached "content.html" .Content .Content }}
+      {{ end }}
+      </details>
+      </div>
+      <h2>Offre détaillée</h2>
+      {{ $modules := ($.Site.GetPage "modules") }}
+      {{ $titles  := slice "Évaluation" "Consolidation" "Transformation"}}
+      <div class="grid-offer offers gap-null background-head">
+        {{ range  $id, $value := $modules.RegularPagesRecursive.GroupByParam "pack" }}
+            {{ $.Scratch.Set (string $id) 0 }}
+            {{ $.Scratch.Set (printf "profilCounter%s" $id) 0 }}
+            {{ $.Scratch.Set (printf "profilDays%s" $id) 0 }}
+            {{ $pages := .Pages }}
+            {{ range $key, $value := $modules.Sections }}
+            <div class="grid-card p-all background-{{ $key }} item" style="--grid-place: e{{ $id }}{{ $key }}">
+              {{- range $key, $value := sort .Pages "Params.pack" "asc" }}
+              {{- with (where $pages "Title" .Title) }}
+                {{- range . }}
+                  {{ $price := (mul .Params.days 833.3333) }}
+                  {{ partial "projects/project-offers.html" (dict "context" . "id" $id "key" $key "style" "small") }}
+                  {{- if ne .Parent.Params.level 4 }}
+                    {{- $days := .Params.days }}
+                    {{- $.Scratch.Add (string $id) .Params.days }}
+                    {{- $.Scratch.SetInMap "days" (string $id) ($.Scratch.Get (string $id)) }}
+                    {{- with .Params.profil }}
+                      {{- $.Scratch.Add (printf "profilCounter%s" $id) 1 }}
+                      {{- $.Scratch.Add (printf "profilDays%s" $id) $days }}
+                      {{- $.Scratch.SetInMap "profilDays" (string $id) ($.Scratch.Get (printf "profilDays%s" $id)) }}
+                      {{- range $key, $value := . }}
+                        {{- $.Scratch.Add (printf "profilSlice%s%s" $id $key) $value }}
+                        {{- $.Scratch.SetInMap (printf "profil%s" $id) (string $key) ($.Scratch.Get (printf "profilSlice%s%s" $id $key)) }}
+                      {{ end -}}
+                    {{ end -}}
+                  {{ end -}}
+                {{ end }}
+              {{ end }}
+              {{ end }}
+            </div>
+            {{ end }}
+        {{ end }}
+        <div class="item r background-0" style="--grid-place: r0"><p><strong>Sociale</strong></p></div>
+        <div class="item r background-1" style="--grid-place: r1"><p><strong>Métiers</strong></p></div>
+        <div class="item r background-2" style="--grid-place: r2"><p><strong>Technique</strong></p></div>
+        <div class="item r background-3" style="--grid-place: r3"><p><strong>+Assistance+</strong></p></div>
+        {{- range $key, $value := $titles }}
+        <div class="item c background-head" style="--grid-place: c{{ $key }}"><strong>Pack 1<br>{{ . }}<br>{{ lang.FormatNumberCustom 0 (mul (index ($.Scratch.Get "days") (string $key)) 833.3333) "-|.| " "|" }} € - {{ (index ($.Scratch.Get "days") (string $key)) }} jours</strong></div>
+        {{ end -}}
+      </div>
+      
+      <h3>Compétences nécessaires par Pack</h3>
+      <div class="flex">
+        {{- range seq 3 }}
+        {{ $id := int (sub . 1) }}
+        <table>
+          <caption>{{ index $titles $id }}</caption>
+          <thead>
+            <tr style="height: 10px;">
+              <th style="text-align: left;">Métiers</th>
+              <th>Jours</th>
+              <th>Prix Vendu</th>
+              <th>Prix Réel</th>
+            </tr>
+          </thead>
+          <tbody>
+          {{ $totalreal := 0 }}
+          {{ $totalsold := 0 }}
+          {{- with ($.Scratch.Get (printf "profil%s" $id)) }}
+          {{- range $key, $value := $.Scratch.Get (printf "profil%s" $id) }}
+          {{ $days := index ($.Scratch.Get "profilDays") (string $id) }}
+          {{ $number := $.Scratch.Get (printf "profilCounter%s" $id) }}
+          {{ $result := (div (mul $days (div (float $value) $number)) 100) }}
+          <tr>
+            <th style="text-align: left;">{{ $key | humanize }}</th>
+            <td>{{ if gt $result 1 }}{{ (lang.FormatNumberCustom 0 $result) }}{{ else if lt $result 0.2 }}{{ . }}{{ else }}{{ (lang.FormatNumberCustom 1 $result) }}{{ end }}</td>
+            <td>{{ lang.FormatNumberCustom 0 (mul 800 $days)  "-|.| " "|" }}€{{ $totalreal = add $totalreal (mul 800 $days) }}</td>
+            <td>{{ lang.FormatNumberCustom 0 (mul (mul (index $profilprice $key) 800) $days)  "-|.| " "|" }}€{{ $totalsold = add $totalsold (mul (mul (index $profilprice $key) 800) $days) }}</td>
+          </tr>
+          {{ end -}}
+          {{ else }}
+          <tr>
+            <th style="text-align: left;">Rien</th>
+            <td>Rien</td>
+          </tr>
+          {{ end -}}
+          </tbody>
+          {{- if $totalreal }}
+          <tfoot>
+            <tr>
+              <th style="text-align: left;">Totaux</th>
+              <td>{{ index ($.Scratch.Get "profilDays") (string $id) }}</td>
+              <td>{{ lang.FormatNumberCustom 0 $totalreal "-|.| " "|" }}€</td>
+              <td>{{ lang.FormatNumberCustom 0 $totalsold "-|.| " "|" }}€</td>
+            </tr>
+            <tr>
+              <th style="text-align: left;" colspan="3">Différentiel</th>
+              <td>{{ lang.FormatNumberCustom 0 (sub $totalreal $totalsold) "-|.| " "|" }}€</td>
+            </tr>
+          </tfoot>
+          {{ end -}}
+        </table>
+        <br>
+        {{ end -}}
+      </div>
+      {{ range  $id, $value := ($.Site.GetPage "modules").Sections }}
+        <h3 class="title-color{{ if gt ($id) 0 }} title-separator{{ end }}">{{ add $id 1 }} - {{ .Title }}</h3>
+        <p>{{ .Params.description | markdownify }}</p>
+        <div class="project-list offers">
+        {{ range $key, $value := sort .RegularPages "Params.pack" "asc"  }}
+          {{ partial "projects/project-offers.html" (dict "context" . "id" $id "key" $key) }}
+        {{ end }}
+        </div>
+      {{ end }}
+    {{ end }}
+    <hr>
+    <h2>Exemples de différentes offres</h2>
+    {{ end }}
+    {{ with .Pages }}
+      <div class="project-list">
+        {{ range where (where . ".Params.sitemapExclude" "ne" "true" ) "Params.genre" "ne" "page" }}
+          {{ partial "projects/project-entry.html" . }}
+        {{ end }}
+      </div>
+    {{ else }}
+      {{ partial "general/fallback-text.html" . }}
+    {{ end }}
+  </section>
+</div>

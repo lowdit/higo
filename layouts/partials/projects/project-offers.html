@@ -1,0 +1,68 @@
+{{ $ctx := .context }}
+<div class="project-entry offers enlarge-link {{ if .style }}small{{ end }}{{ with $ctx.Params.days }} {{ if gt . 4 }}project-double{{ end }}{{ end }}">
+  {{ if .style }}
+  <div class="project-entry-info">
+    <h4 class="project-entry-title">
+      <a href="{{ $ctx.Permalink }}">{{ $ctx.Title }}</a>
+      <sup>{{ partial "general/label-drafts.html" $ctx }}</sup>
+    </h4>
+    <p class="crit">#{{ $ctx.Parent.Params.level }}.{{ add .key 1 }}</p>
+    {{- with $ctx.Params.goals -}}
+      <ul>
+        {{ range . }}
+        <li>{{ . }}</li>
+        {{ end -}}
+      </ul>
+    {{ end -}}
+    <p class="m0 invisible">{{ $ctx.Params.persons }} personnes, {{ $ctx.Params.days }} jours</p>
+    {{ if not $ctx.Params.profil }}No profils{{ end }}
+  </div>
+  {{ else }}
+    {{- if $ctx.Params.feature_image -}}
+    <div class="project-entry-img">
+        {{ partial "general/feature-image.html" . }}
+        {{ with $ctx.Param "project types" }}
+        <div class="project-entry-type">
+        {{ range first 1 . }}
+            <a href="{{ "project-types" | absURL }}/{{ . | urlize }}/">{{ . }}</a>
+        {{ end }}
+        </div>
+        {{ end }}
+    </div>
+    {{ end -}}
+    <div class="project-entry-info">
+      <h4 class="project-entry-title">
+        <a href="{{ $ctx.Permalink }}">{{ $ctx.Title }}</a>
+        <sup>{{ partial "general/label-drafts.html" $ctx }}</sup>
+      </h4>
+      <p class="crit">#{{ $ctx.Parent.Params.level }}.{{ add .key 1 }}</p>
+      {{- with $ctx.Params.sorte -}}
+        <p><strong>{{ . }}</strong></p>
+      {{- end -}}
+      <div class="project-list-summary">
+        {{- with $ctx.Description -}}
+          {{ . | markdownify }}
+        {{- end -}}
+      </div>
+      {{- with $ctx.Params.goals -}}
+        <ul>
+          {{ range . }}
+          <li>{{ . }}</li>
+          {{ end -}}
+        </ul>
+      {{ end -}}
+      <div class="project-list-footer">
+        {{- with $ctx.Params.skills -}}
+          <p class="m0">
+            {{ range . }}
+              #{{ . }}
+            {{ end }}
+          </p>
+        {{- end -}}
+        {{- if and $ctx.Params.persons $ctx.Params.days -}}
+          <p class="m0"><strong>{{ $ctx.Params.persons }} personnes pendant {{ $ctx.Params.days }} jours</strong></p>
+        {{- end -}}
+      </div>
+    </div>
+    {{ end }}
+  </div>
