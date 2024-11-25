@@ -456,7 +456,7 @@
   
   jtd.setTheme = function(theme) {
     var cssFile = document.querySelector('[rel="stylesheet"]');
-    cssFile.setAttribute('href', '/Assistance-UNSSC-courses/assets/css/just-the-docs-' + theme + '.css');
+    cssFile.setAttribute('href', '/' + theme + '.css');
   }
   
   // Note: pathname can have a trailing slash on a local jekyll server

@@ -60,15 +60,16 @@ a:not([class]) {
 
 h1,h2 {
   font: normal 125% / 1.4 $title-font-stack;
-  font-weight: 800;
 }
 
 h1 {
   @include font-size('xxl');
+  font-weight: 800 !important;
 }
 
 h2 {
   @include font-size('xl');
+  font-weight: 800;
 }
 
 h3 {
