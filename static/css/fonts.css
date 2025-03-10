@@ -1,28 +1,28 @@
 @font-face {
-	font-family: 'TT Norms Pro';
+	font-family: 'atkinson';
 	src:
-		url('./..//fonts/tt-norms-pro/light.woff2') format('woff2'),
-		url('./..//fonts/tt-norms-pro/light.woff') format('woff');
+		url('./..//fonts/atkinson/light.woff2') format('woff2'),
+		url('./..//fonts/atkinson/light.woff') format('woff');
 	font-weight: 400;
 	font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-	font-family: 'TT Norms Pro';
+	font-family: 'atkinson';
 	src:
-		url('./../fonts/tt-norms-pro/regular.woff2') format('woff2'),
-		url('./../fonts/tt-norms-pro/regular.woff') format('woff');
+		url('./../fonts/atkinson/regular.woff2') format('woff2'),
+		url('./../fonts/atkinson/regular.woff') format('woff');
 	font-weight: 500;
 	font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-	font-family: 'TT Norms Pro';
+	font-family: 'atkinson';
 	src:
-		url('./../fonts/tt-norms-pro/bold.woff2') format('woff2'),
-		url('./../fonts/tt-norms-pro/bold.woff') format('woff');
+		url('./../fonts/atkinson/bold.woff2') format('woff2'),
+		url('./../fonts/atkinson/bold.woff') format('woff');
 	font-weight: 800;
 	font-style: normal;
     font-display: swap;

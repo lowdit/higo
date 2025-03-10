@@ -52,7 +52,7 @@
   --base-light: 38% !important;
   --form-control-color: var(--color-primary) !important;
   --background-color-section: #fdfdfd !important;
-  --title-font-name: "TT Norms Pro", "Roboto", "Helvetica Neue Light", "Helvetica Neue", "Helvetica", "Arial", sans-serif !important;
+  --title-font-name: "atkinson", "Roboto", "Helvetica Neue Light", "Helvetica Neue", "Helvetica", "Arial", sans-serif !important;
   --base-font: "Roboto", "Calibri", "Helvetica Neue Light", "Helvetica Neue", "Helvetica", "Arial", sans-serif !important
 }
 
@@ -72,7 +72,7 @@ hr {
   margin: 2rem 0 2rem;
 }
 
-hr{ 
+hr{
   border: 0;
   height: 2px;
   width: 95%;
@@ -80,7 +80,7 @@ hr{
   margin: 2rem auto 1rem;
   background: #8fc8e76f;
 }
-    
+
 hr:before {
   content: "";
   width: 6px;
@@ -178,7 +178,7 @@ hr:before {
   flex: 1;
 }
 
-.flex { 
+.flex {
   display: flex;
   gap: 0.5rem
 }
@@ -219,7 +219,7 @@ hr:before {
   font-size: 90%;
   color: #fff;
   background: #39165c;
-  font-family: "TT Norms Pro", Arial;
+  font-family: "atkinson", Arial;
 }
 
 .list-stats > div > span {
@@ -235,16 +235,16 @@ hr:before {
 
 .chart {
   display: grid;
-  margin: 0 auto 3.5rem; 
+  margin: 0 auto 3.5rem;
 }
 
 .chart .flex  {
   display: flex;
-  justify-content: center; 
+  justify-content: center;
 }
 
 .chart-small {
-  max-width: 900px; 
+  max-width: 900px;
 }
 
 .chart-pie {
@@ -254,7 +254,7 @@ hr:before {
 }
 
 .list.chart {
-  gap: 3rem; 
+  gap: 3rem;
 }
 
 .list-unstyled {

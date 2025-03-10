@@ -5,7 +5,7 @@
 :root, [data-theme="default"] {
   --color-primary: rgb(18, 120, 175) !important;
   --color-inline-code: hsl(0, 81%, 35%);
-  
+
   /* color contrasts */
   --color-bg: rgb(248, 248, 248);
   --color-contrast-lower: hsl(0, 0%, 95%);
@@ -35,7 +35,7 @@
 [data-theme="dark"] {
   --color-primary: rgb(86, 184, 237);
   --color-inline-code: hsl(0, 81%, 70%);
-  
+
   /* color contrasts */
   --color-bg: rgb(18, 18, 18);
   --color-contrast-lower: hsl(240, 6%, 15%);
@@ -55,7 +55,7 @@
 /// Regular font family
 /// @type List
 $text-font-stack: 'Roboto', 'Calibri','Helvetica Neue Light', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-$title-font-stack: 'TT Norms Pro', 'Roboto', 'Helvetica Neue Light', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+$title-font-stack: 'atkinson', 'Roboto', 'Helvetica Neue Light', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
 
 /// Code (monospace) font family
 /// @type List
