@@ -109,23 +109,36 @@ hr:before {
   border-bottom: 1px solid #666;
 }
 
-.m0 {
+.margin-baseline {
+  margin-bottom: var(--baseline,1.5em);
+}
+
+.padding-baseline {
+  padding-block: var(--baseline,1.5em);
+}
+
+.padding-block {
+  padding-inline: var(--baseline,1.5em);
+  padding-block: var(--baseline,1.5em);
+}
+
+.m-0 {
   margin: 0;
 }
 
-.mt0 {
+.mt-0 {
   margin-top: 0;
 }
 
-.mb0 {
+.mb-0 {
   margin-bottom: 0;
 }
 
-.p0 {
+.p-0 {
   padding: 0;
 }
 
-.p1 {
+.p-1 {
   padding: 1em;
 }
 

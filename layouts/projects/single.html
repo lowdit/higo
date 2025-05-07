@@ -21,7 +21,7 @@
   meter,
   meter::-webkit-meter-bar {
       /*to remove the default background property */
-      background: none; 
+      background: none;
       width: 300px;
       height: 35px;
       border-radius: 4px;
@@ -30,32 +30,32 @@
       border: 1px solid #999;
       box-shadow: 0 5px 5px -5px rgba(0,0,0,0.1) inset;
   }
-  
+
   /*for meter bar*/
   meter::-webkit-meter-optimum-value {
-      background: none; 
+      background: none;
       background-color: rgb(86, 73, 198);
       background-color: rebeccapurple;
   }
   :-moz-meter-optimum::-moz-meter-bar {
-      background: none; 
+      background: none;
       background-color: rgb(86, 73, 198);
       background-color: rebeccapurple;
   }
-  
-  
+
+
   meter::-webkit-meter-suboptimum-value{
-      background: none; 
+      background: none;
       background-color: rebeccapurple;
   }
   :-moz-meter-sub-optimum::-moz-meter-bar{
-      background: none; 
+      background: none;
       background-color: rebeccapurple;
   }
-  
-  
+
+
   meter::-webkit-meter-even-less-good-value{
-      background: none; 
+      background: none;
       background-color: rgb(153, 51, 65);
       background-color: rebeccapurple;
   }
@@ -125,7 +125,7 @@
       <div class="list-indicators">
       {{ range $key, $value := .Params.scores }}
         <p>
-          <span>{{ index ($.Site.Data.scores) $key }}</span> 
+          <span>{{ index ($.Site.Data.scores) $key }}</span>
           <meter value="{{ . }}" min="0" max="5" low="2" high="4" optimum ="5" ></meter>
         </p>
       {{ end }}
@@ -170,7 +170,7 @@
           </th>
           {{ end }}
         </tr>
-      </thead> 
+      </thead>
       <tbody>
           {{- range $modules }}
             {{- $title := .title }}
@@ -249,7 +249,7 @@
       <h3>{{ .name }}</h3>
       <p><strong>{{ .topic }}</strong>{{ if .url }} / <a href="{{ .url }}" title="Accéder à l'article {{ .name }}">Accéder à l'article</a>{{ end }}</p>
       {{ .description | markdownify }}
-      {{ end }}    
+      {{ end }}
     {{ end }}
     {{ with .Params.competitors }}
       {{ range . }}
@@ -257,17 +257,16 @@
         {{ range .countries }}
           <h3>{{ .name }}</h3>
           {{ range $id, $value := .competitor  }}
-          <p class="m0"><strong>{{ add $id 1 }}. {{ .name }}{{ with .url}} <small>- <a href="{{ . }}">{{ . }}</a></small>{{ end }}</strong></p>
+          <p class="m-0"><strong>{{ add $id 1 }}. {{ .name }}{{ with .url}} <small>- <a href="{{ . }}">{{ . }}</a></small>{{ end }}</strong></p>
             {{ with .links }}
             <p class="mb0"><small>Liens notables :</small></p>
-            <ul class="mt0">
+            <ul class="mt-0">
               {{ range .  }}
                 <li><small><a href="{{ . }}">{{ . }}</a></small></li>
               {{ end }}
             </ul>
             {{ end }}
           {{ end }}
-          
         {{ end }}
       {{ end }}
     {{ end }}
@@ -283,7 +282,7 @@
       </ul>
       {{ end }}
     {{ end }}
-    
+
 
     {{ with .Params.persons }}
       <h2>Liste de personnes</h2>
@@ -316,18 +315,18 @@
     --essential: #00aeef;
     --professional: #ff7f45;
   }
-  
-  
+
+
     button {
     background: none;
     border: none;
     cursor: pointer;
   }
-  
+
   table {
     border-collapse: collapse;
   }
-   
+
   /* SWITCH STYLES
   –––––––––––––––––––––––––––––––––––––––––––––––––– */
   .switch-wrapper {
@@ -339,36 +338,36 @@
     border-radius: 30px;
     background: var(--white);
   }
-  
+
   .switch-wrapper [type="radi"] {
     position: absolute;
     left: -9999px;
   }
-  
+
   .switch-wrapper [type="radio"]:checked#monthly ~ label[for="monthly"],
   .switch-wrapper [type="radio"]:checked#yearly ~ label[for="yearly"] {
     color: var(--white);
   }
-  
+
   .switch-wrapper [type="radio"]:checked#monthly ~ label[for="monthly"]:hover,
   .switch-wrapper [type="radio"]:checked#yearly ~ label[for="yearly"]:hover {
     background: transparent;
   }
-  
+
   .switch-wrapper
     [type="radio"]:checked#monthly
     + label[for="yearly"]
     ~ .highlighter {
     transform: none;
   }
-  
+
   .switch-wrapper
     [type="radio"]:checked#yearly
     + label[for="monthly"]
     ~ .highlighter {
     transform: translateX(100%);
   }
-  
+
   .switch-wrapper label {
     font-size: 16px;
     z-index: 1;
@@ -378,11 +377,11 @@
     border-radius: 30px;
     transition: color 0.25s ease-in-out;
   }
-  
+
   .switch-wrapper label:hover {
     background: var(--lightgray);
   }
-  
+
   .switch-wrapper .highlighter {
     position: absolute;
     top: 4px;
@@ -393,42 +392,42 @@
     background: var(--darkgreen);
     transition: transform 0.25s ease-in-out;
   }
-  
+
   /* TABLE STYLES
   –––––––––––––––––––––––––––––––––––––––––––––––––– */
   .table-wrapper {
     background: var(--white);
     overflow-x: auto;
   }
-  
+
   table {
     width: 100%;
     margin-block: 6rem;
   }
-  
+
   table tr {
     display: flex;
   }
-  
+
   table th,
   table td {
     min-width: 15%;
     background: none;
     padding: 0;
     border: none;
-    line-height: 1.5; 
+    line-height: 1.5;
     color: #000;
   }
 
   table th:first-child,
-  table td:first-child { 
+  table td:first-child {
     min-width: 55%;
   }
 
   table .subheader {
     background: rgb(209, 237, 245);
   }
-  
+
   table th:nth-child(1) {
     display: flex;
     flex-direction: column;
@@ -436,39 +435,39 @@
     line-height: 1.3;
     padding: 1rem 10px;
   }
-  
+
   table th:nth-child(1) .svg-wrapper {
     margin-top: 10px;
   }
-  
+
   table th:nth-child(1) svg {
     width: 22px;
     height: 22px;
   }
-  
+
   table th .heading {
     padding: 1rem;
     color: var(--white);
   }
-  
+
   table th:nth-child(2) .heading {
     background: var(--starter);
   }
-  
+
   table th:nth-child(3) .heading {
     background: var(--essential);
   }
-  
+
   table th:nth-child(4) .heading {
     background: var(--professional);
   }
-  
+
   table th .info {
     position: relative;
     padding: 1.5rem 0;
     border-left: 1px solid var(--lightgray);
   }
-  
+
   table th .popular {
     position: absolute;
     top: 10px;
@@ -478,72 +477,72 @@
     padding: 4px 8px;
     border-radius: 2px;
   }
-  
+
   table th .amount {
     font-size: 2rem;
   }
-  
+
   table th .amount span {
     display: block;
     transform: translateY(-8px);
   }
-  
+
   table th:nth-child(2) .amount {
     color: var(--starter);
   }
-  
+
   table th:nth-child(3) .amount {
     color: var(--essential);
   }
-  
+
   table th:nth-child(4) .amount {
     color: var(--professional);
   }
-  
+
   table th .billing-msg,
   table th .amount span {
     font-weight: normal;
     font-size: 0.8rem;
   }
-  
+
   table th button {
     border-radius: 20px;
     padding: 8px 20px;
     margin-top: 10px;
     transition: all 0.2s;
   }
-  
+
   table th:nth-child(2) button {
     color: var(--starter);
     border: 1px solid var(--starter);
   }
-  
+
   table th:nth-child(2) button:hover {
     background: var(--starter);
   }
-  
+
   table th:nth-child(3) button {
     color: var(--essential);
     border: 1px solid var(--essential);
   }
-  
+
   table th:nth-child(3) button:hover {
     background: var(--essential);
   }
-  
+
   table th:nth-child(4) button {
     color: var(--professional);
     border: 1px solid var(--professional);
   }
-  
+
   table th:nth-child(4) button:hover {
     background: var(--professional);
   }
-  
+
   table th button:hover {
     color: var(--white);
   }
-  
+
   table td {
     padding: 10px;
   }
@@ -551,41 +550,41 @@
   table td span {
     color: #555;
   }
-  
+
   table td:not(:first-child) {
     border-left: 1px solid var(--lightgray);
   }
-  
+
   table td:first-child {
     font-size: 1rem;
     text-align: left;
   }
-  
+
   table svg {
     width: 22px;
     height: 24px;
   }
-  
+
   table svg.not-included {
     fill: var(--gray);
   }
-  
+
   table svg.starter {
     fill: var(--starter);
   }
-  
+
   table svg.essential {
     fill: var(--essential);
   }
-  
+
   table svg.professional {
     fill: var(--professional);
   }
-  
+
   table .hide {
     display: none;
   }
-  
+
   /* MQ
   –––––––––––––––––––––––––––––––––––––––––––––––––– */
   @media screen and (min-width: 780px) {
@@ -594,6 +593,6 @@
     }
   }
 </style>
-  
+
 {{ end }}
 

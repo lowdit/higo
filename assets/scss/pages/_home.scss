@@ -6,7 +6,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 3rem 5vw;
+  gap: 3rem 2.5vw;
 
   @include respond-to('medium') {
     flex-wrap: nowrap;
@@ -20,7 +20,7 @@
 .hero-info {
 
   @include respond-to('medium') {
-    flex: 0 1 65%;
+    flex: 0 1 55%;
   }
 
   .hero-title {
@@ -50,11 +50,14 @@
     width: 100%;
     height: auto;
     border-radius: 20px;
-    
+
     @include respond-to('medium') {
       max-width: 100%;
       width: unset;
     }
+  }
+  blockquote {
+    font-size: 80%;
   }
 }
 

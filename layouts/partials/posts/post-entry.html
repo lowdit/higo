@@ -3,7 +3,7 @@
     <a href="{{ .Permalink }}">{{ .Title }}</a>
     {{ with .Date }}<br><small>{{ . | time.Format ":date_medium"}}</small>{{ end }}
   </h3>
-  <p class="post-list-summary mt0">
+  <p class="post-list-summary mt-0">
     {{- with .Params.Summary -}}
       {{- . | markdownify -}}
     {{- else -}}

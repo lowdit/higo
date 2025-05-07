@@ -32,12 +32,12 @@ body {
   flex-direction: column;
 }
 
-main {   
-  flex: 1 0 auto; 
+main {
+  flex: 1 0 auto;
 }
 
 footer {
-  flex-shrink: 0;    
+  flex-shrink: 0;
 }
 
 a {
@@ -93,7 +93,7 @@ table {
   border-collapse: collapse;
   overflow-x: auto;
   width: 100%;
-  margin-inline: auto; 
+  margin-inline: auto;
   table-layout: fixed;
   overflow-wrap: break-word;
 }
@@ -142,7 +142,7 @@ td {
 }
 
 blockquote {
-  background: rgb(234, 245, 249);
+  background: transparent;
   padding: 0.5em 1.5rem;
   margin: 1em auto 3em;
   max-width: 80vw;
@@ -154,8 +154,8 @@ blockquote {
 }
 
 blockquote p {
-  font-size: 110%;
-  font-weight: 600;
+  font-size: 100%;
+  font-weight: 400;
   line-height: 1.4;
 }
 
@@ -196,7 +196,7 @@ form {
   margin: auto;
   padding: 0rem;
   max-width: 50rem;
- 
+
   p, fieldset {
     margin-bottom: 1em;
   }
@@ -219,7 +219,7 @@ form {
     background-color: var(--color-contrast-lower);
     color: var(--color-contrast-high);
   }
-  
+
   button {
     cursor: pointer;
   }

@@ -19,6 +19,12 @@
     </div>
     <div class="hero-owner">
       {{ $avatar := .Site.Params.avatar }}
+      {{ $cite   := .Params.blockquote }}
+      {{ with $cite }}
+        <blockquote>
+          <p>{{ . | markdownify }}</p>
+        </blockquote>
+      {{ end }}
       {{ $default_image := "images/default.png" }}
       {{ $image := "" }}
       {{ with $avatar }}
