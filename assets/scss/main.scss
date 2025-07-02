@@ -198,7 +198,7 @@ hr:before {
 
 .list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
 }
 
@@ -207,7 +207,7 @@ hr:before {
 }
 
 .list.list-stats {
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 }
 
 .list-interview > div {
@@ -233,6 +233,7 @@ hr:before {
   color: #fff;
   background: #39165c;
   font-family: "atkinson", Arial;
+  text-align: center;
 }
 
 .list-stats > div > span {

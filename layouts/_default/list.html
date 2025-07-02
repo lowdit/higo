@@ -23,9 +23,9 @@
       {{- if $slides }}&nbsp;-&nbsp;{{ end }}
       {{ end }}
       {{- if (eq .Format.BaseName "print") }}<li><a href="{{ .Permalink | safeURL }}">Lien vers la version à imprimer</a></li>{{ end }}
-      {{- if $slides }}{{- if (eq .Format.BaseName "presentation") }}<li><a href="{{ .Permalink | safeURL }}">Lien vers la version présentation</a></li>{{ end }}{{ end -}} 
+      {{- if $slides }}{{- if (eq .Format.BaseName "presentation") }}<li><a href="{{ .Permalink | safeURL }}">Lien vers la version présentation</a></li>{{ end }}{{ end -}}
     {{- end }}
-   </ul>
+    </ul>
     {{- end }}
   </section>
   <section>

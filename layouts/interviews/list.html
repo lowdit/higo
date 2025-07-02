@@ -1,6 +1,6 @@
 {{ define "main" -}}
 <div class="container">
-  {{ $pages := where (where .RegularPagesRecursive "Params.slugpath" "eq" "digital-accessibility") "Title" "ne" "Model" }}
+  {{ $pages := .RegularPagesRecursive }}
   <section class="page-header">
     <h1 class="page-header-title">{{ .Title }}{{ if gt (len $pages) 0 }} - {{ len $pages }}{{ end }}</h1>
     <p class="page-header-desc">
@@ -9,43 +9,15 @@
       {{- end -}}
     </p>
   </section>
-  {{ if eq .Title "Interviews" }}
-  {{ $pagesstats := where $pages "Params.data.needexpert" "ne" "" }}
-  <h2>Statistiques générales</h2>
-  {{ partial "interviews/generalstats.html" $pages }}
-  <h2>Répartition des sujets clefs</h2>
-  {{ partial "interviews/topicsstats.html" (dict "context" . "pages" $pages) }}
+  {{ if ge (len (split .Path "/")) 3 }}
+    {{ $pagesstats := where $pages "Params.data.needexpert" "ne" "" }}
+    <h2>Statistiques générales</h2>
+    {{ partial "interviews/generalstats.html" $pages }}
+    <h2 hidden>Répartition des sujets clefs</h2>
+    {{ partial "interviews/topicsstats.html" (dict "context" . "pages" $pages) }}
   {{ end }}
-  <h2>Liste de personnes interviewées</h2>
-  <section class="list list-interview">
-    {{ if eq .Title "Interviews" }}
-    {{- range (sort $pages  "Params.date" "desc") }}
-    {{ if in .Permalink "digital-accessibility" }}
-    <div class="enlarge-link">
-        <div class="project-entry-info">
-          <h3 class="project-entry-title">
-            <a href="{{ .Permalink }}">{{ with .Title }}{{ . }}{{ else }}{{ .Params.name }}{{ end }}</a>
-            <sup>{{ partial "general/label-drafts.html" . }}</sup>
-            {{/* if ne .Params.data.sector "" }}<br><small>{{ .Params.data.sector }}</small>{{ end */}}
-          </h3>
-          {{ with .Params.date }}<time>{{ time.Format "2 Jan 2006" . | safeHTML }}</time>{{ end }}
-          <div class="project-list-meta">
-            {{ with .Params.techstack }}
-            {{ range . }}
-              <span>{{ . }}</span>
-            {{ end }}
-            {{ end }}
-          </div>
-          {{- if (index .Params.data "first-win") -}}
-          <p class="project-list-summary">
-           {{ index .Params.data "first-win" }}
-          </p>
-          {{- end -}}
-        </div>
-      </div>
-    {{ end -}}
-    {{ end }}
-    {{ else }}
+    <h2>Liste de personnes interviewées</h2>
+    <section class="list list-interview">
       {{- range .Pages }}
       <div class="enlarge-link">
         <div class="project-entry-info">
@@ -64,13 +36,12 @@
           </div>
           {{- if (index .Params.data "first-win") -}}
           <p class="project-list-summary">
-           {{ index .Params.data "first-win" }}
+          {{ index .Params.data "first-win" }}
           </p>
           {{- end -}}
         </div>
       </div>
       {{ end }}
-    {{ end }}
-  </section>
+    </section>
 </div>
 {{ end }}

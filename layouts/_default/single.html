@@ -6,6 +6,35 @@
 </div>
 <section class="generic-single">
   <div class="single-container{{ if eq .Title "Roadmap"}} large{{ end }} markdown">
+    <style>
+      .TableOfContents {
+        margin: 1em 0;
+        padding: 1em;
+        border: 2px solid #999;
+        background: #ffffff;
+        border-radius: 3px;
+      }
+      .TableOfContents ol,.TableOfContents li {
+        text-align: left;
+      }
+    </style>
+    <ul class="list-unstyled list-inline">
+    {{- $slides := .Params.slides -}}
+    {{- $formats := slice "print" "presentation" }}
+    {{- range $id, $value := where (where .OutputFormats "Rel" "alternate") ".Format.BaseName" "in" $formats }}
+      {{ if eq $id 0 }}
+      >&nbsp;
+      {{- else }}
+      {{- if $slides }}&nbsp;-&nbsp;{{ end }}
+      {{ end }}
+      {{- if (eq .Format.BaseName "print") }}<li><a href="{{ .Permalink | safeURL }}">Lien vers la version à imprimer</a></li>{{ end }}
+      {{- if $slides }}{{- if (eq .Format.BaseName "presentation") }}<li><a href="{{ .Permalink | safeURL }}">Lien vers la version présentation</a></li>{{ end }}{{ end -}}
+    {{- end }}
+    </ul>
+    <div class="TableOfContents">
+    <h4 class="m-0">Table des matières</h4>
+    {{ .TableOfContents }}
+    </div>
     {{ partialCached "content.html" .Content .Content }}
     {{ if eq .Type "modules" }}
       {{ $ctx := . }}
@@ -36,11 +65,11 @@
       {{- end -}}
       {{- with $ctx.Params.workshops -}}
         <p>
-            <strong>Ateliers potentiels :</strong> 
+            <strong>Ateliers potentiels :</strong>
             <ul>
             {{ range . }}
               {{ range (where (where $.Site.RegularPages "Section" "workshops") "Title" .) }}
-                <li> 
+                <li>
                   <a href="{{ .Permalink }}">{{ .Title }}</a><br>
                   <span>{{ .Description }}</span>
                 </li>
@@ -51,7 +80,7 @@
       {{- end -}}
       {{- with $ctx.Params.urls -}}
       <p>
-        <strong>Pour aller plus loin :</strong> 
+        <strong>Pour aller plus loin :</strong>
         <ul>
         {{ range . }}
           <li>{{ . | markdownify }}</li>

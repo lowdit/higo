@@ -1,20 +1,29 @@
 {{- $pages := . }}
-{{- $pagesstats := where $pages "Params.data.needexpert" "ne" "" }}
+{{- $needexpert := where $pages "Params.data.needexpert" "ne" "" }}
+{{- with $needexpert }}
 <section class="list list-stats">
-    <div>
-        <span>{{ div (mul 100 (len (where $pagesstats "Params.data.mission-issue-present" "eq" "oui"))) (len $pagesstats) }}%</span>
-        Besoin Présent A11Y
-    </div>
-    <div>
-        <span>{{ div (mul 100 (len (where $pagesstats "Params.data.mission-issue-futur" "eq" "oui"))) (len $pagesstats) }}%</span>
-        Besoin Futur A11Y
-    </div>
-    <div>
-        <span>{{ div (mul 100 (len (where $pagesstats "Params.data.accountability" "eq" "oui"))) (len $pagesstats) }}%</span>
-        Considération Interne A11Y
-    </div>
-    <div>
-        <span>{{ div (mul 100 (len (where $pagesstats "Params.data.needexpert" "eq" "oui"))) (len $pagesstats) }}%</span>
-        Besoin Expert A11Y
-    </div>
+    {{ template "score" (dict "pages" $pages "param" "Params.data.company-engagement" "pretext" "Sopra Steria" "subtext" "Soutien interne suffisant") }}
+    {{ template "score" (dict "pages" $pages "param" "Params.data.company-difference" "pretext" "Pour" "subtext" "Diff entre A11Y & Inclusion est clair") }}
+    {{ template "score" (dict "pages" $pages "param" "Params.data.company-openmind" "pretext" "Sopra Steria" "subtext" "Ouverture d’Esprit Inclusion Numérique") }}
+    {{ template "score" (dict "pages" $pages "param" "Params.data.internaly-planned" "pretext" "Pour" "subtext" "Est une exigence contractuelle") }}
+    {{ template "score" (dict "pages" $pages "param" "Params.data.internaly-into-account" "pretext" "Pour" "subtext" "A planifié des actions Accessibilité") }}
+    {{ template "score" (dict "pages" $pages "param" "Params.data.internaly-ressources" "pretext" "Pour" "subtext" "Accès à des ressources") }}
+    {{ template "score" (dict "pages" $pages "param" "Params.data.internaly-referent" "pretext" "Pour" "subtext" "Peut faire appel à des experts A11Y") }}
+    {{ template "score" (dict "pages" $pages "param" "Params.data.internaly-formation" "pretext" "Pour" "subtext" "A demandé des formations") }}
+    {{ template "score" (dict "pages" $pages "param" "Params.data.internaly-stakeholder-feedback" "pretext" "Pour" "subtext" "A demandé des formations") }}
+    {{ template "score" (dict "pages" $pages "param" "Params.data.mission-issue-present" "subtext" "Besoin Présent A11Y") }}
+    {{ template "score" (dict "pages" $pages "param" "Params.data.mission-issue-futur" "subtext" "Besoin Futur A11Y") }}
+    {{ template "score" (dict "pages" $pages "param" "Params.data.accountability" "subtext" "Considération Interne A11Y") }}
+    {{ template "score" (dict "pages" $pages "param" "Params.data.needexpert" "subtext" "Besoin Expert A11Y") }}
 </section>
+{{ end -}}
+
+{{ define "score" }}
+{{ if (where .pages .param "eq" "oui") }}
+  <div>
+    {{ with .pretext }}{{ . }}{{ end }}
+      <span>{{ div (mul 100 (len (where .pages .param "eq" "oui"))) (len .pages) }}%</span>
+    {{ with .subtext }}{{ . }}{{ end }}
+  </div>
+  {{ end }}
+{{ end }}

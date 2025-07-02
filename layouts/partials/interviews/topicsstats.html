@@ -6,7 +6,7 @@
 {{- $s.Set "successfactor" slice -}}
 {{- $s.Set "idea-internal" slice -}}
 {{- $s.Set "idea-external" slice -}}
-{{- $s.Set "estimated-action"    slice -}}
+{{- $s.Set "estimated-action" slice -}}
 {{- $s.Set "estimated-knowledge" slice -}}
 {{- $s.Set "action-count" slice -}}
 {{- $knowledge := slice "aucune" "réduite" "moyenne" "importante" "majeure" -}}
@@ -65,6 +65,7 @@
       {{- $s.Add (printf "knowledge%s" $label) (cond (in (index .Params.data "estimated-knowledge-accessibility") $label) 1 0) -}}
     {{- end -}}
   {{- end -}}
+  {{ with ($s.Get "issues") }}
   {{- range (uniq ($s.Get "issues")) -}}
     {{- $label :=  . -}}
     {{- if $label }}
@@ -74,6 +75,7 @@
       {{- $s.SetInMap "MapIssue" (string $label) (printf "%s%s-%s" $prefix (string ($s.Get (printf "%s" $label))) $label) -}}
     {{- end -}}
     {{- end -}}
+  {{- end -}}
   {{- end -}}
   {{- range (uniq ($s.Get "developfactor")) -}}
     {{- $label :=  . -}}
@@ -103,184 +105,186 @@
   {{ range ($s.Get "MapKnowledge") }}
     {{ with . }}{{ $s.Add "knowledge-count" (int .) }}{{ end }}
   {{ end }}
-  
-  {{- $issues             := sort ($s.Get "MapIssue") "value" "desc" -}}
-  {{- $developfactor      := sort ($s.Get "Mapdevelopfactor") "value" "desc" -}}
-  {{- $successfactor      := sort ($s.Get "Mapsuccessfactor") "value" "desc" -}}
-  {{- $ideainternal       := (uniq (sort ($s.Get "idea-internal"))) -}}
-  {{- $ideaextternal      := (uniq (sort ($s.Get "idea-external"))) -}}
-  {{- $estimatedaction    := (uniq (sort ($s.Get "estimated-action"))) -}}
-  {{- $estimatedknowledge := (uniq (sort ($s.Get "estimated-knowledge"))) -}}
+  {{ if (ne (len ($s.Get "issues")) 0) }}
+    {{- $issues             := cond ($s.Get "issues") (sort ($s.Get "MapIssue") "value" "desc") "" -}}
+    {{- $developfactor      := sort ($s.Get "Mapdevelopfactor") "value" "desc" -}}
+    {{- $successfactor      := sort ($s.Get "Mapsuccessfactor") "value" "desc" -}}
+    {{- $ideainternal       := (uniq (sort ($s.Get "idea-internal"))) -}}
+    {{- $ideaextternal      := (uniq (sort ($s.Get "idea-external"))) -}}
+    {{- $estimatedaction    := (uniq (sort ($s.Get "estimated-action"))) -}}
+    {{- $estimatedknowledge := (uniq (sort ($s.Get "estimated-knowledge"))) -}}
 
-  <div class="chart list">
-    <div class="flex">
-      <canvas id="myChart" class="chart-small"></canvas>
+
+    <div class="chart list">
+      <div class="flex">
+        <canvas id="myChart" class="chart-small"></canvas>
+      </div>
     </div>
-  </div>
-  <h2 class="m0">Des idées pour lancer la machine</h2>
-  <div class="chart list">
-    <div>
-      <h3>Facteurs de succès (A court terme)&nbsp;?<br><small>Des choses qu'on fait déjà, qu'on devrait faire mieux</small></h3>
-      <canvas id="successfactor"></canvas>
+    <h2 class="m0">Des idées pour lancer la machine</h2>
+    <div class="chart list">
+      <div>
+        <h3>Facteurs de succès (A court terme)&nbsp;?<br><small>Des choses qu'on fait déjà, qu'on devrait faire mieux</small></h3>
+        <canvas id="successfactor"></canvas>
+      </div>
+      <div>
+        <h3>Facteurs de développement (Au long terme) ?<br><small>Des choses qu’on fait mal ou qu’on ne fait pas.</small></h3>
+        <canvas id="developfactor"></canvas>
+      </div>
     </div>
-    <div>
-      <h3>Facteurs de développement (Au long terme) ?<br><small>Des choses qu'on fait mal ou qu'on ne fait pas.</small></h3>
-      <canvas id="developfactor"></canvas>
+    <h2 class="m0">Une idée de l’accessibilité numérique pour les interviewés</h2>
+    <div class="chart list">
+      <div>
+        <h3>Quoi mettre en place en priorité ?</h3>
+        <canvas id="horizontal-stacker-bar-chart"></canvas>
+      </div>
+      <div>
+        <h3>Mon rapport à l’accessibilité numérique</h3>
+        <canvas id="horizontal-stacker-bar-charte"></canvas>
+      </div>
     </div>
-  </div>
-  <h2 class="m0">Une idée de l'accessibilité numérique pour les interviewés</h2>
-  <div class="chart list">
-    <div>
-      <h3>Quoi mettre en place en priorité ?</h3>
-      <canvas id="horizontal-stacker-bar-chart"></canvas>
-    </div>
-    <div>
-      <h3>Mon rapport à l'accessibilité numérique</h3>
-      <canvas id="horizontal-stacker-bar-charte"></canvas>
-    </div>
-  </div>
-  {{ $color := slice "#003f5c" "#a05195" "#f95d6a" "#ff7c43" "#ffa600" "#00d29c" "#00a1a3" "#006e8c" }}
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
-  <script>
-    const ctx = document.getElementById('myChart');
-  
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: [{{ range $id, $value := $issues -}}{{ $value := index (last 1 (split . "-")) 0 }}{{ if ne $id 0 }},{{ end }}{{- if (index ($.Site.Data.scores) (lower $value)) -}}{{ (index ($.Site.Data.scores) (lower $value)) }}{{ else }}{{ $value }}{{ end -}}{{ end -}}],
-        datasets: [{
-          label: 'Nombre de citation',
-          backgroundColor: "{{ index $color 1 }}",
-          data: [{{ range $id, $value := $issues -}}{{ if ne $id 0 }},{{ end }}{{ index (split . "-") 0 -}}{{ end -}}],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        title: {
-          display: false,
-          text: 'Eléments clefs'
+    {{ $color := slice "#003f5c" "#a05195" "#f95d6a" "#ff7c43" "#ffa600" "#00d29c" "#00a1a3" "#006e8c" }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+      const ctx = document.getElementById('myChart');
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: [{{ range $id, $value := $issues -}}{{ $value := index (last 1 (split . "-")) 0 }}{{ if ne $id 0 }},{{ end }}{{- if (index ($.Site.Data.scores) (lower $value)) -}}{{ (index ($.Site.Data.scores) (lower $value)) }}{{ else }}{{ $value }}{{ end -}}{{ end -}}],
+          datasets: [{
+            label: 'Nombre de citation',
+            backgroundColor: "{{ index $color 1 }}",
+            data: [{{ range $id, $value := $issues -}}{{ if ne $id 0 }},{{ end }}{{ index (split . "-") 0 -}}{{ end -}}],
+            borderWidth: 1
+          }]
         },
-        scales: {
-          y: {
-            beginAtZero: true
+        options: {
+          title: {
+            display: false,
+            text: 'Eléments clefs'
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
           }
         }
-      }
-    });
-  </script>
+      });
+    </script>
 
-  <script>
+    <script>
 
-    
-    const ctxsf = document.getElementById('successfactor');
-  
-    new Chart(ctxsf, {
-      type: 'pie',
-      data: {
-        labels: [{{ range $id, $value := first 4  $successfactor -}}{{ $value := index (last 1 (split . "-")) 0 }}{{ if ne $id 0 }},{{ end }}{{- if (index ($.Site.Data.scores) (lower $value)) -}}{{ (index ($.Site.Data.scores) (lower $value)) }}{{ else }}{{ $value }}{{ end -}}{{ end -}}],
-        datasets: [{
-          label: 'Fréquence',
-          backgroundColor: [{{ range $id, $value := $successfactor -}}{{ if ne $id 0 }},{{ end }}"{{ index $color $id }}"{{ end}}],
-          data: [{{ range $id, $value := first 4 $successfactor -}}{{ if ne $id 0 }},{{ end }}{{ index (split . "-") 0 -}}{{ end -}}],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        plugins: {
-          datalabels: {
-            display: true,
-            align: 'bottom',
-            backgroundColor: '#ccc',
-            borderRadius: 3,
-            font: {
-              size: 18,
+
+      const ctxsf = document.getElementById('successfactor');
+
+      new Chart(ctxsf, {
+        type: 'pie',
+        data: {
+          labels: [{{ range $id, $value := first 4  $successfactor -}}{{ $value := index (last 1 (split . "-")) 0 }}{{ if ne $id 0 }},{{ end }}{{- if (index ($.Site.Data.scores) (lower $value)) -}}{{ (index ($.Site.Data.scores) (lower $value)) }}{{ else }}{{ $value }}{{ end -}}{{ end -}}],
+          datasets: [{
+            label: 'Fréquence',
+            backgroundColor: [{{ range $id, $value := $successfactor -}}{{ if ne $id 0 }},{{ end }}"{{ index $color $id }}"{{ end}}],
+            data: [{{ range $id, $value := first 4 $successfactor -}}{{ if ne $id 0 }},{{ end }}{{ index (split . "-") 0 -}}{{ end -}}],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: {
+            datalabels: {
+              display: true,
+              align: 'bottom',
+              backgroundColor: '#ccc',
+              borderRadius: 3,
+              font: {
+                size: 18,
+              },
             },
           },
-        },
-        title: {
-          display: false,
-          text: 'Eléments clefs'
+          title: {
+            display: false,
+            text: 'Eléments clefs'
+          }
         }
-      }
-    });
-  </script>
+      });
+    </script>
 
-  <script>
-    const ctxdf = document.getElementById('developfactor');
-  
-    new Chart(ctxdf, {
-      type: 'pie',
-      data: {
-        labels: [{{ range $id, $value := first 4 $developfactor -}}{{ $value := index (last 1 (split . "-")) 0 }}{{ if ne $id 0 }},{{ end }}{{- if (index ($.Site.Data.scores) (lower $value)) -}}{{ (index ($.Site.Data.scores) (lower $value)) }}{{ else }}{{ $value }}{{ end -}}{{ end -}}],
-        datasets: [{
-          label: 'Fréquence',
-          backgroundColor: [{{ range $id, $value := $developfactor -}}{{ if ne $id 0 }},{{ end }}"{{ index $color $id }}"{{ end}}],
-          data: [{{ range $id, $value := first 4 $developfactor -}}{{ if ne $id 0 }},{{ end }}{{ index (split . "-") 0 -}}{{ end -}}],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        title: {
-          display: false,
-          text: 'Eléments clefs'
-        }
-      }
-    });
-  </script>
-  
-  <script>
-    var ctx2 = document.getElementById("horizontal-stacker-bar-chart");
-    new Chart(ctx2, {
-        type: 'bar',
+    <script>
+      const ctxdf = document.getElementById('developfactor');
+
+      new Chart(ctxdf, {
+        type: 'pie',
         data: {
-            labels: ["En Interne", "En Externe"],
-            datasets: [{{ range seq 3 }}{
-              label: '{{ humanize (index $ideaextternal (sub . 1)) -}}',
-              backgroundColor: "{{ index $color (sub . 1) }}",
-              data: [{{ ($s.Get (printf "int%s" (index $ideainternal (sub . 1)))) -}},{{ ($s.Get (printf "ext%s" (index $ideaextternal (sub . 1)))) -}}],
-          }{{ if ne . (len $knowledge) }},{{ end }}
-          {{ end }}],
+          labels: [{{ range $id, $value := first 4 $developfactor -}}{{ $value := index (last 1 (split . "-")) 0 }}{{ if ne $id 0 }},{{ end }}{{- if (index ($.Site.Data.scores) (lower $value)) -}}{{ (index ($.Site.Data.scores) (lower $value)) }}{{ else }}{{ $value }}{{ end -}}{{ end -}}],
+          datasets: [{
+            label: 'Fréquence',
+            backgroundColor: [{{ range $id, $value := $developfactor -}}{{ if ne $id 0 }},{{ end }}"{{ index $color $id }}"{{ end}}],
+            data: [{{ range $id, $value := first 4 $developfactor -}}{{ if ne $id 0 }},{{ end }}{{ index (split . "-") 0 -}}{{ end -}}],
+            borderWidth: 1
+          }]
         },
         options: {
-            scales: {
-                x: {
-                    stacked: true,
-                },
-                y: {
-                    stacked: true
-                }
-            },
-            indexAxis: 'x',
-            responsive: true
+          title: {
+            display: false,
+            text: 'Eléments clefs'
+          }
         }
-    });		
-  </script>
+      });
+    </script>
 
-  <script>
-    var ctx3 = document.getElementById("horizontal-stacker-bar-charte");
-    new Chart(ctx3, {
-        type: 'bar',
-        data: {
-            labels: ["Mon niveau estimé - {{ (div (mul ($s.Get "knowledge-count") 100) (mul (len $pages) 4)) }}%","Mon niveau réel - {{ (div (mul ($s.Get "action-count") 100) (mul (len $pages) 4)) }}%"],
-            datasets: [{{ range seq (len $knowledge) }}{
-                label: '{{ humanize (index $knowledge (sub . 1)) -}}',
+    <script>
+      var ctx2 = document.getElementById("horizontal-stacker-bar-chart");
+      new Chart(ctx2, {
+          type: 'bar',
+          data: {
+              labels: ["En Interne", "En Externe"],
+              datasets: [{{ range seq 3 }}{
+                label: '{{ humanize (index $ideaextternal (sub . 1)) -}}',
                 backgroundColor: "{{ index $color (sub . 1) }}",
-                data: [{{ ($s.Get (printf "knowledge%s" (index $knowledge (sub . 1)))) }},{{ ($s.Get (printf "action%s" (index $knowledge (sub . 1)))) }}],
+                data: [{{ ($s.Get (printf "int%s" (index $ideainternal (sub . 1)))) -}},{{ ($s.Get (printf "ext%s" (index $ideaextternal (sub . 1)))) -}}],
             }{{ if ne . (len $knowledge) }},{{ end }}
             {{ end }}],
-        },
-        options: {
-            scales: {
-                x: {
-                    stacked: true,
-                },
-                y: {
-                    stacked: true
-                }
-            },
-            indexAxis: 'x',
-            responsive: true
-        }
-    });		
-</script>
+          },
+          options: {
+              scales: {
+                  x: {
+                      stacked: true,
+                  },
+                  y: {
+                      stacked: true
+                  }
+              },
+              indexAxis: 'x',
+              responsive: true
+          }
+      });
+    </script>
+
+    <script>
+      var ctx3 = document.getElementById("horizontal-stacker-bar-charte");
+      new Chart(ctx3, {
+          type: 'bar',
+          data: {
+              labels: ["Mon niveau estimé - {{ (div (mul ($s.Get "knowledge-count") 100) (mul (len $pages) 4)) }}%","Mon niveau réel - {{ (div (mul ($s.Get "action-count") 100) (mul (len $pages) 4)) }}%"],
+              datasets: [{{ range seq (len $knowledge) }}{
+                  label: '{{ humanize (index $knowledge (sub . 1)) -}}',
+                  backgroundColor: "{{ index $color (sub . 1) }}",
+                  data: [{{ ($s.Get (printf "knowledge%s" (index $knowledge (sub . 1)))) }},{{ ($s.Get (printf "action%s" (index $knowledge (sub . 1)))) }}],
+              }{{ if ne . (len $knowledge) }},{{ end }}
+              {{ end }}],
+          },
+          options: {
+              scales: {
+                  x: {
+                      stacked: true,
+                  },
+                  y: {
+                      stacked: true
+                  }
+              },
+              indexAxis: 'x',
+              responsive: true
+          }
+      });
+  </script>
+  {{ end }}
