@@ -12,23 +12,10 @@
       {{- end -}}
     </p>
     {{- if (eq .Type "study") }}
-    {{ $slides := .Params.slides }}
-    <br>
-    <ul class="list-unstyled list-inline">
-    {{- $formats := slice "print" "presentation" }}
-    {{- range $id, $value := where (where .OutputFormats "Rel" "alternate") ".Format.BaseName" "in" $formats }}
-      {{ if eq $id 0 }}
-      >&nbsp;
-      {{- else }}
-      {{- if $slides }}&nbsp;-&nbsp;{{ end }}
-      {{ end }}
-      {{- if (eq .Format.BaseName "print") }}<li><a href="{{ .Permalink | safeURL }}">Lien vers la version à imprimer</a></li>{{ end }}
-      {{- if $slides }}{{- if (eq .Format.BaseName "presentation") }}<li><a href="{{ .Permalink | safeURL }}">Lien vers la version présentation</a></li>{{ end }}{{ end -}} 
-    {{- end }}
-   </ul>
+    {{- partial "print/links" (dict "context" . "slides" .Params.slides) -}}
     {{- end }}
   </section>
-  <section>
+  <section{{- with .Params.autonumbering }} autonumbering{{- end }}>
     {{ $.Scratch.Set "menu" slice }}
     {{ if eq .Type "study" }}
       {{ range (.Paginate .RegularPagesRecursive).Pages }}
@@ -45,28 +32,59 @@
         </ul>
       </div>
       {{- end }}
-      {{- end }}
-      {{ with .Content }}{{ . }}{{- end }}
-      {{ if eq .Type "study" }}
+    {{- end }}
+    {{ with .Content }}{{ partial "content.html" . . }}{{- end }}
+      {{- if eq .Type "study" }}
+        {{- if .Param "autonumbering" }}
+        <style>
+          /* Auto Numbering */
+            body {counter-reset: h2}
+            h2 {counter-reset: h3}
+            h3 {counter-reset: h4}
+            h4 {counter-reset: h5}
+
+            section[autonumbering] h2:before {counter-increment: h2; content: ""}
+            section[autonumbering] h3:before {counter-increment: h3; content: counter(h2) "." counter(h3) ". "}
+            section[autonumbering] h4:before {counter-increment: h4; content: counter(h2) "." counter(h3) "." counter(h4) ". "}
+
+            section[autonumbering] .toc__menu ul { counter-reset: item }
+            section[autonumbering] .toc__menu li a:before { content: counters(item, ".") ". "; counter-increment: item }
+        </style>
+        {{- end }}
         {{- range $id, $value := (.Paginate .RegularPagesRecursive).Pages }}
+          <div class="study-element study-element-{{ add $id 1 }}">
           {{- if (eq .Parent.Type "study") }}
             <h2 id="{{ anchorize .Title }}">
-              {{ add $id 1 }} - {{ .Title }}
+              {{ add $id 1 }}. {{ .Title }}
               <a href="#{{ anchorize .Title | safeURL }}"></a>
             </h2>
-            {{ partialCached "content.html" .Content .Content }}
+            <div class=title-increment>
+            {{- partial "content.html" .Content .Content }}
             <br>
             <hr>
             <br>
           {{- end }}
+          </div>
         {{- end }}
       {{- else }}
-      {{ $range := cond (ne (len .Sections) 0) .Sections .RegularPages }}
-      {{- range $id, $value := $range }}
-          {{ partial "posts/post-entry.html" . }}
-          <div class="post-entry-divider"></div>
-        {{- end }}
-      {{ end }}
+        {{ $range2 := cond (ne (len .Sections) 0) .RegularPages .Sections }}
+        {{ with $range2 }}
+          <h3>Articles</h3>
+          {{- range $id, $value := . }}
+            {{ partial "posts/post-entry.html" . }}
+            <div class="post-entry-divider"></div>
+          {{- end }}
+        {{ end -}}  
+        {{ $range1 := cond (ne (len .Sections) 0) .Sections .RegularPages }} 
+        {{ with $range1 }}
+          <h3>Sections</h3>
+          {{- range $id, $value := . }}
+            {{ partial "posts/post-entry.html" . }}
+            <div class="post-entry-divider"></div>
+          {{- end }}
+        {{ end -}}  
+      {{- end }}
+
       {{- $pages := where (where (.GetPage "interviews").RegularPagesRecursive "Params.slugpath" "eq" "digital-accessibility") "Title" "ne" "Model" }}
       {{ template "_internal/pagination.html" . }}
   </section>

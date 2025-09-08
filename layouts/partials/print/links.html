@@ -1,0 +1,19 @@
+{{ $slides := .slides }}
+{{- $formats := slice "print" "presentation" }}
+<ul class="list-unstyled list-inline no-print">
+{{- range $id, $value := where (where .context.OutputFormats "Rel" "alternate") ".Format.BaseName" "in" $formats }}
+    {{ if eq $id 0 }}
+    >&nbsp;
+    {{- else }}
+    {{- if $slides }}&nbsp;-&nbsp;{{ end }}
+    {{ end }}
+    {{- if (eq .Format.BaseName "print") }}
+    <li><a href="{{ .Permalink | safeURL }}">Lien vers la version à imprimer</a></li>
+    {{ end -}}
+    {{- if $slides }}
+    {{- if (eq .Format.BaseName "presentation") }}
+    <li><a href="{{ .Permalink | safeURL }}">Lien vers la version présentation</a></li>
+    {{ end -}}
+    {{ end -}} 
+{{- end }}
+</ul>

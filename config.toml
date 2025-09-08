@@ -1,8 +1,7 @@
 [module]
   [module.hugoVersion]
     extended = true
-    min = "0.128.0"
-
+    min = "0.140.0"
 
 [outputs]
   _merge = 'deep'
@@ -19,3 +18,8 @@
   mediaType = "application/json"
   isPlainText = true
   notAlternative = false
+
+[[redirects]]  # Default lang, should be last.
+from = '/**'
+to = '/404.html'
+status = 404  

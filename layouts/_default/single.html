@@ -2,6 +2,7 @@
 <div class="container">
   <section class="page-header--c">
     <h1 class="page-header-title">{{ .Title }}</h1>
+    {{- partial "print/links" (dict "context" . "slides" .Params.slides) -}}
   </section>
 </div>
 <section class="generic-single">

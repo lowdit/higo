@@ -3,7 +3,7 @@
 	src:
 		url('./..//fonts/atkinson/light.woff2') format('woff2'),
 		url('./..//fonts/atkinson/light.woff') format('woff');
-	font-weight: 400;
+	font-weight: 300;
 	font-style: normal;
     font-display: swap;
 }
@@ -13,7 +13,7 @@
 	src:
 		url('./../fonts/atkinson/regular.woff2') format('woff2'),
 		url('./../fonts/atkinson/regular.woff') format('woff');
-	font-weight: 500;
+	font-weight: normal;
 	font-style: normal;
     font-display: swap;
 }
@@ -23,7 +23,7 @@
 	src:
 		url('./../fonts/atkinson/bold.woff2') format('woff2'),
 		url('./../fonts/atkinson/bold.woff') format('woff');
-	font-weight: 800;
+	font-weight: bold;
 	font-style: normal;
     font-display: swap;
 }

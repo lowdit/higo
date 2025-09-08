@@ -15,6 +15,7 @@
   'base/base',
   'base/font',
   'base/typography',
+  'base/print',
   'base/helpers';
 
 // 4. Layout-related sections
@@ -34,7 +35,8 @@
   'components/code-highlight',
   'components/markdown',
   'components/toc',
-  'components/page-header';
+  'components/page-header',
+  'components/medals';
 
 // 6. Page-specific styles
 @import
@@ -329,3 +331,4 @@ hr:before {
   height: 1px;
   border: 0;
 }
+

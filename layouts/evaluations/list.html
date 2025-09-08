@@ -1,0 +1,97 @@
+{{ define "main" -}}
+{{- $data := .Site.Data.people.accessibility }}
+{{- $dataentity := .Params.data }} 
+<div class="container--sm">
+  <section class="page-header">
+    <h1 class="page-header-title">{{ .Title }}</h1>
+    <p class="page-header-desc">
+      {{- with .Params.Summary -}}
+        {{- . -}}
+      {{- else -}}
+        {{- with .Description -}}
+          {{- . | markdownify -}}
+        {{- end -}}
+      {{- end -}}
+    </p>
+  </section>
+  <section{{- with .Params.autonumbering }} autonumbering{{- end }}>
+      {{ with .Content }}{{ partial "content.html" . . }}{{- end }}
+      {{ $path := .Path }}
+      {{- if eq .Title "Entities" }}
+        {{- $type := slice }}
+        {{- range $data }}
+          {{ $type = $type | append .type }}
+        {{ end -}} 
+        {{- $type = $type | uniq | sort }}
+        {{- range $type }}
+        <h2>{{ . }}</h2>
+            {{- range where $data ".type" . }}
+            {{ with .name }}<h3 class="mb-0"><a href="{{ $path }}/{{ anchorize . }}">{{ . }}</a></h3>{{ end }}
+            {{ partial "scores/skills" (dict "name" .name "dataentity" (index (where $dataentity "name" (string .name)) 0).assessment) }}
+            {{- if reflect.IsMap (index (where $dataentity "name" (string .name)) 0).assessment.needsformgroup }}
+              <p><strong>Needs</strong><br>
+                {{ delimit (index (where $dataentity "name" (string .name)) 0).assessment.needsformgroup.value ", " }}
+              </p>
+            {{ end -}}
+            {{ end -}}
+        {{ end }}
+      {{- else }}
+        {{- $range := cond (ne (len .Sections) 0) .Sections .RegularPages }}
+            {{- range $id, $value := $range }}
+            {{ partial "posts/post-entry.html" . }}
+            <div class="post-entry-divider"></div>
+            {{- end }}
+        {{ end -}}
+  </section>
+</div>
+{{- .Store.SetInMap "keys" "legal" (slice (slice "Public/Private" "2-publicprivate") (slice "Rules" "4-rules") (slice "EAA change" "5-eaa")) }}
+{{- .Store.SetInMap "keys" "status" (slice (slice "A11Y Proposed" "1-propose") (slice "Shelf Offer" "4-offers"))  }}
+
+{{- if $dataentity }}
+<div class="container">
+<br>
+<hr>
+{{- $type := slice }}
+{{- range $data }}
+  {{ $type = $type | append .type }}
+{{ end -}} 
+{{- $type = $type | uniq | sort }}
+<h2>Key figures</h2>
+{{- range $type }}
+{{ $type := . }}
+<h3>{{ $type }}</h3>
+<table>
+  <caption>Comparative data from the july 2025 assessment</caption>
+  <thead>
+    <tr>
+      <th></th>
+      {{- range $dataentity }}
+      {{ if eq ((index (where $data "name" .name) 0).type) $type }}
+      <th>{{ .name }}</th>
+      {{ end }}
+      {{ end -}}
+    </tr>
+  </thead>
+  <tbody>
+        {{- range $key, $value := ($.Store.Get "keys") }}
+        {{- range $id, $value := . }}
+        <tr>
+          <th>{{ index . 0 }}</th>
+        {{- range $dataentity }}
+          {{ if reflect.IsMap . }}
+          {{ if eq ((index (where $data "name" .name) 0).type) $type }}
+          <td>{{ with (index (index .assessment $key) (index $value 1)).value }}{{ if eq . true}}Yes{{ else }}{{ . }}{{ end }}{{ else }}{{ if eq . false }}No{{ else }}-{{ end }}{{ end }}</td>
+          {{ end }}
+          {{ end }}
+        {{ end }}
+        </tr>
+        {{ end }}
+      {{ end }}
+  </tbody>
+</table>
+{{ end -}} 
+
+</div>
+{{ end -}}
+
+{{ end }}

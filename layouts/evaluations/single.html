@@ -1,0 +1,83 @@
+{{ define "main" }}
+{{ $assessment := .Site.Data.assessment }}
+<div class="container">
+  <section class="page-header--c">
+    <nav class="nav-transverse">
+      {{ $title := .Title }}
+      <ul class="list-unstyled list-inline">
+      {{ range where .Parent.Pages "Params.genre" "ne" "page" }}
+      <li>
+        {{ if ne $title .Title }}<a href="{{ .Permalink }}">{{ end }}
+          {{ .Title }}
+        {{ if ne $title .Title }}</a>{{ end }}
+      </li>
+    {{ end }}
+    </ul>
+    </nav>
+    <h1 class="page-header-title">{{ .Title }}</h1><br><br>
+    {{- partial "scores/skills" (dict "name" .Title "dataentity" .Params.data.assessment) }}
+    {{- partial "print/links" (dict "context" . "slides" .Params.slides) -}}
+  </section>
+</div>
+<style>
+  h4 { margin-bottom: 0; }
+  p  { margin-top: 0; }
+  dl:not(:first-of-type) dt[data-level="2"] {padding-top:2rem;;border-top: 2px solid #777;}
+  dl:not(:last-item) {padding-bottom:0.2rem; border-bottom: 1px solid #555;}
+  dl dl {padding-bottom:0.5rem; border-bottom: 2px solid #ccc}
+  dl dl dl {padding-bottom:0.5rem; border-bottom: 1px dashed #dedede}
+  dl dl:last-of-type {padding-bottom:0; border-bottom: none}
+  dd { padding: 0; margin: 0;}
+  ul, ol {margin-bottom: 1.5rem;}
+</style>
+<div class="about">
+  <article class="single-container markdown">
+      {{- $data      := .Params.data.assessment }}
+      {{- $mainkey   := $assessment.entities.keys.order }}
+      {{- $keyvalue  := $assessment.entities.keys.value }}
+      {{- range $mainkey }}
+        {{ template "anwerscomplet" (dict "context" (index $data (string . )) "keyvalue" $keyvalue "key" . "level" "2") }}
+      {{ end -}}
+    {{ partialCached "content.html" .Content .Content }}
+  </article>
+</div>
+{{ end }}
+
+{{ define "anwerstitle" }}
+  {{ $key := cond (findRE "\\d-" .key) (delimit (symdiff (first 1 (split .key "-")) (split .key "-")) "-") .key }}
+  {{ index .value $key }}
+{{ end }}
+
+{{ define "anwerscomplet" }}
+  {{- $context  := .context }}
+  {{- $keyvalue := .keyvalue }}
+  {{- $key      := string .key }}
+  {{- $level    := .level }}
+  {{- if ne $key "number" "value" }}
+  <dl>
+  {{- if ne $key "comment" }}
+  {{ with $level }}<dt data-level="{{ . }}">{{ template "anwerstitle" (dict "value" $keyvalue "key" $key) }}:</dt>{{ end }}
+  {{ end -}}
+  {{ if (reflect.IsMap $context) }}
+    {{- range $key, $value := $context  }}
+       {{ template "anwerscomplet" (dict "context" . "keyvalue" $keyvalue "key" $key "level" (add 1 (int $level))) }}
+    {{ end }}
+  {{ else }}
+    <dd>{{ template "anwerspartial" $context }}</dd>
+  {{ end -}}
+  </dl>
+  {{ end -}}
+{{ end }}
+
+{{ define "anwerspartial" }}
+  {{- if (reflect.IsSlice .) }}
+    <p>{{ delimit . ", " " and " }}</p>
+  {{ else }}
+    {{- $markdown := cond (not .) "Any answer." ( . | markdownify) }}
+    {{ if not (findRE "<[h|p][^>]*>" $markdown ) }}
+        <p>{{ $markdown }}</p>
+    {{ else }}
+        {{ $markdown }}
+    {{ end }}
+  {{ end -}}
+{{ end }}

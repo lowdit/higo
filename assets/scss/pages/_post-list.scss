@@ -3,6 +3,10 @@
   max-width: 750px;
 }
 
+.post-entry:has(p) h3 {
+  margin-bottom: 0;
+}
+
 .post-entry-divider {
   background-color: var(--color-contrast-low);
   content: "";
@@ -31,6 +35,7 @@
   @extend .summary-text;
   margin: 10px 0 0 0;
 }
+
 
 .post-list-meta {
   @extend .meta-text;

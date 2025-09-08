@@ -12,7 +12,7 @@
     {{ $content = $content | replaceRE "(&rdquo;|”|»)&lt;a " "«&nbsp;&lt;a " }}
     {{- $content = $content | replaceRE "(&ldquo;|“|«)(^&#8239;)(\\s|&nbsp;| )*" "«&#8239;" -}}
     <!-- # ?! not existing in go. Should find an other way -->
-    {{- $content = $content | replaceRE "(\\s|&nbsp;| )*(\\?\\!&nbsp;)(&rdquo;|”|»)" "&#8239;»" -}}
+    {{- $content = $content | replaceRE "(\\s|&nbsp;| )*(\\?C!&nbsp;)(&rdquo;|”|»)" "&#8239;»" -}}
 
     <!-- # Point median -->
     <!-- if settings["median"] -->

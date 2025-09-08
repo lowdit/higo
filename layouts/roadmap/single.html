@@ -1,4 +1,8 @@
 {{ define "main" }}
+{{- $roadmap    := .Site.Data.roadmap }}
+{{ .Params.percentage }} '' {{ $roadmap.percentage }}
+{{- $percentage := cond (not $roadmap.percentage) .Params.percentage $roadmap.percentage }}
+{{- $timeline   := cond (not $roadmap.timeline) .Params.timeline $roadmap.timeline }}
 <div class="container">
   <section class="page-header--c">
     <h1 class="page-header-title">{{ .Title }}</h1>
@@ -9,141 +13,141 @@
     {{ partialCached "content.html" .Content .Content }}
     <style>
       /*
-/// Timeline
-*/
-.timeline {
-  margin-bottom: 5rem;
-  padding-left: 30px;
-  list-style: none;
-  border-left: 8px solid #f2ffde;
-}
+      /// Timeline
+      */
+      .timeline {
+        margin-bottom: 5rem;
+        padding-left: 30px;
+        list-style: none;
+        border-left: 8px solid #f2ffde;
+      }
 
-@media only screen and (min-width: 600px) {
-  .timeline {
-    margin: 50px 0 8rem 150px;
-    padding-left: 30px;
-    list-style: none;
-    border-left: 8px solid #94f69e;
-  }
-}
+      @media only screen and (min-width: 600px) {
+        .timeline {
+          margin: 50px 0 8rem 150px;
+          padding-left: 30px;
+          list-style: none;
+          border-left: 8px solid #94f69e;
+        }
+      }
 
-.timeline a {
-  color: var(--background-color-body, #fff);
-}
+      .timeline a {
+        color: var(--background-color-body, #fff);
+      }
 
-.timeline li {
-  position: relative;
-  margin: 40px 0;
-}
+      .timeline li {
+        position: relative;
+        margin: 40px 0;
+      }
 
-.timeline p {
-  margin: 5px 0;
-}
+      .timeline p {
+        margin: 5px 0;
+      }
 
-@media only screen and (min-width: 600px) {
-  .timeline .date {
-    font-family: "Futura", "Century Gothic";
-    position: absolute;
-    top: 35%;
-    left: -258px;
-    width: 200px;
-    margin-top: -10px;
-    line-height: 20px;
-    font-size: 0.95em;
-    text-align: right;
-    font-weight: bold;
-  }
-}
+      @media only screen and (min-width: 600px) {
+        .timeline .date {
+          font-family: "Futura", "Century Gothic", "Consolas", "Arial", sans-serif;
+          position: absolute;
+          top: 35%;
+          left: -258px;
+          width: 200px;
+          margin-top: -10px;
+          line-height: 20px;
+          font-size: 0.95em;
+          text-align: right;
+          font-weight: bold;
+        }
+      }
 
-.timeline .circle {
-  position: absolute;
-  top: 50%;
-  left: -44px;
-  display: block;
-  margin-top: -10px;
-  width: 20px;
-  height: 20px;
-  border: 5px solid var(--color-grey-verylight);
-  border-radius: 50%;
-  background: #48b379;
-}
+      .timeline .circle {
+        position: absolute;
+        top: 50%;
+        left: -44px;
+        display: block;
+        margin-top: -10px;
+        width: 20px;
+        height: 20px;
+        border: 5px solid var(--color-grey-verylight);
+        border-radius: 50%;
+        background: #48b379;
+      }
 
-.timeline .work {
-  display: flex;
-  align-items: center;
-  min-height: 80px;
-}
+      .timeline .work {
+        display: flex;
+        align-items: center;
+        min-height: 80px;
+      }
 
-.timeline .content p {
-  overflow: hidden;
-  max-height: 200px;
-  text-align: justify;
-  word-break: break-word;
-}
+      .timeline .content p {
+        overflow: hidden;
+        max-height: 200px;
+        text-align: justify;
+        word-break: break-word;
+      }
 
-.timeline .flex {
-  display: flex;
-  padding-left: 0px;
-  flex-direction: column;
-}
+      .timeline .flex {
+        display: flex;
+        padding-left: 0px;
+        flex-direction: column;
+      }
 
-.timeline label {
-  font-size: 1.3em;
-  font-weight: bold;
-  cursor: auto;
-}
+      .timeline label {
+        font-size: 1.3em;
+        font-weight: bold;
+        cursor: auto;
+      }
 
-.timeline .radio {
-  display: none;
-}
+      .timeline .radio {
+        display: none;
+      }
 
-@media only screen and (min-width: 600px) {
-  .timeline .content {
-    max-height: 180px;
-    transform: translateX(20px);
-    border-width: 2px;
-    border-style: solid;
-    border-color: var(--color-grey-light,transparent);
-    border-radius: 0.5em;
-  }
+      @media only screen and (min-width: 600px) {
+        .timeline .content {
+          max-height: 180px;
+          transform: translateX(20px);
+          border-width: 2px;
+          border-style: solid;
+          border-color: var(--color-grey-light,transparent);
+          border-radius: 0.5em;
+        }
 
-  .timeline label {
-    z-index: 100;
-    top: 20px;
-    transform: translateX(22px);
-  }
+        .timeline label {
+          z-index: 100;
+          top: 20px;
+          transform: translateX(22px);
+        }
 
-  .timeline .content {
-    position: relative;
-    margin-right: 20px;
-  }
+        .timeline .content {
+          position: relative;
+          margin-right: 20px;
+        }
 
-  .timeline .content:before,
-  .timeline .content:after {
-    position: absolute;
-    content: "";
-    right: calc(100% + 1px);
-    width: 0;
-    height: 0;
-    pointer-events: none;
-    border: solid transparent;
-  }
+        .timeline .content:before,
+        .timeline .content:after {
+          position: absolute;
+          content: "";
+          right: calc(100% + 1px);
+          width: 0;
+          height: 0;
+          pointer-events: none;
+          border: solid transparent;
+        }
 
-  .timeline .content:before {
-    top: 50%;
-    margin-top: -20px;
-    border-width: 20px;
-    border-right-color: inherit;
-  }
+        .timeline .content:before {
+          top: 50%;
+          margin-top: -20px;
+          border-width: 20px;
+          border-right-color: inherit;
+        }
 
-  .timeline .content:after {
-    top: 50%;
-    margin-top: -17px;
-    border-width: 17px;
-  }
-}
+        .timeline .content:after {
+          top: 50%;
+          margin-top: -17px;
+          border-width: 17px;
+        }
+      }
     </style>
-      {{ range .Site.Data.roadmap.theme }}
+      {{ range $roadmap.theme }}
         {{ range .topics }}
         {{ with .activities }}
           {{ range . }}
@@ -184,7 +188,7 @@
         {{- end -}}
         {{- end -}}
       {{- end -}}
-      <div>
+      <div{{ if not $timeline }} hidden{{ end -}}>
         <h2>Déroulement des tâches</h2>
           <ul class='timeline'>
           {{- range (sort ($.Scratch.Get "roadmap") "startdateconverted" "asc") }}
@@ -196,7 +200,7 @@
                 <span class="date">
                   {{- with .startdate -}}<time datetime="{{ time.Format "2006-01-02T15:04:05Z07:00" . | safeHTML }}">{{ time.Format "2 Jan 2006" . }}</time>{{ else }}Aucune Date{{ end }}
                   <br>to {{  with .deadline -}}<time datetime="{{ time.Format "2006-01-02T15:04:05Z07:00" . | safeHTML }}">{{ time.Format "2 Jan 2006" . }}</time>{{ else }}Aucune Date{{ end }}
-                </span>
+               </span>
                 <span class="circle"></span>
                 <div class="content">
                     {{- with .description -}}
@@ -210,77 +214,92 @@
             {{- end -}}
             {{ end -}}
           </ul>
-        </div>
+      </div>
       <h2>Tableau de tâches en fonction des chantiers</h2>
+      {{ if $percentage }}
         <table>
-        <thead>
+          <caption>Tableau récapitulatif de la répartition</caption>
+          <thead>
             <tr>
             <td colspan="4"></th>
             {{- range seq 4 }}
-                <th style="width:100px">{{ substr (index $.Site.Data.month (string .)) 0 }}</th>
+              <th style="width:100px">{{ substr (index $.Site.Data.month (string .)) 0 }}</th>
             {{ end -}}
             </tr>
-        </thead>
-        <tfoot>
-            <tr>
-            <th colspan="4">
-                Total
-            </td>
-            {{- range seq 4 }}
-                <td>{{ with $.Scratch.Get (printf "%s-timetotal" (string .)) }}{{ . }}%{{ else }}0{{ end }}</td>
-            {{ end -}}
-            </tr>
-        </tfoot>
+          </thead>
+          <tfoot>
+              <tr>
+              <th colspan="4">
+                  Total
+              </td>
+              {{- range seq 4 }}
+                  <td>{{ with $.Scratch.Get (printf "%s-timetotal" (string .)) }}{{ . }}%{{ else }}0{{ end }}</td>
+              {{ end -}}
+              </tr>
+          </tfoot>
         </table>
+      {{ end -}}
       {{- range .Site.Data.roadmap.theme }}
         {{- $nametheme := .name }}
         <h3>{{ .name }}</h3>
           <table>
+            <caption>Tableau des actions ménées pour {{ .name }}</caption>
             <thead>
               <tr>
-                <th>Sujet</th>
+                <th style="width:250px;">Sujet</th>
                 <th>Activité</th>
-                <th>Temps</th>
+                <th hidden>Temps</th>
                 <th>DeadLine</th>
-                {{ range seq 4 }}
-                  <th style="width:100px">{{ substr (index $.Site.Data.month (string .)) 0  }}</th>
-                {{ end }}
+                {{- if $percentage }}
+                {{- range seq 4 }}
+                  <th style="width:100px">{{ substr (index $.Site.Data.month (string .)) 0 }}</th>
+                {{ end -}}
+                {{ end -}}
+                <th>Avancement</th>
               </tr>
             </thead>
           <body>
           {{- range .topics }}
             {{- $nametopics := .name }}
+            {{ $len := len .activities }}
               {{- with .activities }}
               {{- range $id, $value := . }}
                 {{- $nameactivities := .name }}
                 {{- $durationactivities := .duration }}
                 {{- $deadlineactivities := .deadline }}
-                {{- $values := . }}      
-                {{- with .charge }}                    
-                  <tr>
-                    <td style="width:250px"><strong>{{ $nametopics }}</strong></td>
+                {{- $comment            := .comment }}
+                {{- $values := . }}
+                {{- $cond := cond (and .charge $percentage) true (cond (not (and .charge $percentage)) true false) }}     
+                {{- with $cond }}               
+                <tr>
+                    {{ if eq $id 0 }}<th style="font-size: 1rem;" rowspan="{{ $len }}"><strong>{{ $nametopics }}</strong></th>{{ end }}
                     <td>{{ $nameactivities }}</td>
-                    <td>{{ with $durationactivities }}{{ . }} j{{ else }}-{{- end -}}</td>
+                    <td hidden>{{ with $durationactivities }}{{ . }} j{{ else }}-{{- end -}}</td>
                     <td>{{ with $deadlineactivities }}{{ time.Format "2 January 2006" . }}{{ else }}-{{- end -}}</td>
                     {{- range seq 4 }}
+                    {{- if $percentage }}
                     <td>{{ with (index (index ($.Scratch.Get (printf "roadmap%s" $nametheme)) (string .)) $nameactivities) }}{{ . }}%{{ else }}0{{ end }}</td>
                     {{ end -}}
+                    {{ end -}}
+                    <td>{{ with $comment }}{{ . | markdownify }}{{ else }}-{{- end -}}</td>
                 </tr>  
                 {{- end -}}
               {{- end -}}
             {{- end -}}
           {{- end -}}
           </body>
+          {{- if $percentage }}
           <tfoot>
             <tr>
-            <th colspan="4">
-              Total
-            </th>
-            {{- range seq 4 }}
-              <td>{{ with $.Scratch.Get (printf "%s-%s-timetotal" (string .) $nametheme) }}{{ . }}%{{ else }}0{{ end }}</td>
-            {{ end -}}
-          </tr>
+              <th colspan="4">
+                Total
+              </th>
+              {{- range seq 4 }}
+                <td>{{ with $.Scratch.Get (printf "%s-%s-timetotal" (string .) $nametheme) }}{{ . }}%{{ else }}0{{ end }}</td>
+              {{ end -}}
+            </tr>
           </tfoot>
+          {{ end -}}
         </table>
       {{- end -}}
     

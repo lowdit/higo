@@ -1,0 +1,165 @@
+{{ define "main" -}}
+{{ $people := .Site.Data.people }}
+{{ $data   := index $people (string .File) }}
+{{ $jobs   := slice "Digital Accessibility Officer" "Digital Sustainability Officer" }}
+<div class="container">
+  <section class="page-header">
+    <h1 class="page-header-title">{{ .Title }} - {{ with $data }}<small>{{ len (.) }}{{ end }} dans la liste</small></h1>
+    <p class="page-header-desc">
+      {{- with .Params.Summary -}}
+        {{- . -}}
+      {{- else -}}
+        {{- with .Description -}}
+          {{- . -}}
+        {{- end -}}
+      {{- end -}}
+    </p>
+  </section>
+
+  <section>
+    {{- if eq (string .File) "network" }}
+      <h2>Contactés ou non</h2>
+      {{- range where (sort $data "contacted" "desc") "job" "!=" "Digital Sustainability Officer"}}
+        {{- if .interview }}
+        {{ else }}
+        <div class="b-bottom">
+            {{ with .name }}{{ . }}{{ end }}{{ with .job }} - <strong>{{ . }}</strong> {{ end }} 
+            {{ with .contacted }} ✔️{{ else }} ❌{{ end }} {{ with .called }} {{ . }}{{ else }} ❌{{ end }}<br>
+        </div>
+        {{ end -}}
+      {{ end -}}
+      {{- range $jobs }}
+      <h2>{{ . }}</h2>
+        {{- range where $data "job" "=" . }}
+        <div class="b-bottom">
+            {{ with .name }}{{ . }}{{ end }} {{ if and .country (ne .job "Digital Sustainability Officer") }}- {{ .country }}{{ end }} 
+        </div>
+        {{ end -}}
+      {{ end -}}
+      <h2>Interviewé(s)</h2>
+      {{- range (sort $data "interview" "desc") }}
+        {{- if .interview }}
+        <div class="b-bottom">
+            {{ with .name }}{{ . }}{{ end }}{{ with .sector }} - <strong>{{ . }}</strong>{{ end }}<br>
+            Interviewé :{{ with .interview }} {{ . }}{{ else }} ❌<br>Contacté : {{ with .contacted }} ✔️{{ else }} ❌{{ end }}{{ end }}
+        </div>
+        {{ end -}}
+      {{ end -}}
+    {{ else }}
+      <h2>Entities</h2>
+      {{ $type := slice }}
+      {{ range $data }}
+        {{ $type = $type | append .type }}
+      {{ end }}
+      {{ $type = $type | uniq | sort }}
+      {{- range $type }}
+        <h3>{{ . }}</h3>
+        {{- range where $data ".type" . }}
+          <div class="b-bottom">
+              {{ with .name }}<strong>{{ . }}</strong>{{ end }}<br>
+              {{ with .status }}Evaluation: {{ with . }} ✔️{{ else }} ❌{{ end }}<br>{{ end }}
+              {{ with .contact }}Contact: {{ range $id, $value :=  . }}{{ if ne $id 0 }}, {{ end }}{{ .name }}{{ end }}{{ end }}<br>
+              {{ with .assessment }}
+                <hr>
+                <h3>Assessment:</h3>
+                {{ range $key, $value := .  }}
+                  <h4>{{ index $people.keys $key }}</h4>
+                  {{ if (reflect.IsMap .) }}
+                    {{ range $key, $value := .  }}
+                      <h5>_{{ index $people.keys $key }}</h5>
+                      {{ if (reflect.IsMap .) }}
+                        {{ range $key, $value := .  }}
+                          <h6>__{{ index $people.keys $key }}</h6>
+                          {{- $markdown := . | markdownify }}
+                          {{ if not (findRE "<[h|p][^>]*>" $markdown ) }}
+                              <p>{{ $markdown }}</p>
+                          {{ else }}
+                              {{ $markdown }}
+                          {{ end }}
+                        {{ end }}
+                      {{ else }}
+                        {{ if (reflect.IsMap .) }}
+                          {{ range $key, $value := .  }}
+                            {{ . }}
+                          {{ end }}
+                        {{ else }}
+                          {{ if (reflect.IsMap .) }}
+                            {{ range $key, $value := .  }}
+                              {{ . }}
+                            {{ end }}
+                          {{ else }}
+                            {{ if (reflect.IsMap (index . 0)) }}
+                              {{ range $key, $value := (index . 0)  }}
+                                <h6>{{ index $people.keys $key }}</h6>
+                                {{- $markdown := . | markdownify }}
+                                {{ if not (findRE "<[h|p][^>]*>" $markdown ) }}
+                                    <p>{{ $markdown }}</p>
+                                {{ else }}
+                                    {{ $markdown }}
+                                {{ end }}
+                              {{ end }}
+                            {{ end }}
+                            {{ if  (reflect.IsSlice .) }}
+                              <p>{{ delimit . ", " " and " }}</p>
+                            {{ else }}
+                              {{- $markdown := . | markdownify }}
+                              {{ if not (findRE "<[h|p][^>]*>" $markdown ) }}
+                                  <p>{{ $markdown }}</p>
+                              {{ else }}
+                                  {{ $markdown }}
+                              {{ end }}
+                            {{ end }}  
+                          {{ end }}
+                        {{ end }}
+                      {{ end }}
+                    {{ end }}
+                  {{ else }}
+                    <h5>{{ index $people.keys (string $key) }} :</h5>
+                      {{ if (reflect.IsMap .) }}
+                        {{ range $key, $value := .  }}
+                          {{ . }}
+                        {{ end }}
+                      {{ else }}
+                        {{ if  (reflect.IsSlice .) }}
+                          {{ delimit . ", " " and " }}
+                        {{ else }}
+                          {{- $markdown := . | markdownify }}
+                          {{ if not (findRE "<[h|p][^>]*>" $markdown ) }}
+                              <p>{{ $markdown }}</p>
+                          {{ else }}
+                              {{ $markdown }}
+                          {{ end }}
+                        {{ end }}  
+                        <br>
+                      {{ end }}
+                  {{ end }}
+                {{ end }}
+              {{ end }}
+              <br>
+          </div>
+        {{ end -}}
+        {{ end -}}
+    {{ end -}}
+  </section>
+</div>
+{{ end }}
+
+{{ define "value" }}
+  {{ if (reflect.IsMap .) }}
+    {{ range $key, $value := .  }}
+      {{ . }}
+    {{ end }}
+  {{ else }}
+    {{ if  (reflect.IsSlice .) }}
+      {{ delimit . ", " " and " }}
+    {{ else }}
+      {{- $markdown := . | markdownify }}
+      {{ if not (findRE "<[h|p][^>]*>" $markdown ) }}
+          <p>{{ $markdown }}</p>
+      {{ else }}
+          {{ $markdown }}
+      {{ end }}
+    {{ end }}  
+    <br>
+  {{ end }}
+{{ end }}

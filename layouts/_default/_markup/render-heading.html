@@ -1,3 +1,4 @@
-<h{{ .Level }} id="{{ .Anchor | safeURL }}">
+{{ $anchor := .Anchor | replaceRE "(^\\d+)" "a-$1" }}
+<h{{ .Level }} id="{{ $anchor  | safeURL }}">
   {{- .Text | safeHTML -}} 
 </h{{ .Level }}>
