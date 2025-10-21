@@ -1,6 +1,5 @@
 {{ define "main" }}
-{{- $roadmap    := .Site.Data.roadmap }}
-{{ .Params.percentage }} '' {{ $roadmap.percentage }}
+{{- $roadmap    := cond (not .Params.roadmap) .Site.Data.roadmap .Params.roadmap }}
 {{- $percentage := cond (not $roadmap.percentage) .Params.percentage $roadmap.percentage }}
 {{- $timeline   := cond (not $roadmap.timeline) .Params.timeline $roadmap.timeline }}
 <div class="container">
@@ -10,7 +9,6 @@
 </div>
 <section class="generic-single">
   <div class="single-container{{ if eq .Title "Roadmap"}} large{{ end }} markdown">
-    {{ partialCached "content.html" .Content .Content }}
     <style>
       /*
       /// Timeline
@@ -147,51 +145,69 @@
         }
       }
     </style>
-      {{ range $roadmap.theme }}
-        {{ range .topics }}
+      {{- range $roadmap.theme }}
+        {{- range .topics }}
         {{ with .activities }}
-          {{ range . }}
-            {{ with .charge }}
+          {{- range . }}
+            {{- with .charge }}
               {{ range $key, $value := . }}
-                {{ $key := (string (index $.Site.Data.month $key)) }}
-                {{ $.Scratch.Set $key dict }}
-                {{ $.Scratch.Set (printf "%s-time" $key) slice }}
+                {{- $key := (string (index $.Site.Data.month $key)) }}
+                {{- $.Scratch.Set $key dict }}
+                {{- $.Scratch.Set (printf "%s-time" $key) slice }}
               {{- end -}}
             {{- end -}}
           {{- end -}}
         {{- end -}}
         {{- end -}}
       {{- end -}}
-      {{ range .Site.Data.roadmap.theme }}
+      {{- range $roadmap.theme }}
       {{- $nametheme := .name }}
-        {{ range .topics }}
-        {{- $nametopics := .name }}
-        {{ with .activities }}
-          {{ range . }}
+        {{- range .topics }}
+        {{- $startdatebest := slice }}
+        {{- $enddatebest   := slice }}
+        {{- $statusslice   := slice }}
+        {{- $nametopics    := .name }}
+        {{- with .activities }}
+          {{- range . }}
             {{- $nameactivities := .name }}
-            {{- $startdate := "" }}
+            {{- $startdate     := "" }}
+            {{- $enddate       := "" }}
             {{- $values := . }}
-            {{ if .startdate }}{{ $startdate = time.AsTime .startdate }}{{ end }}
-            {{ with .charge }}
-              {{ range $key, $value := . }}
-              {{ $key := (string (index $.Site.Data.month $key)) }}
-              {{ $.Scratch.Set $key (merge (dict $nameactivities .) ($.Scratch.Get $key)) }}
-              {{ $.Scratch.Add (printf "%s-%s-time" $key $nametheme) . }}
-              {{ $.Scratch.Add (printf "%s-timetotal" $key) . }}
-              {{ $.Scratch.Add (printf "%s-%s-timetotal" $key $nametheme) . }}
-              {{ $.Scratch.SetInMap (printf "roadmap%s" $nametheme) $key ($.Scratch.Get $key) }}
-              {{ $keyname := (printf "%s£%s£%s" $nametheme $nametopics $nameactivities) }}
-              {{ $.Scratch.SetInMap "roadmap" $keyname (merge $values (dict "theme" $nametheme "topics" $nametopics "activity" $nameactivities "startdateconverted" $startdate)) }}
+            {{- if .startdate }}{{ $startdate = time.AsTime .startdate }}{{ end }}
+            {{- if .deadline  }}{{ $enddate  = time.AsTime .deadline }}{{ end }}
+            {{- $startdatebest   = $startdatebest   | append $startdate }} 
+            {{- $enddatebest     = $enddatebest     | append $enddate }}
+            {{- $statusslice     = $statusslice     | append .status }} 
+            {{- $.Scratch.SetInMap (printf "roadmap%s" $nametopics) "startdate" (index $startdatebest 0) }}
+            {{- $.Scratch.SetInMap (printf "roadmap%s" $nametopics) "enddate"   (index (last 1 $enddatebest) 0) }}
+            {{- $.Scratch.SetInMap (printf "roadmap%s" $nametopics) "status"    (uniq $statusslice) }}
+            {{- $cond := cond (and .charge $percentage) true (cond (not (and .charge $percentage)) true false) }}
+            {{- if $cond }}
+              {{- $keyname := (printf "%s£%s£%s" $nametheme $nametopics $nameactivities) }}
+              {{- if .charge }}
+                {{- range $key, $value := .charge }}
+                  {{- $key := (string (index $.Site.Data.month $key)) }}
+                  {{- $.Scratch.Set $key (merge (dict $nameactivities .) ($.Scratch.Get $key)) }}
+                  {{- $.Scratch.Add (printf "%s-%s-time" $key $nametheme) . }}
+                  {{- $.Scratch.Add (printf "%s-timetotal" $key) . }}
+                  {{- $.Scratch.Add (printf "%s-%s-timetotal" $key $nametheme) . }}
+                  {{- $.Scratch.SetInMap (printf "roadmap%s" $nametheme) $key ($.Scratch.Get $key) }}
+                  {{- $.Scratch.SetInMap "roadmap" $keyname (merge $values (dict "theme" $nametheme "topics" $nametopics "activity" $nameactivities "startdateconverted" $startdate)) }}
+                {{ end -}}
+              {{- else -}}
+                {{- $.Scratch.SetInMap "roadmapaction" $keyname (merge $values (dict "theme" $nametheme "topics" $nametopics "activity" $nameactivities "startdateconverted" $startdate)) }}
               {{- end -}}
             {{- end -}}
           {{- end -}}
         {{- end -}}
         {{- end -}}
       {{- end -}}
+      {{ partialCached "content.html" .Content .Content }}
       <div{{ if not $timeline }} hidden{{ end -}}>
         <h2>Déroulement des tâches</h2>
           <ul class='timeline'>
-          {{- range (sort ($.Scratch.Get "roadmap") "startdateconverted" "asc") }}
+          {{- with ($.Scratch.Get "roadmapaction") }}
+          {{- range (sort . "startdateconverted" "asc") }}
             {{- if .startdate -}}
             <li class="work">
               <input class='radio' id='work' name="works" type="radio">
@@ -212,47 +228,76 @@
               </div>
             </li>
             {{- end -}}
-            {{ end -}}
+          {{ end -}}
+          {{ end -}}
           </ul>
       </div>
-      <h2>Tableau de tâches en fonction des chantiers</h2>
-      {{ if $percentage }}
-        <table>
-          <caption>Tableau récapitulatif de la répartition</caption>
-          <thead>
+
+      <h2>Tableau de tâches par missions</h2>
+      
+      <table>
+        <caption hidden>Tableau récapitulatif de la répartition</caption>
+        <thead>
+          <tr>
+          <th  style="width:150px">Axes</th>
+          <th  style="width:150px">Sujets</th>
+          {{- range seq 8 12 }}
+            <th>{{ substr (index $.Site.Data.month (string .)) 0 }}</th>
+          {{ end -}}
+          </tr>
+        </thead>
+        <tbody>
+            {{- range $roadmap.theme }}
+            {{- $name := .name }}
+            {{- $len  := len .topics -}}
+            {{- range $id, $value := .topics }}
+            {{- $nametopics := .name }}
             <tr>
-            <td colspan="4"></th>
-            {{- range seq 4 }}
-              <th style="width:100px">{{ substr (index $.Site.Data.month (string .)) 0 }}</th>
+            {{ if eq $id 0 }}
+              <th rowspan="{{ $len }}">
+                  {{ $name }}
+              </th>
             {{ end -}}
-            </tr>
-          </thead>
-          <tfoot>
-              <tr>
-              <th colspan="4">
-                  Total
-              </td>
-              {{- range seq 4 }}
-                  <td>{{ with $.Scratch.Get (printf "%s-timetotal" (string .)) }}{{ . }}%{{ else }}0{{ end }}</td>
+              <td>{{ .name }}</td>
+              {{- range seq 8 12 }}
+                  <td
+                    {{ $seq := . }}
+                    {{ $status := ($.Scratch.Get (printf "roadmap%s" $nametopics )).status }}
+                    {{ $startdateactivities  := ($.Scratch.Get (printf "roadmap%s" $nametopics )).startdate }}
+                    {{ $deadlineactivities   := ($.Scratch.Get (printf "roadmap%s" $nametopics )).enddate }}
+                    {{ if $deadlineactivities }}
+                    {{ if and (not $startdateactivities)  (le $seq ($deadlineactivities).Month | int) }} style="background: rgba(57, 22, 92, 0.8);"
+                    {{ else }}
+                    {{ if $startdateactivities }}
+                    {{ if and (ge $seq ($startdateactivities).Month | int)  (le $seq ($deadlineactivities).Month | int) }} style="background: rgba(57, 22, 92, 0.8);" 
+                    {{- end -}}
+                    {{- end -}}
+                    {{- end -}}
+                    {{- end -}}
+                  >{{ if and (eq (len $status) 1) (eq (index $status 0) "archived") }}{{ $status }}{{ end }}
+                  </td>
               {{ end -}}
-              </tr>
-          </tfoot>
-        </table>
-      {{ end -}}
-      {{- range .Site.Data.roadmap.theme }}
+            </tr>
+            {{ end -}}
+            {{ end -}}
+        </tbody>
+      </table>
+      
+      {{- range $roadmap.theme }}
         {{- $nametheme := .name }}
-        <h3>{{ .name }}</h3>
+        <h3 class="mb-0">{{ .name }}</h3>
+        <p class="mt-0">{{ .description | markdownify }}</p>
           <table>
-            <caption>Tableau des actions ménées pour {{ .name }}</caption>
+            <caption hidden>Tableau des actions menées pour <strong>{{ .name }}</strong></caption>
             <thead>
               <tr>
-                <th style="width:250px;">Sujet</th>
+                <th style="width:150px; text-align: left;">Sujet</th>
                 <th>Activité</th>
                 <th hidden>Temps</th>
-                <th>DeadLine</th>
+                <th  style="width:100px">Echéance</th>
                 {{- if $percentage }}
-                {{- range seq 4 }}
-                  <th style="width:100px">{{ substr (index $.Site.Data.month (string .)) 0 }}</th>
+                {{- range seq 8 12 }}
+                  <th style="width:70px">{{ (substr (index $.Site.Data.month (string .)) 0 3)  }}</th>
                 {{ end -}}
                 {{ end -}}
                 <th>Avancement</th>
@@ -260,49 +305,40 @@
             </thead>
           <body>
           {{- range .topics }}
-            {{- $nametopics := .name }}
-            {{ $len := len .activities }}
-              {{- with .activities }}
-              {{- range $id, $value := . }}
+            {{- $nametopics := .name -}}
+            {{- $len := len .activities -}}
+              {{- with .activities -}}
+              {{- range $id, $value := sort . ".deadline" "asc" -}}
                 {{- $nameactivities := .name }}
-                {{- $durationactivities := .duration }}
-                {{- $deadlineactivities := .deadline }}
-                {{- $comment            := .comment }}
+                {{- $startdateactivities  := .startdate }}
+                {{- $durationactivities   := .duration }}
+                {{- $deadlineactivities   := .deadline }}
+                {{- $comment              := .comment }}
+                {{- $status               := .status }}
                 {{- $values := . }}
                 {{- $cond := cond (and .charge $percentage) true (cond (not (and .charge $percentage)) true false) }}     
-                {{- with $cond }}               
-                <tr>
-                    {{ if eq $id 0 }}<th style="font-size: 1rem;" rowspan="{{ $len }}"><strong>{{ $nametopics }}</strong></th>{{ end }}
-                    <td>{{ $nameactivities }}</td>
+                {{- with $cond }}    
+                <tr{{ if eq $status "closed" }} style="background: #dededebb;"{{ else if eq $status "waiting" }} style="background: #e4f7e4;"{{ end }}>
+                    {{ if eq $id 0 }}<th style="font-size: 1rem; text-align: left;" rowspan="{{ $len }}"><strong>{{ $nametopics }}</strong></th>{{ end }}
+                    {{- if ne $status "archived"}}
+                    <td>{{ $nameactivities }}{{ if eq $status "progress" }} 🚩{{ end }}</td>
                     <td hidden>{{ with $durationactivities }}{{ . }} j{{ else }}-{{- end -}}</td>
                     <td>{{ with $deadlineactivities }}{{ time.Format "2 January 2006" . }}{{ else }}-{{- end -}}</td>
-                    {{- range seq 4 }}
+                    {{- range seq 8 12 }}
                     {{- if $percentage }}
-                    <td>{{ with (index (index ($.Scratch.Get (printf "roadmap%s" $nametheme)) (string .)) $nameactivities) }}{{ . }}%{{ else }}0{{ end }}</td>
+                    <td{{ $seq := . }}{{ if $deadlineactivities }}{{ if and (not $startdateactivities)  (le $seq (time.AsTime $deadlineactivities).Month | int) }} style="background: rgba(57, 22, 92, 0.8);"{{ else }}{{ if and (ge $seq (time.AsTime $startdateactivities).Month | int)  (le $seq (time.AsTime $deadlineactivities).Month | int) }} style="background: rgba(57, 22, 92, 0.8);" {{- end -}}{{- end -}}{{- end -}}></td>
                     {{ end -}}
                     {{ end -}}
                     <td>{{ with $comment }}{{ . | markdownify }}{{ else }}-{{- end -}}</td>
-                </tr>  
+                    {{- end -}}
+                </tr>
                 {{- end -}}
               {{- end -}}
             {{- end -}}
           {{- end -}}
           </body>
-          {{- if $percentage }}
-          <tfoot>
-            <tr>
-              <th colspan="4">
-                Total
-              </th>
-              {{- range seq 4 }}
-                <td>{{ with $.Scratch.Get (printf "%s-%s-timetotal" (string .) $nametheme) }}{{ . }}%{{ else }}0{{ end }}</td>
-              {{ end -}}
-            </tr>
-          </tfoot>
-          {{ end -}}
         </table>
       {{- end -}}
-    
   </div>
 </section>
 {{- end -}}

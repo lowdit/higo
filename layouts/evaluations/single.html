@@ -1,8 +1,8 @@
 {{ define "main" }}
-{{ $assessment := .Site.Data.assessment }}
+{{ $assessment := $.Site.Data.assessment }}
 <div class="container">
   <section class="page-header--c">
-    <nav class="nav-transverse">
+    <nav class="nav-transverse no-print">
       {{ $title := .Title }}
       <ul class="list-unstyled list-inline">
       {{ range where .Parent.Pages "Params.genre" "ne" "page" }}
@@ -11,12 +11,11 @@
           {{ .Title }}
         {{ if ne $title .Title }}</a>{{ end }}
       </li>
-    {{ end }}
-    </ul>
+      {{ end }}
+      </ul>
     </nav>
     <h1 class="page-header-title">{{ .Title }}</h1><br><br>
     {{- partial "scores/skills" (dict "name" .Title "dataentity" .Params.data.assessment) }}
-    {{- partial "print/links" (dict "context" . "slides" .Params.slides) -}}
   </section>
 </div>
 <style>
@@ -27,7 +26,7 @@
   dl dl {padding-bottom:0.5rem; border-bottom: 2px solid #ccc}
   dl dl dl {padding-bottom:0.5rem; border-bottom: 1px dashed #dedede}
   dl dl:last-of-type {padding-bottom:0; border-bottom: none}
-  dd { padding: 0; margin: 0;}
+  dd {padding: 0; margin: 0;}
   ul, ol {margin-bottom: 1.5rem;}
 </style>
 <div class="about">
@@ -53,13 +52,23 @@
   {{- $keyvalue := .keyvalue }}
   {{- $key      := string .key }}
   {{- $level    := .level }}
+
   {{- if ne $key "number" "value" }}
+  {{ if (reflect.IsMap $context) }}
+    {{ $allkeys := slice }}
+    {{- range $key, $value := $context }}
+      {{ if ge $level 3 }}
+        {{ $allkeys = $allkeys | append (string $key) }}
+      {{ end }}
+    {{ end }}
+    {{/* not (and (ge $level 3) (not (in $allkeys "comment"))) */}}
+  {{ end }}
   <dl>
   {{- if ne $key "comment" }}
-  {{ with $level }}<dt data-level="{{ . }}">{{ template "anwerstitle" (dict "value" $keyvalue "key" $key) }}:</dt>{{ end }}
+    {{ with $level }}<dt data-level="{{ . }}">{{ template "anwerstitle" (dict "value" $keyvalue "key" $key) }}:</dt>{{ end }}
   {{ end -}}
   {{ if (reflect.IsMap $context) }}
-    {{- range $key, $value := $context  }}
+    {{- range $key, $value := $context }}
        {{ template "anwerscomplet" (dict "context" . "keyvalue" $keyvalue "key" $key "level" (add 1 (int $level))) }}
     {{ end }}
   {{ else }}
@@ -80,4 +89,34 @@
         {{ $markdown }}
     {{ end }}
   {{ end -}}
+{{ end }}
+
+{{ define "anwersCommentExist" }}
+  {{ $context := .context }}
+  {{ $key := .key }}
+  {{ $level := .level }}
+  {{/* Test if comment is empty or not */}}
+  {{ $commentEmpty := true }}
+  {{ $allkeys := slice ""}}
+  {{ if (reflect.IsMap $context) }}
+  {{ range $subkey, $value := $context }}
+    {{ if (reflect.IsMap .) }}
+      {{ range $subkey, $value := . }}
+        {{ $subkey }}
+        {{ if eq $subkey "comment"}}
+          {{ if ne . "" }}{{ $key  }}{{ $subkey  }}{{ $commentEmpty = false }}{{ end }}
+        {{ end }}
+      {{ end -}}
+    {{ else }}
+      {{ $allkeys = $allkeys | append $subkey }}
+      {{ if eq $subkey "comment"}}
+        {{ if ne . "" }}{{ $key  }}{{ $subkey  }}{{ $commentEmpty = false }}{{ end }}
+      {{ end }}
+    {{ end -}}
+  {{ end -}}
+  {{ end -}}
+  {{ $commentExist := (in $allkeys (slice "comment")) }}
+  <br>commentExist : {{ $commentExist }}
+  <br>commentEmpty : {{ $commentEmpty }}
+  <br>{{ $key }} {{ $level }} : {{ cond (gt $level 2) (cond (not $commentExist) $commentExist $commentEmpty) true }}
 {{ end }}

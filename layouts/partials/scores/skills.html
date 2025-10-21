@@ -5,7 +5,10 @@
 {{ range $key, $value := $dataentity.skills }}
  <div class="medal">
     {{ $keynew := cond (findRE "\\d-" $key) (delimit (symdiff (first 1 (split $key "-")) (split $key "-")) "-") $key }}
-     <span>{{ if ne .number "N/A" }}{{ .number }}{{ else }}0{{ end }}{{ if eq (printf "%T" .value) "bool"}}{{ with .value }}Yes{{ else }}No{{ end }}{{ end }}</span>
+     <span>
+        {{ if ne .number "N/A" }}{{ .number }}{{ else }}-{{ end }}{{ if eq (printf "%T" .value) "bool"}}{{ with .value }}Yes{{ else }}No{{ end }}{{ end }}
+        {{ if and (not .number) (ne .number 0) (ne (printf "%T" .value) "bool") }} - {{ end }}
+    </span>
      <b>{{ humanize $keynew }}</b>
     {{ $counter = add $counter 1 }}
     {{ if ne $counter (len $dataentity.skills) }}{{ end }}

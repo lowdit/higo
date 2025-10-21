@@ -43,5 +43,5 @@
     <!-- Render Content -->
     {{- $content | safeHTML -}}
 {{- else -}}
-  {{ . }}
+  {{ .  | safeHTML }}
 {{- end -}}

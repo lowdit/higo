@@ -1,6 +1,7 @@
 {{ define "main" -}}
 {{- $data := .Site.Data.people.accessibility }}
-{{- $dataentity := .Params.data }} 
+{{- $dataentity := .Params.data }}
+
 <div class="container--sm">
   <section class="page-header">
     <h1 class="page-header-title">{{ .Title }}</h1>
@@ -13,11 +14,12 @@
         {{- end -}}
       {{- end -}}
     </p>
+    {{- partial "print/links" (dict "context" . "slides" .Params.slides) -}}
   </section>
   <section{{- with .Params.autonumbering }} autonumbering{{- end }}>
       {{ with .Content }}{{ partial "content.html" . . }}{{- end }}
       {{ $path := .Path }}
-      {{- if eq .Title "Entities" }}
+      {{- if eq (index (last 1 (split .Path "/")) 0) "entities" }}
         {{- $type := slice }}
         {{- range $data }}
           {{ $type = $type | append .type }}
@@ -27,10 +29,20 @@
         <h2>{{ . }}</h2>
             {{- range where $data ".type" . }}
             {{ with .name }}<h3 class="mb-0"><a href="{{ $path }}/{{ anchorize . }}">{{ . }}</a></h3>{{ end }}
-            {{ partial "scores/skills" (dict "name" .name "dataentity" (index (where $dataentity "name" (string .name)) 0).assessment) }}
-            {{- if reflect.IsMap (index (where $dataentity "name" (string .name)) 0).assessment.needsformgroup }}
-              <p><strong>Needs</strong><br>
-                {{ delimit (index (where $dataentity "name" (string .name)) 0).assessment.needsformgroup.value ", " }}
+            {{ $assessment := (index (where $dataentity "name" (string .name)) 0).assessment }}
+            {{ (index (where $dataentity "name" (string .name)) 0).note | markdownify }}
+            {{ partial "scores/skills" (dict "name" .name "dataentity" ($assessment)) }}
+            {{ if not (index $assessment.legal "1-regulations") }}<b>> Assessment missing <</b>{{ end }}
+            {{- if reflect.IsMap (index (where $dataentity "name" (string .name)) 0).assessment.needsfromgroup }}
+             <p><strong>Needs from Sopra Steria Group :</strong><br>
+                {{ $needsfromgroup :=(index (where $dataentity "name" (string .name)) 0).assessment.needsfromgroup.value }}
+                {{ with $needsfromgroup }}
+                  <ul>
+                  {{ range . }}
+                    <li>{{ . }}</li>
+                  {{ end }}
+                  </ul>
+                {{ end }}
               </p>
             {{ end -}}
             {{ end -}}
@@ -44,8 +56,9 @@
         {{ end -}}
   </section>
 </div>
-{{- .Store.SetInMap "keys" "legal" (slice (slice "Public/Private" "2-publicprivate") (slice "Rules" "4-rules") (slice "EAA change" "5-eaa")) }}
-{{- .Store.SetInMap "keys" "status" (slice (slice "A11Y Proposed" "1-propose") (slice "Shelf Offer" "4-offers"))  }}
+{{- .Store.SetInMap "keys" "3-business" (slice (slice "Accessibility systematically proposed" "1-propose") (slice "Shelf Offer" "4-offers")) }}
+{{- .Store.SetInMap "keys" "1-legal"  (slice (slice "Difference<br>Public/Private" "2-publicprivate") (slice "WCAG Rules" "4-rules") (slice "EAA<br>Game Changer" "5-eaa")) }}
+{{- .Store.SetInMap "keys" "2-skills" (slice (slice "Experts" "1-experts") (slice "Sensitized" "2-sensitized") (slice "Trained" "3-trained")) }}
 
 {{- if $dataentity }}
 <div class="container">
@@ -57,39 +70,89 @@
 {{ end -}} 
 {{- $type = $type | uniq | sort }}
 <h2>Key figures</h2>
+
+<h3>Assessment Status</h3>
+<table>
+  <caption class="invisible">Status by entity</caption>
+  <thead>
+    <tr>
+      <th>Entities</th>
+      <th>Status</th>
+      <th>Leader</th>
+      <th>Contact established</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{- range $key, $value := $dataentity }}
+        <tr>
+          <th style="font-size: 1rem;">{{ $value.name }}</th>
+          <td>{{ if not (index .assessment.perimeter "1-entitiescovered") }}<b>Assessment missing</b>{{ else }}Ok{{ end }}</td>
+          <td>
+            {{- range $key, $value := ((index (where $data "name" $value.name) 0).contact) }}{{ $name := .name}}{{ with .main }}{{ $name }}{{ end }}{{ end }}
+          </td>
+          <td>
+             {{ index ((index (where $data "name" $value.name) 0).meeting) 0 }}
+          </td>
+        </tr>
+    {{ end }}
+  </tbody>
+</table>
+
+
 {{- range $type }}
 {{ $type := . }}
 <h3>{{ $type }}</h3>
 <table>
-  <caption>Comparative data from the july 2025 assessment</caption>
+  <caption class="invisible">Comparative data from the july 2025 assessment</caption>
   <thead>
     <tr>
-      <th></th>
+      <th style="font-size: 1rem;width: 90px;">Topics</th>
+      <th style="font-size: 1rem;width: 120px;"></th>
       {{- range $dataentity }}
-      {{ if eq ((index (where $data "name" .name) 0).type) $type }}
+      {{- if eq ((index (where $data "name" .name) 0).type) $type }}
       <th>{{ .name }}</th>
-      {{ end }}
+      {{ end -}}
       {{ end -}}
     </tr>
   </thead>
   <tbody>
         {{- range $key, $value := ($.Store.Get "keys") }}
+        {{ $len := (len .)}}
+        {{ $key := index (last 1 (split $key "-")) 0 }}
         {{- range $id, $value := . }}
+        {{- if not (and (eq ($type) "Service Centres") (eq $key "legal")) }}
         <tr>
-          <th>{{ index . 0 }}</th>
+          {{ if eq $id 0 }}<th rowspan="{{ $len }}" style="font-size: 1rem;">{{ $key | humanize}}</th>{{ end }}
+          <td>{{ index . 0 | safeHTML }}</td>
         {{- range $dataentity }}
-          {{ if reflect.IsMap . }}
-          {{ if eq ((index (where $data "name" .name) 0).type) $type }}
-          <td>{{ with (index (index .assessment $key) (index $value 1)).value }}{{ if eq . true}}Yes{{ else }}{{ . }}{{ end }}{{ else }}{{ if eq . false }}No{{ else }}-{{ end }}{{ end }}</td>
-          {{ end }}
-          {{ end }}
-        {{ end }}
+          {{- if reflect.IsMap . }}
+          {{- if eq ((index (where $data "name" .name) 0).type) $type }}
+          <td>
+            {{- with (index (index .assessment $key) (index $value 1)).value }}
+              {{ if eq . true}}Yes{{ else }}
+                {{ . }}{{ end }}
+              {{ else }}
+              {{ if eq . false }}
+                No
+              {{ else }}
+              {{ with (index (index .assessment $key) (index $value 1)).number }}
+                {{ . }}
+              {{ else }}
+                -
+              {{ end -}}
+              {{ end -}}
+            {{ end -}}
+          </td>
+          {{ end -}}
+          {{ end -}}
+        {{ end -}}
         </tr>
-        {{ end }}
-      {{ end }}
+        {{ end -}}
+        {{ end -}}
+      {{ end -}}
   </tbody>
 </table>
-{{ end -}} 
+{{ end -}}
 
 </div>
 {{ end -}}

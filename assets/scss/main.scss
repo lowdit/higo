@@ -15,7 +15,6 @@
   'base/base',
   'base/font',
   'base/typography',
-  'base/print',
   'base/helpers';
 
 // 4. Layout-related sections
@@ -48,6 +47,11 @@
   'pages/post-list',
   'pages/project-list';
 
+// 7. Print styles
+@import
+  'print/print';
+
+
 :root {
   --base-primary: 245 !important;
   --base-sat: 80% !important;
@@ -55,11 +59,40 @@
   --form-control-color: var(--color-primary) !important;
   --background-color-section: #fdfdfd !important;
   --title-font-name: "atkinson", "Roboto", "Helvetica Neue Light", "Helvetica Neue", "Helvetica", "Arial", sans-serif !important;
-  --base-font: "Roboto", "Calibri", "Helvetica Neue Light", "Helvetica Neue", "Helvetica", "Arial", sans-serif !important
+  --base-font: "atkinson","Roboto", "Calibri", "Helvetica Neue Light", "Helvetica Neue", "Helvetica", "Arial", sans-serif !important
 }
-
+ 
 body {
   background: #fcfdfe;
+}
+
+@supports (position-anchor: --test) {
+  *:focus {
+    anchor-name: --focus-anchor;
+    outline: none;
+  }
+  
+  html::before {
+    content: '';
+    position: fixed;
+    position-anchor: --focus-anchor;
+
+    inset: anchor(inside);
+    margin: -6px;
+
+    display: block;
+    background: #ff02;
+    border: 2px solid #3d80a2;
+    border-radius: 6px;
+    pointer-events: none;
+    z-index: 2147483647;
+    opacity: 1;
+    transition: inset 0.2s linear, opacity 0.2s linear;
+  }
+
+  html:not(:focus-within)::before {
+    opacity: 0;
+  }
 }
 
 .fg-wrapper {
@@ -74,7 +107,7 @@ hr {
   margin: 2rem 0 2rem;
 }
 
-hr{
+hr {
   border: 0;
   height: 2px;
   width: 95%;
@@ -83,19 +116,6 @@ hr{
   background: #8fc8e76f;
 }
 
-hr:before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  background: #cee6f3;
-  display: inline-block;
-  border: 2px solid #cee6f3;
-  position: absolute;
-  top: -4px;
-  left: 50%;
-  margin: 0 0 0 -3px;
-  transform: rotate(45deg);
-}
 
 .b-all {
   overflow: hidden;
@@ -134,6 +154,23 @@ hr:before {
 
 .mb-0 {
   margin-bottom: 0;
+}
+
+.mt-1 {
+  margin-top: calc(var(--baseline,1.5em) * 2);
+}
+
+.mb-1 {
+  margin-bottom: calc(var(--baseline,1.5em) * 2);
+}
+
+
+.mt-2 {
+  margin-top: var(--baseline,1.5em);
+}
+
+.mb-2 {
+  margin-bottom: var(--baseline,1.5em);
 }
 
 .p-0 {
@@ -321,6 +358,19 @@ hr:before {
   font-weight: 700;
 }
 
+.markdown ul:has(input) {
+  list-style: none;
+  padding-left: 0.6em;
+}
+
+h3 + table {
+  margin-top: -1rem;
+}
+
+table th, table td {
+  line-height: 1.2 !important;
+}
+
 .invisible {
   position: absolute;
   overflow: hidden;
@@ -332,3 +382,61 @@ hr:before {
   border: 0;
 }
 
+.markdown-alert {
+    border-left: .25em solid currentColor;
+    margin: 1rem 0;
+}
+.markdown-alert p + * {
+    margin: 0.5em;
+}
+.markdown-alert-heading {
+    margin: 0;
+    padding: 0.2lh 0.5lh;
+    font-weight: bold;
+}
+.markdown-icon {
+    display: inline-block;
+    overflow: visible !important;
+    vertical-align: sub;
+    fill: currentColor;
+    margin-right: 5px;
+}
+.markdown-alert-note {
+    border-color: #4493f8;
+}
+.markdown-alert-tip {
+    border-color: #238636;   
+}
+.markdown-alert-important {
+    border-color: #8957e5;
+}
+.markdown-alert-warning {
+    border-color: #9e6a03;  
+}
+.markdown-alert-caution {
+    border-color: #da3633;
+}
+.markdown-alert-heading-note {
+    color: #4493f8;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+.markdown-alert-heading-tip {
+    color: #238636;
+    background-color: rgba(0, 0, 0, 0.05); 
+}
+.markdown-alert-heading-important {
+    color: #8957e5;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+.markdown-alert-heading-warning {
+    color: #9e6a03;
+    background-color: rgba(0, 0, 0,0.05);
+}
+.markdown-alert-heading-caution {
+    color: #da3633;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.mermaid {
+  background-color: #fff !important;
+}

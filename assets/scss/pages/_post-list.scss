@@ -37,6 +37,18 @@
 }
 
 
+.post-list-tags {
+  @extend .meta-text;
+}
+
+.post-list-tags span {
+  padding: 0 5px;
+  color: #fff;
+  border: 1px solid;
+  border-radius: 5px;
+  background: #333;
+}
+
 .post-list-meta {
   @extend .meta-text;
   margin-top: 10px;

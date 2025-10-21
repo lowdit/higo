@@ -1,8 +1,18 @@
 @font-face {
 	font-family: 'atkinson';
 	src:
-		url('fonts/atkinson/light.woff2') format('woff2'),
-		url('fonts/atkinson/light.woff') format('woff');
+		url('/assets/fonts/atkinson/light.woff2') format('woff2'),
+		url('/assets/fonts/atkinson/light.woff') format('woff');
+	font-weight: 300;
+	font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+	font-family: 'atkinson';
+	src:
+		url('/assets/fonts/atkinson/regular.woff2') format('woff2'),
+		url('/assets/fonts/atkinson/regular.woff') format('woff');
 	font-weight: 400;
 	font-style: normal;
     font-display: swap;
@@ -11,18 +21,8 @@
 @font-face {
 	font-family: 'atkinson';
 	src:
-		url('fonts/atkinson/regular.woff2') format('woff2'),
-		url('fonts/atkinson/regular.woff') format('woff');
-	font-weight: 500;
-	font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-	font-family: 'atkinson';
-	src:
-		url('fonts/atkinson/bold.woff2') format('woff2'),
-		url('fonts/atkinson/bold.woff') format('woff');
+		url('/assets/fonts/atkinson/bold.woff2') format('woff2'),
+		url('/assets/fonts/atkinson/bold.woff') format('woff');
 	font-weight: 800;
 	font-style: normal;
     font-display: swap;

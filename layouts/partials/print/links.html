@@ -1,6 +1,6 @@
 {{ $slides := .slides }}
 {{- $formats := slice "print" "presentation" }}
-<ul class="list-unstyled list-inline no-print">
+<ul class="padding-baseline list-unstyled list-inline no-print">
 {{- range $id, $value := where (where .context.OutputFormats "Rel" "alternate") ".Format.BaseName" "in" $formats }}
     {{ if eq $id 0 }}
     >&nbsp;

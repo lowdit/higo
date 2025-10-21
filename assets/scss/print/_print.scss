@@ -18,8 +18,8 @@
   div:first-line,
   blockquote:first-line,
   li:first-line {
-    color: #000 !important;
-    background: transparent !important;
+    //color: #000 !important;
+    //background: transparent !important;
     box-shadow: none !important;
     text-shadow: none !important;
   }
@@ -27,6 +27,10 @@
   /* Content */
   body > *:not(main) {
     display: none;
+  }
+
+  .container--sm {
+    max-width: 100%;
   }
 
   /* a[href]:after {
@@ -51,10 +55,17 @@
   html {
   }
 
+  * {
+    color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    border-color: #000 !important;
+  }
+
   body {
     font-size: 11pt;
     color: #000;
-    background-color: #fff;
+    background-color: none;
   }
 
   a,
@@ -100,6 +111,7 @@
   table td {
     padding: 1px 5px;
     border-width: 1px !important;
+    font-size: 75%;
   }
 
   pre,
@@ -141,7 +153,7 @@
   }
 
   .flex > * {
-    min-width: 200px;
+    min-width: 150px;
   }
 
   .benchmark {

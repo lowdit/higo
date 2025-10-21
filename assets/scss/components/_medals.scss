@@ -4,8 +4,8 @@
 
 .medal {
   padding: 0 0.3em 0 0;
-  border: 1px solid #555;
-  border-radius: 5px;
+  border: 2px solid #085279;
+  border-radius: 4px;
 }
 
 .page-header--c .medals {
@@ -24,11 +24,13 @@
 
 .medal span {
   display: inline-block;
+  margin: -1.5pt 1.5pt -1.5pt -1.5pt;
   padding: 0 0.3em;
   min-width: 2.5em;
   font-weight: 700;
   color: var(--background-color-body, #f5f5f5);
-  border-radius: 3px;
+  border-radius: 4px;
+  border: 1.5pt solid #085279;
   background: #085279;
   text-align: center;
 }

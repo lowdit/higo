@@ -1,6 +1,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preload" href="/assets/fonts/atkinson/bold.woff2" as="font" type="font/woff2" crossorigin>
   {{ partial "head/seo/seo.html" . }}
   {{ partial "head/resource-hints.html" . }}
   {{ partial "head/styles.html" . }}
@@ -14,5 +15,11 @@
       });
     }
   </script>
+  {{ if .Store.Get "hasMermaid" }}
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true });
+    </script>
+  {{ end }}
   {{ hugo.Generator }}
 </head>

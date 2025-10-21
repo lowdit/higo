@@ -2,11 +2,28 @@
 <div class="container">
   <section class="page-header--c">
     <h1 class="page-header-title">{{ .Title }}</h1>
+    {{ with .Description }}{{ . | markdownify }} {{ end }}
     {{- partial "print/links" (dict "context" . "slides" .Params.slides) -}}
   </section>
 </div>
-<section class="generic-single">
+<section class="generic-single"{{- with .Params.autonumbering }} autonumbering{{- end }}>
   <div class="single-container{{ if eq .Title "Roadmap"}} large{{ end }} markdown">
+     {{- if .Param "autonumbering" }}
+      <style>
+        /* Auto Numbering */
+          body {counter-reset: h2}
+          h2 {counter-reset: h3}
+          h3 {counter-reset: h4}
+          h4 {counter-reset: h5}
+
+          section[autonumbering] h2:before {counter-increment: h2; content: counter(h2) ". "}
+          section[autonumbering] h3:before {counter-increment: h3; content: counter(h2) "." counter(h3) ". "}
+          section[autonumbering] h4:before {counter-increment: h4; content: counter(h2) "." counter(h3) "." counter(h4) ". "}
+
+          section[autonumbering] .toc__menu ul { counter-reset: item }
+          section[autonumbering] .toc__menu li a:before { content: counters(item, ".") ". "; counter-increment: item }
+      </style>
+      {{- end }}
     {{ partialCached "content.html" .Content .Content }}
     {{ if eq .Type "modules" }}
       {{ $ctx := . }}

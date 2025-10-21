@@ -10,4 +10,5 @@
       {{- .Description | markdownify -}}
     {{- end -}}
   </p>
+  <p class="post-list-tags">{{ with .Params.tags }}{{ range . }}<span>{{ . }}</span>{{ end }}{{ end }}</p>
 </div>
