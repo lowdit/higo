@@ -247,7 +247,7 @@
     <h2>Liste de articles</h2>
       {{ range . }}
       <h3>{{ .name }}</h3>
-      <p><strong>{{ .topic }}</strong>{{ if .url }} / <a href="{{ .url }}" title="Accéder à l'article {{ .name }}">Accéder à l'article</a>{{ end }}</p>
+      <p><strong>{{ .topic }}</strong>{{ if .url }} / <a href="{{ .url }}" title="Accéder à l'article {{ .name }}">Accéder à l’article</a>{{ end }}</p>
       {{ .description | markdownify }}
       {{ end }}
     {{ end }}

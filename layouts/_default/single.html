@@ -8,6 +8,7 @@
 </div>
 <section class="generic-single"{{- with .Params.autonumbering }} autonumbering{{- end }}>
   <div class="single-container{{ if eq .Title "Roadmap"}} large{{ end }} markdown">
+
      {{- if .Param "autonumbering" }}
       <style>
         /* Auto Numbering */
@@ -24,6 +25,21 @@
           section[autonumbering] .toc__menu li a:before { content: counters(item, ".") ". "; counter-increment: item }
       </style>
       {{- end }}
+      .TableOfContents {
+        margin: 1em 0;
+        padding: 1em;
+        border: 2px solid #999;
+        background: #ffffff;
+        border-radius: 3px;
+      }
+      .TableOfContents ol,.TableOfContents li {
+        text-align: left;
+      }
+    </style>
+    <div class="TableOfContents">
+    <h4 class="m-0">Table des matières</h4>
+    {{ .TableOfContents }}
+    </div>
     {{ partialCached "content.html" .Content .Content }}
     {{ if eq .Type "modules" }}
       {{ $ctx := . }}
@@ -54,11 +70,11 @@
       {{- end -}}
       {{- with $ctx.Params.workshops -}}
         <p>
-            <strong>Ateliers potentiels :</strong> 
+            <strong>Ateliers potentiels :</strong>
             <ul>
             {{ range . }}
               {{ range (where (where $.Site.RegularPages "Section" "workshops") "Title" .) }}
-                <li> 
+                <li>
                   <a href="{{ .Permalink }}">{{ .Title }}</a><br>
                   <span>{{ .Description }}</span>
                 </li>
@@ -69,7 +85,7 @@
       {{- end -}}
       {{- with $ctx.Params.urls -}}
       <p>
-        <strong>Pour aller plus loin :</strong> 
+        <strong>Pour aller plus loin :</strong>
         <ul>
         {{ range . }}
           <li>{{ . | markdownify }}</li>

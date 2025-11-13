@@ -74,15 +74,15 @@
             {{ partial "posts/post-entry.html" . }}
             <div class="post-entry-divider"></div>
           {{- end }}
-        {{ end -}}  
-        {{ $range1 := cond (ne (len .Sections) 0) .Sections .RegularPages }} 
+        {{ end -}}
+        {{ $range1 := cond (ne (len .Sections) 0) .Sections .RegularPages }}
         {{ with $range1 }}
           <h3 hidden>Sections</h3>
           {{- range $id, $value := . }}
             {{ partial "posts/post-entry.html" . }}
             <div class="post-entry-divider"></div>
           {{- end }}
-        {{ end -}}  
+        {{ end -}}
       {{- end }}
 
       {{- $pages := where (where (.GetPage "interviews").RegularPagesRecursive "Params.slugpath" "eq" "digital-accessibility") "Title" "ne" "Model" }}
