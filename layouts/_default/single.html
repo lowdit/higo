@@ -25,21 +25,6 @@
           section[autonumbering] .toc__menu li a:before { content: counters(item, ".") ". "; counter-increment: item }
       </style>
       {{- end }}
-      .TableOfContents {
-        margin: 1em 0;
-        padding: 1em;
-        border: 2px solid #999;
-        background: #ffffff;
-        border-radius: 3px;
-      }
-      .TableOfContents ol,.TableOfContents li {
-        text-align: left;
-      }
-    </style>
-    <div class="TableOfContents">
-    <h4 class="m-0">Table des matières</h4>
-    {{ .TableOfContents }}
-    </div>
     {{ partialCached "content.html" .Content .Content }}
     {{ if eq .Type "modules" }}
       {{ $ctx := . }}

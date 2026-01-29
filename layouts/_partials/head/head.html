@@ -1,0 +1,50 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preload" href="/assets/fonts/atkinson/bold.woff2" as="font" type="font/woff2" crossorigin>
+  {{ partial "head/seo/seo.html" . }}
+  {{ partial "head/resource-hints.html" . }}
+  {{ partial "head/styles.html" . }}
+  {{ partial "head/favicons.html" . }}
+  {{ partial "head/scripts.html" . }}
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+          navigator.serviceWorker.register('/sw.js')
+      });
+    }
+  </script>
+  {{- if .Store.Get "hasMermaid" }}
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true });
+    </script>
+  {{ end -}}
+  {{ hugo.Generator }}
+  <!-- CSS style file -->
+  {{- $.Scratch.Set "isCSS" false -}}
+  {{- $.Scratch.Set "isFONT" false -}}
+  {{- range readDir "./" -}}{{- if eq .Name "static" -}}{{- range readDir "./static" -}}
+    {{- if eq .Name "assets" -}}
+      {{- range readDir "./static/assets" -}}
+        {{- if eq .Name "css" }}{{- $.Scratch.Set "isCSS" (readDir "./static/assets/css") -}}{{- end -}}
+        {{- if eq .Name "fonts" -}}{{- $.Scratch.Set "isFONT" (readDir "./static/assets/fonts") -}}{{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}{{- end -}}{{- end -}}
+  {{- with ($.Scratch.Get "isCSS") -}}
+  {{- range . }}
+  <link rel="stylesheet" href="{{ $.Site.BaseURL | default "/" }}assets/css/{{ .Name }}" media="print" onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet" href="{{ $.Site.BaseURL | default "/" }}assets/css/{{ .Name }}" media="screen">
+  </noscript>
+  {{- end -}}
+  {{- else -}}
+  <link rel="preload" href="{{ $.Site.BaseURL | default "/" }}assets/css/fonts.css" as="style">
+  <link rel="stylesheet" href="{{ $.Site.BaseURL | default "/" }}assets/css/fonts.css" media="print" onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet" href="{{ $.Site.BaseURL | default "/" }}assets/css/fonts.css" media="screen">
+  </noscript>
+  {{- end -}}
+</head>

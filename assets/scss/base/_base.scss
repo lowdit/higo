@@ -128,7 +128,7 @@ th {
 
 th, tfoot td {
   border: 1px solid var(--color-contrast-medium);
-  background-color: rgb(57, 22, 92);
+  background-color: var(--color-ui);
   color: #fff;
   font-size: 1rem;
 }
@@ -161,12 +161,13 @@ blockquote {
   background: transparent;
   padding: 0.5em 1.5rem;
   margin: 1em auto 3em;
+  width: 90%;
   max-width: 80vw;
-  border: solid 2px rebeccapurple;
+  border: solid 2px var(--color-ui);
   box-shadow: 13px 13px 0 0 white,
-              15px 15px 0 0 rebeccapurple,
-              15px 11px 0 0 rebeccapurple,
-              11px 15px 0 0 rebeccapurple;
+              15px 15px 0 0 var(--color-ui),
+              15px 11px 0 0 var(--color-ui),
+              11px 15px 0 0 var(--color-ui);
 }
 
 blockquote p {

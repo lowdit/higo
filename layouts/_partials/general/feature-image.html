@@ -1,0 +1,23 @@
+{{- $images := union (union (.Parent.Resources.ByType "image") ($.Resources.ByType "image")) (resources.ByType "image") -}}
+{{- $feature := $images.GetMatch "*feature*" -}}
+{{- $feature_param := cond ($.Params.image) $.Params.image $.Params.feature_image -}}
+{{- $feature_alt   := cond ($.Params.image_alt) $.Params.image_alt $.Params.feature_image_alt -}}
+{{- $feature_image := $images.GetMatch (printf "**/%s" $feature_param) }}
+{{- $custom_file := .Params.feature_image }}
+{{- $custom_image := $images.GetMatch $custom_file }}
+{{- $img_src := "" }}
+{{- with $custom_image }}
+  {{ $img_src = . }}
+{{ else }}
+  {{- with $feature_image }}
+    {{ $img_src = . }}
+  {{ end -}}
+{{ end -}}
+{{- if $img_src }}
+<link rel="preload" as='"image' srcset="{{ ($img_src.Resize "500x webp").Permalink }} 480w, {{ ($img_src.Resize "800x webp").Permalink }} 800w" href="{{ ($img_src.Resize "500x webp").Permalink }}">
+<img class="feature-images" 
+  srcset="{{ ($img_src.Resize "500x webp").Permalink }} 480w, {{ ($img_src.Resize "800x webp").Permalink }} 800w"
+  sizes="(max-width: 600px) 480px, 800px"
+  src="{{ ($img_src.Resize "500x webp").Permalink }}"
+  {{ with $feature_alt }}alt="{{ . }}"{{ else }}alt=""{{ end }}>
+{{ end }}

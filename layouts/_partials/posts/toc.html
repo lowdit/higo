@@ -1,0 +1,9 @@
+<!-- Reusable template for table of contents (i.e. start or sidebar of posts single pages) -->
+{{- if ne .TableOfContents "<nav id=\"TableOfContents\"></nav>" }}
+<aside class="toc">
+  <div id="js-toc-togle">
+    <h2 class="toc-header">{{ i18n "table-of-contents" }}</h2>
+  </div>
+  <div id="js-toc-contents" class="toc-content">{{ .TableOfContents }}</div>
+</aside>
+{{ end -}}

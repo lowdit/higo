@@ -16,7 +16,7 @@
   max-width: 750px;
 }
 
-.post-list-title {
+.post-list-title, {
   font-weight: 400;
   margin: 0;
   @include font-size('md');
@@ -26,6 +26,7 @@
     color: var(--color-contrast-high);
 
     &:hover {
+      text-decoration: underline;
       color: var(--color-primary);
     }
   }

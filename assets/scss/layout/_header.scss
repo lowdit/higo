@@ -76,7 +76,8 @@
     text-align: center;
     text-decoration: none;
     cursor: pointer;
-    padding: 1.4rem 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 8%;
 
     &:hover {
       background-color: var(--color-primary);

@@ -1,9 +1,195 @@
-{{ define "main" }}
-  <article class="error-404 container">
-    <div>
-      <h1>Page Not Found!</h1>
-      <p>The page you requested could not be found.</p>
-      <a class="btn-secondary" href="{{ "/" | relURL }}">&lsaquo; Return Home</a>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="{{ with .Params.robots }}{{ . }}{{ else }}{{ .Site.Params.robots }}{{ end }}">
+  <title>{{ block "title" . }}{{ .Title }}{{ end }} | {{ .Site.Title }}</title>
+
+  <!-- Informations -->
+  {{ hugo.Generator }}
+  <link rel="canonical" href="{{ .Permalink }}">
+  <link rel="manifest" href="{{ $.Site.BaseURL | default "/" }}manifest.json">
+  {{- if .IsTranslated -}}
+  {{- range .Translations -}}
+  <link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}" title="{{ .Language.LanguageName }}">
+  {{- end -}}
+  {{- end -}}
+  <meta name="robots" content="noindex, nofollow">
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180"
+    href="{{ $.Site.BaseURL | default "/" }}assets/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32"
+    href="{{ $.Site.BaseURL | default "/" }}assets/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16"
+    href="{{ $.Site.BaseURL | default "/" }}assets/favicons/favicon-16x16.png">
+  {{- with .Site.Params.tile_color }}
+  <meta name="msapplication-TileColor" content="{{ . }}">{{ else }}
+  <meta name="msapplication-TileColor" content="#000">{{ end -}}
+  {{- with .Site.Params.theme_color }}
+  <meta name="theme-color" content="{{ . }}">{{ else }}
+  <meta name="theme-color" content="#000">{{ end -}}
+
+  <!-- CSS -->
+  {{- with resources.Match "**.css" -}}
+  <!-- Loop over all css of the base theme -->
+  {{- range . -}}
+  {{- if (in . "overgo") -}}{{- $.Scratch.Add "css" (slice .) -}}{{ end }}
+  {{- end -}}
+  {{- end -}}
+  <!-- Get the main styles CSS -->
+  {{- $styles := resources.Get "/css/styles.css" -}}
+  <!-- Union the both CSS -->
+  {{- $.Scratch.Add "css" (slice $styles) -}}
+  {{- $style := ($.Scratch.Get "css") | resources.Concat "styles.css" -}}
+  <!-- Optimise (purge, concat) if production -->
+  {{- if not (and (.Site.IsServer) (eq (getenv "HUGO_ENV") "production" | or (eq .Site.Params.env "production"))) -}}
+  {{- $style := $style | postCSS (dict "config" "postcss.config.js") -}}
+  {{- end -}}
+  <!-- Call font files -->
+
+  {{- with .OutputFormats.Get "RSS" -}}
+  <link href="{{ .RelPermalink }}" rel="alternate" type="{{ .MediaType.Type }}" title="{{ $.Site.Title }}" />
+  <link href="{{ .RelPermalink }}" rel="feed" type="{{ .MediaType.Type }}" title="{{ $.Site.Title }}" />
+  {{- end -}}
+</head>
+
+<body class="error-page">
+  <main>
+    <style>
+      // https://set.studio/reality-check-2-building-out-a-fancy-404-page/
+      :root {
+        --font-base: Helvetica Neue, Arial, sans-serif;
+        --font-display: 'Rubik Mono One', monospace;
+        --color-dark: #363950;
+        --color-light: #ffffff;
+        --color-light-shade: #f3f3f3;
+        --color-primary: #000;
+        --gradient-primary: linear-gradient(111deg, #000 0%, #888 82.7%, #888 97.2%);
+        --gradient-secondary: linear-gradient(180deg, #000 0%, #666 100%);
+        --size-step-0: clamp(1rem, 0.9592rem + 0.2041vw, 1.125rem);
+        --size-step-1: clamp(1.2rem, 1.1022rem + 0.4888vw, 1.4994rem);
+        --size-step-2: clamp(1.44rem, 1.2576rem + 0.9122vw, 1.9988rem);
+        --size-step-3: clamp(1.7281rem, 1.4224rem + 1.5286vw, 2.6644rem);
+        --size-step-4: clamp(2.0738rem, 1.5911rem + 2.4133vw, 3.5519rem);
+        --size-step-5: clamp(2.4881rem, 1.7545rem + 3.6684vw, 4.735rem);
+        --size-mega: 45vw;
+        --space-s: clamp(1rem, 0.9592rem + 0.2041vw, 1.125rem);
+        --space-m: clamp(1.5rem, 1.4388rem + 0.3061vw, 1.6875rem);
+        --space-l: clamp(2rem, 1.9184rem + 0.4082vw, 2.25rem);
+        --space-xl: clamp(3rem, 2.8776rem + 0.6122vw, 3.375rem);
+        --gutter: var(--space-m);
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+        flex: auto;
+      }
+
+      :is(h1, h2, h3) {
+        max-width: 30ch;
+      }
+
+      .mega-heading {
+        width: calc(100vw - 0.2ch);
+        font-family: var(--font-display);
+        letter-spacing: -0.1ch;
+        font-size: var(--size-mega);
+        line-height: 1;
+        margin: 0;
+        margin-inline-start: 50%;
+        transform: translateX(-50%);
+        color: transparent;
+        background-color: var(--color-dark);
+        background-image: var(--gradient-primary);
+        background-clip: text;
+        -webkit-background-clip: text;
+        text-align: center;
+      }
+
+      .curved-container {
+        font-family: var(--font-display);
+        font-size: var(--size-mega);
+        background: var(--color-light);
+        position: relative;
+        margin-block-start: -0.45ex;
+      }
+
+      .curved-container svg {
+        font: inherit;
+        fill: var(--color-light);
+        display: block;
+        width: 100%;
+        height: 0.2ex;
+        position: absolute;
+        inset: auto auto calc(100% - 1px) 0;
+        filter: drop-shadow(0px -10px 18px rgba(0, 0, 0, 0.25));
+        z-index: 0;
+      }
+
+      @media (prefers-contrast: more) {
+        .curved-container svg {
+          display: none;
+        }
+      }
+
+      .curved-container__content {
+        font-family: var(--font-base);
+        font-size: var(--size-step-1);
+        text-align: center;
+        padding-block: var(--space-m);
+        position: relative;
+        z-index: 1;
+        background: var(--color-light);
+        overflow: hidden;
+      }
+
+      .curved-container__content>* {
+        max-width: 30ch;
+        margin-inline: auto;
+      }
+
+      @media (min-width: 800px) {
+        .curved-container__content {
+          padding-block-start: 0;
+        }
+      }
+
+      .button {
+        display: inline-block;
+        padding: 0.7em 1.2em 0.85em 1.2em;
+        background: var(--color-dark);
+        background-image: var(--gradient-secondary);
+        color: var(--color-light);
+        font-weight: 700;
+        text-decoration: none;
+        border-radius: 0.5em;
+        line-height: 1;
+        border: 4px solid var(--color-primary);
+      }
+
+      .button:hover {
+        background-size: 150% 150%;
+      }
+
+      .button:active {
+        transform: scale(99%);
+      }
+    </style>
+    <h1 class="mega-heading">404</h1>
+    <div class="curved-container">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 1440 105" preserveAspectRatio="none"
+        aria-hidden="true" focusable="false">
+        <path d="M1440 97.315C716.52-78.932 182.417 23.879 0 97.315V105h1440v-7.685Z" />
+      </svg>
+      <div class="curved-container__content flow">
+        <p>{{ i18n "404-message" | default "Page non trouvée" }}</p>
+        <a class="button" href="/">{{ i18n "404-button" | default "Retour à la page d’accueil" }}</a>
+      </div>
     </div>
-  </article>
-{{ end }}
+  </main>
+</body>
+
+</html>

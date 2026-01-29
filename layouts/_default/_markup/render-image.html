@@ -22,7 +22,7 @@
 	{{- if or (eq .MediaType.SubType "jpg") (eq .MediaType.SubType "jpeg") }}
 		{{ $placeholder = .Resize "48x q20 jpg Gaussian" }}
 	{{ end -}}
-	<!-- if a GIF file, then revert to original to avoid resizing animations; WebP animations don't work -->
+	<!-- if a GIF file, then revert to original to avoid resizing animations; WebP animations don’t work -->
 	{{- if (eq .MediaType.SubType "gif") }}
 		{{ $resized = . }}
 	{{ end -}}

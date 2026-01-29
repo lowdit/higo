@@ -1,33 +1,34 @@
-{{ with .Site.Params.twitterSite }}
+{{- with .Site.Params.twitterSite }}
   <meta name="twitter:site" content="{{ . }}">
-{{ end }}
-{{ with .Site.Params.twitterCreator }}
+{{ end -}}
+{{- with .Site.Params.twitterCreator }}
   <meta name="twitter:creator" content="{{ . }}">
-{{ end }}
+{{ end -}}
 <meta name="twitter:title" content="{{- with .Params.seo_title -}}{{- . -}}{{ else }}{{- .Title -}}{{ end }}{{ if (or (and (ne .Type "posts") (ne .Type "projects") (not .IsHome)) (and (not .IsPage) (not .IsHome))) }} | {{ .Site.Title -}}{{ end -}}">
-<meta name="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{if .IsPage}}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}">
-{{ $images := $.Resources.ByType "image" -}}
-{{ $feature := $images.GetMatch "*feature*" -}}
-{{ $feature_param := $.Params.feature_image  }}
-{{ $feature_frontmatter := $images.GetMatch $feature_param }}
-{{ if $feature_frontmatter -}}
+<meta name="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{if .IsPage}}{{ .Summary | truncate 200 }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}">
+{{- $images := union (resources.ByType "image") ($.Resources.ByType "image") -}}
+{{- $feature := $images.GetMatch "*feature*" -}}
+{{- $feature_param := cond ($.Params.image) $.Params.image $.Params.feature_image -}}
+{{- $feature_alt   := cond ($.Params.image_alt) $.Params.image_alt $.Params.feature_image_alt -}}
+{{- $feature_frontmatter := $images.GetMatch (printf "**/%s" $feature_param) }}
+{{- if $feature_frontmatter -}}
   <meta name="twitter:card" content="summary_large_image">
   <meta property="twitter:image" content="{{ $feature_frontmatter.Permalink }}"/>
-  {{ with $.Params.feature_image_alt }}
+  {{- with $feature_alt }}
     <meta name="twitter:image:alt" content="{{ . }}">
-  {{ end }}
-{{ else if $feature -}}
+  {{ end -}}
+{{- else if $feature -}}
     <meta name="twitter:card" content="summary_large_image">
     <meta property="twitter:image" content="{{ $feature.Permalink }}"/>
-    {{ with $.Params.feature_image_alt }}
-      <meta name="twitter:image:alt" content="{{ . }}">
-    {{ end }}
-{{ else if $.Params.images }}
+    {{- with $.Params.feature_image_alt }}
+    <meta name="twitter:image:alt" content="{{ . }}">
+    {{ end -}}
+{{- else if $.Params.images }}
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:image" content="{{ index $.Params.images 0 | absURL }}"/>
-{{ else if $.Site.Params.images }}
+{{- else if $.Site.Params.images }}
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:image" content="{{ index $.Site.Params.images 0 | absURL }}"/>
-{{ else }}
+{{- else }}
   <meta name="twitter:card" content="summary">
-{{ end }}
+{{ end -}}

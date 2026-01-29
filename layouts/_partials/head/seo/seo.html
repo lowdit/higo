@@ -6,27 +6,26 @@
   {{- else -}}
     {{- with .Title -}}
       {{ . }}
-    {{ else }}
+    {{- else -}}
       {{ with .Params.name }}{{ . }}{{- end -}}
     {{- end -}}
   {{- end -}}
-
   {{ if (or (and (ne .Type "posts") (ne .Type "projects") (not .IsHome)) (and (not .IsPage) (not .IsHome))) }} | {{ .Site.Title -}}{{ end -}}
 </title>
 <!-- Author from config -->
-{{ with .Params.author -}}
+{{- with .Params.author -}}
 <meta name="author" content="{{ . }}">
 {{ else -}}
 <meta name="author" content="{{ .Site.Params.author }}">
 {{ end -}}
 <!-- Description from config or front matter  -->
-{{ with .Description -}}
+{{- with .Description -}}
 <meta name="description" content="{{ . }}">
 {{ else -}}
 <meta name="description" content="{{ .Site.Params.description }}">
 {{ end -}}
 <!-- Robots meta -->
-{{ if eq .Kind "404" -}}
+{{- if eq .Kind "404" -}}
 <meta name="robots" content="noindex, follow">
 {{ else -}}
   {{ with .Params.robots -}}
@@ -38,12 +37,12 @@
 {{ end -}}
 {{ end -}}
 
-{{ if $.Scratch.Get "paginator" }}
+{{- if $.Scratch.Get "paginator" }}
 <link rel="canonical" href="{{ .Paginator.URL | absURL }}">
-{{ if .Paginator.HasPrev -}}
+{{- if .Paginator.HasPrev -}}
 <link rel="prev" href="{{ .Paginator.Prev.URL | absURL }}">
 {{ end -}}
-  {{ if .Paginator.HasNext -}}
+{{- if .Paginator.HasNext -}}
 <link rel="next" href="{{ .Paginator.Next.URL | absURL }}">
 {{ end -}}
 {{ else  -}}

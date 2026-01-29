@@ -9,7 +9,7 @@
     <p class="crit">#{{ $ctx.Parent.Params.level }}.{{ add .key 1 }}</p>
     {{- with $ctx.Params.goals -}}
       <ul>
-        {{ range . }}
+        {{- range . }}
         <li>{{ . }}</li>
         {{ end -}}
       </ul>

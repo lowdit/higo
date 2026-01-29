@@ -1,0 +1,210 @@
+{{ range .Page.Params.theme }}
+  {{ range .topics }}
+  {{ with .activities }}
+    {{ range . }}
+      {{ with .charge }}
+        {{ range $key, $value := . }}
+          {{ $key := (string (index $.Site.Data.month $key)) }}
+          {{ $.Scratch.Set $key dict }}
+          {{ $.Scratch.Set (printf "%s-time" $key) slice }}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{ range .Page.Params.theme }}
+{{- $nametheme := .name }}
+  {{ range .topics }}
+  {{- $nametopics := .name }}
+  {{ with .activities }}
+    {{ range . }}
+      {{- $nameactivities := .name }}
+      {{- $startdate := "" }}
+      {{- $values := . }}
+      {{ if .startdate }}{{ $startdate = time.AsTime .startdate }}{{ end }}
+      {{ with .charge }}
+        {{ range $key, $value := . }}
+        {{ $key := (string (index $.Site.Data.month $key)) }}
+        {{ $.Scratch.Set $key (merge (dict $nameactivities .) ($.Scratch.Get $key)) }}
+        {{ $.Scratch.Add (printf "%s-%s-time" $key $nametheme) . }}
+        {{ $.Scratch.Add (printf "%s-timetotal" $key) . }}
+        {{ $.Scratch.Add (printf "%s-%s-timetotal" $key $nametheme) . }}
+        {{ $.Scratch.SetInMap (printf "roadmap%s" $nametheme) $key ($.Scratch.Get $key) }}
+        {{ $keyname := (printf "%s£%s£%s" $nametheme $nametopics $nameactivities) }}
+        {{ $.Scratch.SetInMap "roadmap" $keyname (merge $values (dict "theme" $nametheme "topics" $nametopics "activity" $nameactivities "startdateconverted" $startdate)) }}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- with ($.Scratch.Get "roadmap") }}
+<div>
+    <ul class='timeline'>
+    {{- range (sort . "startdateconverted" "asc") }}
+      {{- if .startdate -}}
+      <li class="work">
+        <input class='radio' id='work' name="works" type="radio">
+        <div class="flex flex-column">
+          <label for="">{{ .activity }} <small hidden>({{ .topics }} - {{ .theme }})</small></label>
+          <span class="date">
+            {{- with .startdate -}}<time datetime="{{ time.Format "2006-01-02T15:04:05Z07:00" . | safeHTML }}">{{ time.Format "2 Jan 2006" . }}</time>{{ else }}Aucune Date{{ end }}
+            <br>au {{  with .deadline -}}<time datetime="{{ time.Format "2006-01-02T15:04:05Z07:00" . | safeHTML }}">{{ time.Format "2 Jan 2006" . }}</time>{{ else }}Aucune Date{{ end }}
+          </span>
+          <span class="circle"></span>
+          <div class="content">
+              {{- with .description -}}
+              <p>
+              {{ . }}
+              </p>
+              {{- end -}}
+          </div>
+        </div>
+      </li>
+      {{- end -}}
+      {{ end -}}
+    </ul>
+  </div>
+{{ end -}}
+<style>
+/*
+/// Timeline
+*/
+.timeline {
+margin-bottom: 5rem;
+padding-left: 30px;
+list-style: none;
+border-left: 8px solid #f2ffde;
+font-size: 90%;
+}
+
+@media only screen and (min-width: 600px) {
+.timeline {
+margin: 50px 0 8rem 150px;
+padding-left: 30px;
+list-style: none;
+border-left: 8px solid #94f69e;
+}
+}
+
+.timeline a {
+color: var(--background-color-body, #fff);
+}
+
+.timeline li {
+position: relative;
+margin: 40px 0;
+}
+
+.timeline p {
+margin: 5px 0;
+}
+
+@media only screen and (min-width: 600px) {
+.timeline .date {
+font-family: "Futura", "Century Gothic";
+position: absolute;
+top: 35%;
+left: -258px;
+width: 200px;
+margin-top: -10px;
+line-height: 20px;
+font-size: 0.95em;
+text-align: right;
+font-weight: bold;
+}
+}
+
+.timeline .circle {
+position: absolute;
+top: 50%;
+left: -44px;
+display: block;
+margin-top: -10px;
+width: 20px;
+height: 20px;
+border: 1px solid #888;
+border-radius: 50%;
+background: #48b379;
+}
+
+.timeline .work {
+display: flex;
+align-items: center;
+min-height: 80px;
+}
+
+.timeline .work::before {
+  display: none;
+  }
+
+.timeline .content p {
+overflow: hidden;
+max-height: 200px;
+text-align: justify;
+word-break: break-word;
+}
+
+.timeline .flex {
+display: flex;
+padding-left: 0px;
+flex-direction: column;
+}
+
+.timeline label {
+font-size: 1.3em;
+font-weight: bold;
+cursor: auto;
+}
+
+.timeline .radio {
+display: none;
+}
+
+@media only screen and (min-width: 600px) {
+.timeline .content {
+max-height: 180px;
+transform: translateX(20px);
+border-width: 2px;
+border-style: solid;
+border-color: var(--color-grey-light,transparent);
+border-radius: 0.5em;
+}
+
+.timeline label {
+z-index: 100;
+top: 20px;
+transform: translateX(22px);
+}
+
+.timeline .content {
+position: relative;
+margin-right: 20px;
+}
+
+.timeline .content:before,
+.timeline .content:after {
+position: absolute;
+content: "";
+right: calc(100% + 1px);
+width: 0;
+height: 0;
+pointer-events: none;
+border: solid transparent;
+}
+
+.timeline .content:before {
+top: 50%;
+margin-top: -20px;
+border-width: 20px;
+border-right-color: inherit;
+}
+
+.timeline .content:after {
+top: 50%;
+margin-top: -17px;
+border-width: 17px;
+}
+}
+</style>

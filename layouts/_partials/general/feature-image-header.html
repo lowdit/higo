@@ -1,0 +1,33 @@
+{{- $fragments := (split .src "#") -}}
+{{- $imgwidth :=  600 -}}
+{{- $feature_param := cond ($.Params.image) $.Params.image $.Params.feature_image -}}
+{{- $feature_alt   := cond ($.Params.image_alt) $.Params.image_alt $.Params.feature_image_alt -}}
+{{- with (resources.ByType "image").GetMatch (printf "**/%s" .src) -}}
+  {{ $resized := . }}
+  {{ if (gt .Width $imgwidth) }}
+    {{ if hugo.IsExtended }}
+      {{- $resized = .Resize (print $imgwidth "x webp") -}}
+    {{ else }}
+      {{- $resized = .Resize (print $imgwidth "x") -}}
+    {{ end }}
+  {{ end }}
+  <!-- if a JPEG (certain to be opaque) generate a low resolution placeholder to use as background -->
+  {{ $placeholder := "" }}
+  {{- if or (eq .MediaType.SubType "jpg") (eq .MediaType.SubType "jpeg") }}
+    {{ $placeholder = .Resize "48x q20 jpg Gaussian" }}
+  {{ end -}}
+  <!-- if a GIF file, then revert to original to avoid resizing animations; WebP animations don’t work -->
+  {{- if (eq .MediaType.SubType "gif") }}
+    {{ $resized = . }}
+  {{ end -}}
+  <img src="{{ $resized.RelPermalink }}"
+  width="{{ $resized.Width }}"
+  height="{{ $resized.Height }}"
+  {{ with $.Title }} alt="{{ . }}" {{ end }}
+  {{ with $.Title }} title="{{ . }}" {{ end }}
+  {{ with index ($fragments) 1 }}class="{{ . }}" {{ else }}class="single-post-image" {{ end }}
+  {{ with $feature_alt }}alt="{{ . }}"{{ else }}alt=""{{ end }}
+  loading="lazy"
+  decoding="async"
+  >
+{{- end -}}

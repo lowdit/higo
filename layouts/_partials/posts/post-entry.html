@@ -1,0 +1,18 @@
+<div class="post-entry m-0">
+  <h3 class="mt-1 h4">
+    <a href="{{ .Permalink }}">{{ .Title }}</a>
+  </h3>
+  {{ with .Date }}<p class="date mb-1"><small>{{ . | time.Format ":date_medium"}}</small></p>{{ end }}
+  {{- if not (eq .Type "posts") }}
+  {{- with .Params.Summary -}}
+  <p class="post-list-summary mb-0">
+      {{- . | markdownify -}}
+  </p>
+  {{- else -}}
+  <p class="post-list-summary mb-0">
+      {{- .Description | markdownify -}}
+  </p>
+  {{- end -}}
+  {{- end -}}
+  {{ with .Params.tags }}<p class="post-list-tags">{{ range . }}<span>{{ . }}</span>{{ end }}</p>{{ end }}
+</div>
