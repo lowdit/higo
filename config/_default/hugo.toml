@@ -47,10 +47,7 @@ weight = 60
 [markup]
   [markup.goldmark]
 ### https://gohugo.io/getting-started/configuration/#configure-minify
-    [minify.tdewolff.html]
-        keepDefaultAttrVals = false  # default true
-        keepDocumentTags = false     # default true
-        keepEndTags = false          # default true
+
 
   [markup.tableOfContents]
     ordered = false
