@@ -72,7 +72,7 @@
   .menu-link {
     display: flex;
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 400;
     text-align: center;
     text-decoration: none;
     cursor: pointer;
@@ -95,11 +95,11 @@
     border: none;
 
     .menu-item:hover {
-      .sub-menu {        
+      .sub-menu {
         background-color: var(--color-contrast-lower);
         padding-left: 0;
         display: block;
-        z-index: 1;        
+        z-index: 1;
       }
     }
   }
