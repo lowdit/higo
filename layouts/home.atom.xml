@@ -46,7 +46,7 @@
             {{- range first 1 (.Resources.ByType "image") }}{{ $original := . }}{{ $.Scratch.Set "image" ($original.Fit "480x480 #ffffff q75 jpeg") }}{{ $image := $.Scratch.Get "image" }}
             <img src="{{ $image.RelPermalink }}" width="{{ $image.Width }}" height="{{ $image.Height }}" alt="{{.Name}}" /><br/>
             {{ end -}}
-            <p>{{ plainify .Summary }}</p>
+            <p>{{ htmlUnescape .Summary }}</p>
             <a href="{{ $url }}">Jetzt den ganzen Artikel lesen...</a>
           </div>
         </summary>
