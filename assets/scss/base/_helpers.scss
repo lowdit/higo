@@ -32,7 +32,7 @@
 
   &--sm {
     @extend .container;
-    max-width: 75ch;
+    max-width: $max-width;
   }
 }
 

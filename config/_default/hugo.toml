@@ -127,15 +127,14 @@ weight = 60
       isHTML                 = false
       noUgly                 = true
       notAlternative         = true
-
-[outputFormats.MANIFEST]
-    mediaType              = "application/manifest+json"
-    baseName               = "manifest"
-    rel                    = "manifest"
-    isPlainText            = true
-    isHTML                 = false
-    noUgly                 = false
-    notAlternative         = true
+  [outputFormats.MANIFEST]
+      mediaType              = "application/manifest+json"
+      baseName               = "manifest"
+      rel                    = "manifest"
+      isPlainText            = true
+      isHTML                 = false
+      noUgly                 = false
+      notAlternative         = true
   [outputFormats.SEARCH]
       mediaType              = "application/catalog+json"
       baseName               = "search/search"
