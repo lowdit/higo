@@ -83,48 +83,50 @@ weight = 60
   [mediaTypes."application/manifest+json"]
     suffixes               = ["webmanifest"]
 
-[outputFormats.HTML]
-    baseName               = "index"
-    isPlainText            = false
-    isHTML                 = true
-    noUgly                 = true
-    permalinkable          = true
+[outputs]
+    home                  = [ "HTML", "ATOM", "JSON", "FEED", "SITEMAP", "SEARCH"]
+    section               = [ "HTML", "SITEMAP" ]
+    page                  = [ "HTML" ]
+    taxonomy              = [ "HTML" ]
 
-[outputFormats.JSON]
-    mediaType              = "application/json"
-    baseName               = "index"
-    path                   = "feed"
-    rel                    = "alternate"
-    isPlainText            = true
-    isHTML                 = false
-    noUgly                 = false
-
-[outputFormats.FEED]       ##### ==> no collision with buildin RSS!
-    mediaType              = "application/rss+xml"
-    baseName               = "index"
-    rel                    = "alternate"
-    isPlainText            = false
-    isHTML                 = false
-    noUgly                 = true
-
-[outputFormats.ATOM]
-    mediaType              = "application/atom+xml"
-    baseName               = "index"
-    path                   = "feed"
-    rel                    = "alternate"
-    isPlainText            = false
-    isHTML                 = false
-    noUgly                 = true
-
-[outputFormats.SITEMAP]
-    mediaType              = "application/xml"
-    baseName               = "sitemap"
-    rel                    = "alternate"
-    isPlainText            = false
-    isHTML                 = false
-    noUgly                 = true
-    notAlternative         = true
-
+[outputFormats]
+  [outputFormats.HTML]
+      baseName               = "index"
+      isPlainText            = false
+      isHTML                 = true
+      noUgly                 = true
+      permalinkable          = true
+  [outputFormats.JSON]
+      mediaType              = "application/json"
+      baseName               = "index"
+      path                   = "feed"
+      rel                    = "alternate"
+      isPlainText            = true
+      isHTML                 = false
+      noUgly                 = false
+  [outputFormats.FEED]       ##### ==> no collision with buildin RSS!
+      mediaType              = "application/rss+xml"
+      baseName               = "index"
+      rel                    = "alternate"
+      isPlainText            = false
+      isHTML                 = false
+      noUgly                 = true
+  [outputFormats.ATOM]
+      mediaType              = "application/atom+xml"
+      baseName               = "index"
+      path                   = "feed"
+      rel                    = "alternate"
+      isPlainText            = false
+      isHTML                 = false
+      noUgly                 = true
+  [outputFormats.SITEMAP]
+      mediaType              = "application/xml"
+      baseName               = "sitemap"
+      rel                    = "alternate"
+      isPlainText            = false
+      isHTML                 = false
+      noUgly                 = true
+      notAlternative         = true
 
 [outputFormats.MANIFEST]
     mediaType              = "application/manifest+json"
@@ -134,15 +136,13 @@ weight = 60
     isHTML                 = false
     noUgly                 = false
     notAlternative         = true
-
-
-[outputFormats.SEARCH]
-    mediaType              = "application/catalog+json"
-    baseName               = "search/search"
-    rel                    = "alternate"
-    isPlainText            = true
-    isHTML                 = false
-    notAlternative         = true
+  [outputFormats.SEARCH]
+      mediaType              = "application/catalog+json"
+      baseName               = "search/search"
+      rel                    = "alternate"
+      isPlainText            = true
+      isHTML                 = false
+      notAlternative         = true
 
 [imaging]
     resampleFilter         = "Lanczos"
@@ -158,10 +158,10 @@ weight = 60
     dateFormatShort        = "2006-01-02"
     dateFormatYear         = "2006"
     dateFormatUTC          = "2006-01-02T15:04:05Z"
-	  dateFormatISO8601      = "2006-01-02T15:04:05-07:00"
+    dateFormatISO8601      = "2006-01-02T15:04:05-07:00"
     dateFormatRFC822Z      = "02 Jan 2006 15:04:05 UT"
 
-    invisibleSections      = ["feed","intern","test","about","links","search"]
+    invisibleSections      = ["feed","intern","test","about","links","search","resume","clients"]
     sitemapMax             = 49999
 
     digest                 = "sha256" # sha256, sha384, sha512
@@ -178,73 +178,3 @@ weight = 60
     showBeginEnd           = false
     spaceIndicator         = "<b> ... </b>"
     pagesBetweenActive     = 5
-
-[menus]
-[[menus.main]]
-    identifier             = "home"
-    name                   = "Home"
-    pageRef                = "home"
-    weight                 = 10
-    url                    = "/"
-
-[[menus.main]]
-    identifier             = "post"
-    name                   = "Posts"
-    pageRef                = "post"
-    weight                 = 20
-
-[[menus.main]]
-    identifier             = "photo"
-    name                   = "Photos"
-    pageRef                = "photo"
-    weight                 = 30
-
-[[menus.main]]
-    identifier             = "serie"
-    name                   = "Series"
-    pageRef                = "series"
-    weight                 = 40
-
-[[menus.main]]
-    identifier             = "book"
-    name                   = "Books"
-    pageRef                = "book"
-    weight                 = 50
-    url                    = "/book/"
-[[menus.main]]
-    identifier             = "tesla"
-    name                   = "N. Tesla"
-    parent                 = "book"
-    pageRef                = "book/Nikola-Tesla"
-    weight                 = 51
-    url                    = "/book/nikola-tesla/"
-
-[[menus.main]]
-    identifier             = "link"
-    name                   = "Links"
-    pageRef                = "link"
-    weight                 = 100
-
-[[menus.main]]
-    identifier             = "tags"
-    name                   = "Index"
-    pageRef                = "tags"
-    weight                 = 110
-
-[[menus.main]]
-    identifier             = "search"
-    name                   = "Search"
-    pageRef                = "search"
-    weight                 = 110
-
-[[menus.main]]
-    identifier             = "feed"
-    name                   = "Feed"
-    pageRef                = "feed"
-    weight                 = 130
-
-[[menus.main]]
-	parent                 = "feed"
-    name                   = "ATOM"
-    pageRef                = "/feeds/atom"
-    weight                 = 1301

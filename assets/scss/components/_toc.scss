@@ -14,14 +14,23 @@
 }
 
 .toc-header, .toc-drop-icon {
-  font-size: 1.2em;
+  font-size: 1.2rem;
   font-weight: 500;
   margin: 0;
 }
 
+.toc-content {
+  li {
+    font-size: 1.2rem;
+  }
+}
+
 .toc-contents {
   display: none;
-  @include font-size('sm');
+
+  li {
+    font-size: 90%;
+  }
 
   &--active {
     display: block;
