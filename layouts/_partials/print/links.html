@@ -1,19 +1,26 @@
-{{ $slides := .slides }}
-{{- $formats := slice "print" "presentation" }}
-<ul class="padding-baseline list-unstyled list-inline no-print">
-{{- range $id, $value := where (where .context.OutputFormats "Rel" "alternate") ".Format.BaseName" "in" $formats }}
-    {{ if eq $id 0 }}
+{{- $slides   := .context.Params.slides -}}
+{{- $carousel := .context.Params.carousel -}}
+{{- $formats := slice "print" "presentation" "abstract" }}
+<ul class="{{ with .class }}{{ . }} {{ end}}list-unstyled list-inline no-print">
+{{- $range := where (where .context.OutputFormats "Rel" "alternate") ".Format.BaseName" "in" $formats -}}
+{{- range $id, $value := $range -}}
+    {{- if eq $id 0 }}
     >&nbsp;
     {{- else }}
     {{- if $slides }}&nbsp;-&nbsp;{{ end }}
-    {{ end }}
+    {{ end -}}
     {{- if (eq .Format.BaseName "print") }}
-    <li><a href="{{ .Permalink | safeURL }}">Lien vers la version à imprimer</a></li>
+    <li><a href="{{ .Permalink | safeURL }}">Version à imprimer</a></li>
     {{ end -}}
     {{- if $slides }}
     {{- if (eq .Format.BaseName "presentation") }}
-    <li><a href="{{ .Permalink | safeURL }}">Lien vers la version présentation</a></li>
+    <li>{{ if ge (len $range) 2 }}- {{ end }}<a href="{{ .Permalink | safeURL }}">Version présentation</a></li>
     {{ end -}}
-    {{ end -}} 
+    {{ end -}}
+    {{- if $carousel }}
+    {{- if (eq .Format.BaseName "abstract") }}
+    <li>{{ if ge (len $range) 2 }}- {{ end }}<a href="{{ .Permalink | safeURL }}">Les chiffres clefs</a></li>
+    {{ end -}}
+    {{ end -}}
 {{- end }}
 </ul>

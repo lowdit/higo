@@ -22,4 +22,4 @@
 [[redirects]]  # Default lang, should be last.
 from = '/**'
 to = '/404.html'
-status = 404  
+status = 404

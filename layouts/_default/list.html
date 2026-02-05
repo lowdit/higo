@@ -12,7 +12,7 @@
       {{- end -}}
     </p>
     {{- if (eq .Type "study") }}
-    {{- partial "print/links" (dict "context" . "slides" .Params.slides) -}}
+    {{- partial "print/links" (dict "context" . "class" "padding-baseline") -}}
     {{- end }}
   </section>
   <section{{- with .Params.autonumbering }} autonumbering{{- end }}>

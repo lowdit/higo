@@ -3,13 +3,13 @@
   <section class="page-header--c">
     <h1 class="page-header-title">{{ .Title }}</h1>
     {{ with .Description }}{{ . | markdownify }} {{ end }}
-    {{- partial "print/links" (dict "context" . "slides" .Params.slides) -}}
+    {{- partial "print/links" (dict "context" . "class" "padding-baseline") -}}
   </section>
 </div>
 <section class="generic-single"{{- with .Params.autonumbering }} autonumbering{{- end }}>
   <div class="single-container{{ if eq .Title "Roadmap"}} large{{ end }} markdown">
 
-     {{- if .Param "autonumbering" }}
+    {{- if .Param "autonumbering" }}
       <style>
         /* Auto Numbering */
           body {counter-reset: h2}

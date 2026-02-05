@@ -59,6 +59,10 @@ body {
   background: var(--background-color-main,#fcfdfe);
 }
 
+[id] {
+    scroll-margin-top: 2ex;
+  }
+
 @supports (position-anchor: --test) {
   *:focus {
     anchor-name: --focus-anchor;

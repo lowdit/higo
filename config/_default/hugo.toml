@@ -46,18 +46,11 @@ weight = 60
 
 [markup]
   [markup.goldmark]
-### https://gohugo.io/getting-started/configuration/#configure-minify
-
-
   [markup.tableOfContents]
     ordered = false
     startLevel = 2
     endLevel = 3
-
-
 ################# Image handling ###########
-# shortcode   figure.html
-# render hook render-image.html
 
 [Params.Images]
     maxSize               = 1480
@@ -68,20 +61,15 @@ weight = 60
 
 [mediaTypes]
   [mediaTypes."application/atom+xml"]
-    suffixes               = ["xml"]
-
+    suffixes = ["xml"]
   [mediaTypes."application/rss+xml"]
-    suffixes               = ["xml"]
-
+    suffixes = ["xml"]
   [mediaTypes."application/feed+json"]
-    suffixes               = ["json"]
-
-# search
+    suffixes = ["json"]
   [mediaTypes."application/catalog+json"]
-    suffixes               = ["json"]
-
+    suffixes = ["json"]
   [mediaTypes."application/manifest+json"]
-    suffixes               = ["webmanifest"]
+    suffixes = ["webmanifest"]
 
 [outputs]
     home                  = [ "HTML", "ATOM", "JSON", "FEED", "SITEMAP", "SEARCH"]
