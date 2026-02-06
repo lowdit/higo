@@ -1,0 +1,50 @@
+{{/*
+  MARK: TEMPLATE for Twitter Card
+*/}}
+{{/*
+  MARK: Declare Variables
+*/}}
+{{- $font := resources.Get "twittercard/Roboto-Black.ttf" -}}
+{{- $logo := resources.Get "twittercard/logo.png" -}}
+{{- $logo := (images.Overlay ($logo.Resize "250x") 3500 50) -}}
+{{- $.Scratch.Set "img" ((resources.Get "twittercard/twittercard-dark.png") | images.Filter $logo) -}}
+
+{{- $img := ($.Scratch.Get "img") -}}
+{{- if .Title -}}
+  {{/*
+  {{- $textsize := cond (ne .Title "") 250 (cond (gt (len .Title) 60) (cond (gt (len .Title) 80) 200 250) 300) }}
+  {{- $img = $img.Filter (images.Text .Title (dict
+    "font" $font
+    "color" "#000000"
+    "size" $textsize
+    "linespacing" 2
+    "x" 110
+    "y" 1200
+  )) -}}*/}}
+{{- end -}}
+{{/* Type d'audit */}}
+{{- $img = $img.Filter (images.Text $.Site.Title (dict
+  "font" $font
+  "color" "#ffffff"
+  "size" 150
+  "linespacing" 2
+  "x" 110
+  "y" 300
+)) -}}
+{{/* Nom du site */}}
+{{- $mainTitle := $.Site.Params.moto -}}
+{{- $textsize := cond (ne $mainTitle "") 250 (cond (gt (len $mainTitle) 60) (cond (gt (len $mainTitle) 80) 200 250) 300) }}
+{{- $img = $img.Filter (images.Text $mainTitle (dict
+  "font" $font
+  "color" "#ffffff"
+  "size" $textsize
+  "linespacing" 2
+  "x" 100
+  "y" 500
+)) -}}
+{{- warnf "%s %s %s %s" (int $textsize) .Title .Title . }}
+{{- $img = $img.Resize "x600" -}}
+<meta property="og:image" content="{{ $img.Permalink }}">
+<meta property="og:image:height" content="">
+<meta property="og:image:width" content="932">
+<meta name="twitter:card" content="summary_large_image">
