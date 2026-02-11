@@ -10,9 +10,9 @@
   {{ $custom = resources.Get . }}
   {{/*  Only concatenate in production to allow source maps  */}}
   {{- if hugo.IsProduction }}
-    {{ $bundle := slice $style $custom | resources.Concat "main.css" }}
-    {{ $style = $bundle }}
-  {{ else }}
+    {{- $bundle := slice $style $custom | resources.Concat "css/main.css" }}
+    {{- $style = $bundle }}
+  {{- else }}
     {{ $custom_no_bundle = true }}
   {{ end }}
 {{ end }}
@@ -20,17 +20,18 @@
 {{ $final := "" }}
 {{/* Only enable PostCSS in production to allow source maps  */}}
 {{- if and (eq $.Site.Params.enable_postcss true) (hugo.IsProduction) }}
-  {{ $final = $style | postCSS (dict "config" "postcss.config.js") }}
+  {{- $final = $style | postCSS (dict "config" "postcss.config.js") }}
 {{- else }}
-  {{ $final = $style }}
+  {{- $final = $style }}
 {{- end }}
 
 {{- if hugo.IsProduction }}
   {{/*  Only minify in production to allow source maps  */}}
-  {{ $final = $final | minify }}
-{{ end }}
+  {{- $final = $final | minify }}
+{{ end -}}
+<link rel="preload" href="{{ $final.Permalink }}" as="style">
 <link rel="stylesheet" href="{{ $final.Permalink }}" />
 {{/*  Custom goes last to preserve cascade in development  */}}
 {{- if $custom_no_bundle }}
 <link rel="stylesheet" href="{{ $custom.Permalink }}" />
-{{ end }}
+{{ end -}}
