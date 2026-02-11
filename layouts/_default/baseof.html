@@ -7,6 +7,8 @@
     {{- block "main" . }}{{- end }}
     </main>
     {{- partial "footer/footer.html" . -}}
+    {{- if not site.Params.script }}
     {{- partial "footer/scripts.html" . -}}
+    {{ end -}}
   </body>
 </html>
