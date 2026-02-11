@@ -1,7 +1,7 @@
 .markdown {
   @include font-size('base');
 
-  p > img, figure > img {      
+  p > img, figure > img {
     max-width: 100%;
     height: auto;
   }
@@ -13,7 +13,7 @@
 
   figcaption {
     @include font-size('sm');
-    color: var(--color-contrast-medium);
+    color: var(--color-contrast-high);
     font-weight: 300;
   }
 }

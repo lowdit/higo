@@ -70,6 +70,7 @@ body {
   }
 
   html::before {
+    --page-bg: red;
     content: '';
     position: fixed;
     position-anchor: --focus-anchor;
@@ -79,7 +80,7 @@ body {
 
     display: block;
     background: #ff02;
-    border: 2px solid #3d80a2;
+    border: 2px solid blue;
     border-radius: 6px;
     pointer-events: none;
     z-index: 2147483647;

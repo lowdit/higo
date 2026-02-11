@@ -1,3 +1,6 @@
+<!-- GET Ordinal and IsBlock -->
+{{- $Ordinal := $.Ordinal -}}
+{{- $IsBlock := $.IsBlock -}}
 <!-- get image URL from Markdown tag -->
 {{- $src := (.Destination | safeURL) -}}
 <!-- split # fragment (used for CSS classes) and keep clean URL -->
@@ -7,44 +10,68 @@
 {{- $imgwidth := .Page.Scratch.Get "imgwidth" | default 800 -}}
 <!-- get actual filename -->
 {{- $src = path.Base $src -}}
+{{- $images := union (.Page.Parent.Resources.ByType "image") (.Page.Resources.ByType "image") -}}
 <!-- check if it exists as a page resource -->
-{{- with (.Page.Resources.ByType "image").GetMatch (printf "**/%s" $src) -}}
-	{{ $resized := . }}
-	{{ if (gt .Width $imgwidth) }}
-		{{ if hugo.IsExtended }}
-			{{- $resized = .Resize (print $imgwidth "x webp") -}}
-		{{ else }}
-			{{- $resized = .Resize (print $imgwidth "x") -}}
-		{{ end }}
-	{{ end }}
-	<!-- if a JPEG (certain to be opaque) generate a low resolution placeholder to use as background -->
-	{{ $placeholder := "" }}
-	{{- if or (eq .MediaType.SubType "jpg") (eq .MediaType.SubType "jpeg") }}
-		{{ $placeholder = .Resize "48x q20 jpg Gaussian" }}
-	{{ end -}}
-	<!-- if a GIF file, then revert to original to avoid resizing animations; WebP animations don’t work -->
-	{{- if (eq .MediaType.SubType "gif") }}
-		{{ $resized = . }}
-	{{ end -}}
-	<img src="{{ $resized.RelPermalink }}"
-	width="{{ $resized.Width }}"
-	height="{{ $resized.Height }}"
-	{{ with $placeholder }}style="
-		background-image: url('data:image/jpg;base64,{{ .Content | base64Encode }}');
-		background-position: 50% 50%;
-		background-repeat: no-repeat;
-		background-size: cover;"{{ end }}
-	alt="{{ $.Text }}" {{ with $.Title }} title="{{ . }}" {{ end }}
-	{{ with index ($fragments ) 1 }}class="{{ . }}" {{ else }}class="single-post-image" {{ end }}
-	loading="lazy"
-	decoding="async"
-	>
+{{- with $images.GetMatch (printf "**/%s" $src) -}}
+  {{ $resized := . }}
+  {{ if (gt .Width $imgwidth) }}
+    {{ if hugo.IsExtended }}
+      {{- $resized = .Resize (print $imgwidth "x webp") -}}
+    {{ else }}
+      {{- $resized = .Resize (print $imgwidth "x") -}}
+    {{ end }}
+  {{ end }}
+  <!-- if a JPEG (certain to be opaque) generate a low resolution placeholder to use as background -->
+  {{ $placeholder := "" }}
+  {{- if or (eq .MediaType.SubType "jpg") (eq .MediaType.SubType "jpeg") }}
+    {{ $placeholder = .Resize "48x q20 jpg Gaussian" }}
+  {{ end -}}
+  <!-- if a GIF file, then revert to original to avoid resizing animations; WebP animations don’t work -->
+  {{- if (eq .MediaType.SubType "gif") }}
+    {{ $resized = . }}
+  {{ end -}}
+  <div class="single-feature-img single-post-image-block">
+  {{- if $.Title -}}
+    <figure>
+    <img src="{{ $resized.RelPermalink }}"
+      width="{{ $resized.Width }}"
+      height="{{ $resized.Height }}"
+      {{ with $placeholder }}style="
+        background-image: url('data:image/jpg;base64,{{ .Content | base64Encode }}');
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+        background-size: cover;"{{ end }}
+      alt="{{ $.Text }}"
+      {{ with index ($fragments ) 1 }}class="{{ . }}" {{ else }}class="single-post-image" {{ end }}
+      {{ if ne $Ordinal 0 }}loading="lazy"{{- end -}}
+      decoding="async"
+    >
+    {{- with $.Title }}<figcaption>{{ . }}</figcaption>{{ end -}}
+  </figure>
+  {{- else -}}
+    <img src="{{ $resized.RelPermalink }}"
+    width="{{ $resized.Width }}"
+    height="{{ $resized.Height }}"
+    {{ with $placeholder }}style="
+      background-image: url('data:image/jpg;base64,{{ .Content | base64Encode }}');
+      background-position: 50% 50%;
+      background-repeat: no-repeat;
+      background-size: cover;"{{ end }}
+    alt="{{ $.Text }}"
+    {{ with index ($fragments ) 1 }}class="{{ . }}" {{ else }}class="single-post-image" {{ end }}
+    {{ if ne $Ordinal 0 }}loading="lazy"{{ end }}
+    decoding="async"
+    >
+  {{- end -}}
+  </div>
 <!-- or otherwise simply load the URL -->
 {{- else -}}
-	<img src="{{ .Destination | safeURL }}"
-	alt="{{ .Text }}" {{ with .Title }} title="{{ . }}" {{ end }}
-	{{ with index ($fragments ) 1 }}class="{{ . }}" {{ else }}class="single-post-image" {{ end }}
-	loading="lazy"
-	decoding="async"
-	>
+  <div class="single-post-image-block">
+    <img src="{{ .Destination | safeURL }}"
+    alt="{{ .Text }}" {{ with .Title }} title="{{ . }}" {{ end }}
+    {{ with index ($fragments ) 1 }}class="{{ . }}" {{ else }}class="single-post-image" {{ end }}
+    loading="lazy"
+    decoding="async"
+    >
+  </div>
 {{- end -}}
