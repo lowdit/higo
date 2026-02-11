@@ -1,6 +1,7 @@
 {{- $sass := resources.Get "scss/main.scss" }}
 {{- $options := (dict
     "enableSourceMap" (not hugo.IsProduction)
+    "targetPath" "css/main.css"
     )
 -}}
 {{- $style := $sass | css.Sass $options }}
@@ -13,7 +14,7 @@
     {{- $bundle := slice $style $custom | resources.Concat "css/main.css" }}
     {{- $style = $bundle }}
   {{- else }}
-    {{ $custom_no_bundle = true }}
+    {{ $custom_no_bundle = true }}  
   {{ end }}
 {{ end }}
 

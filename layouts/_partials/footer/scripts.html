@@ -1,8 +1,8 @@
 {{ $opts := "" }}
 {{ if hugo.IsProduction }}
-  {{ $opts = dict "targetPath" "main.js" }}
+  {{ $opts = dict "targetPath" "js/main.js" }}
 {{ else }}
-  {{ $opts = dict "targetPath" "main.js" "sourceMap" "inline" }}
+  {{ $opts = dict "targetPath" "js/main.js" "sourceMap" "inline" }}
 {{ end }}
 {{ $script := resources.Get "js/app.js" | js.Build $opts }}
 
@@ -22,7 +22,7 @@
 {{ if hugo.IsProduction }}
   {{/*  Only rebuild concatenated files in production (in dev there is no concat)  */}}
   {{/*  Only minify in production to allow source maps  */}}
-  {{ $final = $script | js.Build "main.js" | minify }}
+  {{ $final = $script | js.Build "js/main.js" | minify }}
 {{ else }}
   {{ $final = $script }}
 {{ end }}
