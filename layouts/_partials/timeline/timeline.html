@@ -1,3 +1,4 @@
+
 {{ range .Page.Params.theme }}
   {{ range .topics }}
   {{ with .activities }}
@@ -22,8 +23,8 @@
       {{- $nameactivities := .name }}
       {{- $startdate := "" }}
       {{- $values := . }}
-      {{ if .startdate }}{{ $startdate = time.AsTime .startdate }}{{ end }}
-      {{ with .charge }}
+      {{- if .startdate }}{{ $startdate = time.AsTime .startdate }}{{ end }}
+      {{- with .charge }}
         {{ range $key, $value := . }}
         {{ $key := (string (index $.Site.Data.month $key)) }}
         {{ $.Scratch.Set $key (merge (dict $nameactivities .) ($.Scratch.Get $key)) }}

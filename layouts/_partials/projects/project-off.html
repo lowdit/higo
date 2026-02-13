@@ -4,12 +4,12 @@
     <div class="project-entry-info">
       <h4 class="project-entry-title">
         {{ .title }}&nbsp;
-        {{- if and .persons .days -}}-
+        {{- if and .days -}}-
           <small class="m0">{{ .days }}</small>
         {{ end -}}
       </h4>
-      {{- with .descriptions }}
-        <p>{{ . }}</p>
+      {{- with .description }}
+        <p>{{ . | markdownify }}</p>
       {{ end -}}
       {{- with .skills }}
           <br>

@@ -1,24 +1,29 @@
 @font-face {
-	font-family: 'atkinson';
-	src:
-		url('./../fonts/atkinson/regular.woff2') format('woff2'),
-		url('./../fonts/atkinson/regular.woff') format('woff');
-	font-weight: normal;
-	font-style: normal;
+  font-family: Atkinson;
+  font-style: normal;
+  font-weight: 400;
+  src: url("/assets/fonts/Atkinson-Regular.woff2") format("woff2");
   font-display: swap;
 }
 
 @font-face {
-	font-family: 'atkinson';
-	src:
-		url('./../fonts/atkinson/bold.woff2') format('woff2'),
-		url('./../fonts/atkinson/bold.woff') format('woff');
-	font-weight: bold;
-	font-style: normal;
+  font-family: Atkinson;
+  font-style: italic;
+  font-weight: 400;
+  src: url("/assets/fonts/Atkinson-Italic.woff2") format("woff2");
   font-display: swap;
 }
 
 @font-face {
-	font-family: "Virgil";
-	src: url("./../fonts/virgil/virgil.woff2");
+  font-family: Atkinson;
+  font-style: normal;
+  font-weight: 500;
+  src: url("/assets/fonts/Atkinson-Bold.woff2") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Virgil";
+  src: url("./../fonts/virgil/virgil.woff2");
+  font-display: swap;
 }
