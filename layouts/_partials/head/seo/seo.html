@@ -2,7 +2,8 @@
   <!-- SEO title from config or front matter -->
 <!-- Site title gets added EXCEPT on single post and project pages -->
 */}}
-  {{- $IsPaginator := and .Page.IsNode .Page.Paginator -}}
+  {{- $SectionsSlice := slice "posts" "home" -}}
+  {{- $IsPaginator := and (and .Page.IsNode .Page.Paginator) (not (or (in $SectionsSlice .Section) (eq "home" .Kind))) -}}
   <title>
     {{- with .Params.seo_title -}}
       {{- . -}}

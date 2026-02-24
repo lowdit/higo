@@ -2,8 +2,9 @@
  <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
  <meta property="og:title" content="{{- with .Params.seo_title -}}{{- . -}}{{ else }}{{- .Title -}}{{ end }}{{ if (or (and (ne .Type "posts") (ne .Type "projects") (not .IsHome)) (and (not .IsPage) (not .IsHome))) }} | {{ .Site.Title -}}{{ end -}}">
  <meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{if .IsPage}}{{ .Summary | truncate 200 }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}">
-{{- $IsPaginator := and .Page.IsNode .Page.Paginator -}}ss
-{{- if $IsPaginator }}ss
+{{- $SectionsSlice := slice "posts" "home" -}}
+{{- $IsPaginator := and (and .Page.IsNode .Page.Paginator) (not (or (in $SectionsSlice .Section) (eq "home" .Kind))) -}}
+{{- if $IsPaginator }}
   {{- $paginator := .Paginate (where .Site.RegularPages.ByDate.Reverse "Section" "posts" ) }}
   <meta property="og:url" content="{{ .Paginator.URL | absURL }}">
 {{- else }}
@@ -39,7 +40,7 @@
   <meta property="og:image:alt" content="{{ . }}" />
   {{ end -}}
 {{- else if $feature }}
-  <meta property="og:image" content="{{ $feature.Permalink }}"/>z
+  <meta property="og:image" content="{{ $feature.Permalink }}"/>
   {{- with $.Params.feature_image_alt }}
     <meta property="og:image:alt" content="{{ . }}" />
   {{ end -}}
