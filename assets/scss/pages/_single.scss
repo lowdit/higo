@@ -41,7 +41,7 @@
   @include respond-to('x-large') {
     max-width: $max-width;
     display: grid;
-    grid-template-columns: 4fr minmax(18rem,1fr);
+    grid-template-columns: 4fr minmax(19rem,1fr);
     gap: 1rem;
   }
 }
@@ -99,7 +99,7 @@
   overflow: hidden;
   background: #000;
   border-radius: 10px;
-  * {
+  *, b {
     margin: 0;
     color: #fff;
   }

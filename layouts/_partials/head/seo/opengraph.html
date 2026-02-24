@@ -2,7 +2,8 @@
  <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
  <meta property="og:title" content="{{- with .Params.seo_title -}}{{- . -}}{{ else }}{{- .Title -}}{{ end }}{{ if (or (and (ne .Type "posts") (ne .Type "projects") (not .IsHome)) (and (not .IsPage) (not .IsHome))) }} | {{ .Site.Title -}}{{ end -}}">
  <meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{if .IsPage}}{{ .Summary | truncate 200 }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}">
-{{- if $.Scratch.Get "paginator" }}
+{{- $IsPaginator := and .Page.IsNode .Page.Paginator -}}ss
+{{- if $IsPaginator }}ss
   {{- $paginator := .Paginate (where .Site.RegularPages.ByDate.Reverse "Section" "posts" ) }}
   <meta property="og:url" content="{{ .Paginator.URL | absURL }}">
 {{- else }}
@@ -13,7 +14,7 @@
 {{ end -}}
 
 {{- $iso8601 := "2006-01-02T15:04:05-07:00" -}}
-{{- if .IsPage -}}
+{{- if .IsPage }}
   {{- if not .PublishDate.IsZero }}
     <meta property="article:published_time" {{ .PublishDate.Format $iso8601 | printf "content=%q" | safeHTMLAttr }}>
   {{- else if not .Date.IsZero }}
@@ -23,7 +24,7 @@
     <meta property="article:modified_time" {{ .Lastmod.Format $iso8601 | printf "content=%q" | safeHTMLAttr }}>
   {{ end -}}
 {{- else }}
-  {{- if not .Date.IsZero -}}
+  {{- if not .Date.IsZero }}
     <meta property="og:updated_time" {{ .Lastmod.Format $iso8601 | printf "content=%q" | safeHTMLAttr }}>
   {{ end -}}
 {{ end -}}
@@ -32,17 +33,17 @@
 {{- $feature_param := cond ($.Params.image) $.Params.image $.Params.feature_image -}}
 {{- $feature_alt   := cond ($.Params.image_alt) $.Params.image_alt $.Params.feature_image_alt -}}
 {{- $feature_frontmatter := $images.GetMatch (printf "**/%s" $feature_param) }}
-{{- if $feature_frontmatter -}}
+{{- if $feature_frontmatter }}
   <meta property="og:image" content="{{ $feature_frontmatter.Permalink }}"/>
   {{- with $feature_alt }}
   <meta property="og:image:alt" content="{{ . }}" />
   {{ end -}}
-{{- else if $feature -}}
+{{- else if $feature }}
   <meta property="og:image" content="{{ $feature.Permalink }}"/>z
   {{- with $.Params.feature_image_alt }}
     <meta property="og:image:alt" content="{{ . }}" />
   {{ end -}}
-{{- else if $.Params.images -}}
+{{- else if $.Params.images }}
   <meta name="og:image" content="{{ $.Params.images }}"/>
 {{- else if $.Site.Params.twittercard -}}
   <meta name="og:image" content="{{ $.Site.Params.twittercard  }}"/>

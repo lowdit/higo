@@ -10,7 +10,7 @@
 {{- $imgwidth := .Page.Scratch.Get "imgwidth" | default 800 -}}
 <!-- get actual filename -->
 {{- $src = path.Base $src -}}
-{{- $images := union (.Page.Parent.Resources.ByType "image") (.Page.Resources.ByType "image") -}}
+{{- $images := union (union (.Page.Parent.Resources.ByType "image") (.Page.Resources.ByType "image")) (resources.ByType "image") -}}
 <!-- check if it exists as a page resource -->
 {{- with $images.GetMatch (printf "**/%s" $src) -}}
   {{ $resized := . }}

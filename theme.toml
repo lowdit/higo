@@ -10,4 +10,4 @@ features = ["newsletter", "hero", "netlify", "seo", "schema", "rss", "comments",
     homepage = "https://bertrandkeller.info"
 [original]
   name = "Hugo Liftoff"
-  repo = "https://github.com/wjh18/hugo-liftoff/g"
+  repo = "https://github.com/wjh18/hugo-liftoff/"

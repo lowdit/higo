@@ -2,7 +2,7 @@
 {{- if and (ne .TableOfContents "<nav id=\"TableOfContents\"></nav>") .TableOfContents }}
 <aside class="toc">
   <div id="js-toc-togle">
-    <h2 class="toc-header">{{ i18n "table-of-contents" }}</h2>
+    <b class="toc-header">{{ i18n "table-of-contents" }}</b>
   </div>
   <div id="js-toc-contents" class="toc-content">{{ .TableOfContents }}</div>
 </aside>

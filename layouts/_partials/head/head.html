@@ -15,7 +15,7 @@
     }
   </script>
   {{- range .AlternativeOutputFormats }}
-	  <link rel={{ .Rel }} type="{{ safeHTML .MediaType.Type }}" href={{ .RelPermalink }}>
+    <link rel={{ .Rel }} type="{{ safeHTML .MediaType.Type }}" href={{ .RelPermalink }}>
   {{ end -}}
   {{- if .Store.Get "hasMermaid" }}
     <script type="module">
@@ -32,21 +32,21 @@
       {{- range readDir "./static/assets" -}}
         {{- if eq .Name "css" }}{{- $.Scratch.Set "isCSS" (readDir "./static/assets/css") -}}{{- end -}}
         {{- if eq .Name "fonts" -}}{{- $.Scratch.Set "isFONT" (readDir "./static/assets/fonts") -}}{{- end -}}
-      {{- end -}}
-    {{- end -}}
-  {{- end -}}{{- end -}}{{- end -}}
-  {{- with ($.Scratch.Get "isCSS") -}}
+      {{ end -}}
+    {{ end -}}
+  {{ end -}}{{ end -}}{{ end -}}
+  {{- with ($.Scratch.Get "isCSS") }}
   {{- range . }}
   <link rel="stylesheet" href="{{ $.Site.BaseURL | default "/" }}assets/css/{{ .Name }}" media="print" onload="this.media='all'" />
   <noscript>
     <link rel="stylesheet" href="{{ $.Site.BaseURL | default "/" }}assets/css/{{ .Name }}" media="screen">
   </noscript>
-  {{- end -}}
-  {{- else -}}
+  {{ end -}}
+  {{- else }}
   <link rel="preload" href="{{ $.Site.BaseURL | default "/" }}assets/css/fonts.css" as="style">
   <link rel="stylesheet" href="{{ $.Site.BaseURL | default "/" }}assets/css/fonts.css" media="print" onload="this.media='all'" />
   <noscript>
     <link rel="stylesheet" href="{{ $.Site.BaseURL | default "/" }}assets/css/fonts.css" media="screen">
   </noscript>
-  {{- end -}}
+  {{ end -}}
 </head>
