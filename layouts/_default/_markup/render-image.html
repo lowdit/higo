@@ -13,6 +13,7 @@
 {{- $images := union (union (.Page.Parent.Resources.ByType "image") (.Page.Resources.ByType "image")) (resources.ByType "image") -}}
 <!-- check if it exists as a page resource -->
 {{- with $images.GetMatch (printf "**/%s" $src) -}}
+{{- $imgwidth := cond (gt .Height .Width) "600" $imgwidth -}}
   {{ $resized := . }}
   {{ if (gt .Width $imgwidth) }}
     {{ if hugo.IsExtended }}
