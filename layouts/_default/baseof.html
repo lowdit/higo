@@ -2,8 +2,11 @@
 <html lang="{{ .Site.LanguageCode | default "en-US" }}">
   {{ partial "head/head.html" . }}
   <body>
+    <div class="skip-links" role="navigation">
+      <a href="#main">Contenu principal</a>
+    </div>
     {{- partial "header/header.html" . -}}
-    <main class="section">
+    <main id="main" class="section">
     {{- block "main" . }}{{- end }}
     </main>
     {{- partial "footer/footer.html" . -}}
