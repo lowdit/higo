@@ -45,9 +45,9 @@
     <meta property="og:image:alt" content="{{ . }}" />
   {{ end -}}
 {{- else if $.Params.images }}
-  <meta name="og:image" content="{{ $.Params.images }}"/>
+  <meta name="og:image" content="{{ $.Site.BaseURL | default "/" }}{{ $.Params.images }}"/>
 {{- else if $.Site.Params.twittercard -}}
-  <meta name="og:image" content="{{ $.Site.Params.twittercard  }}"/>
+  <meta name="og:image" content="{{ $.Site.BaseURL | default "/" }}{{ $.Site.Params.twittercard  }}"/>
 {{- else }}
   {{- partialCached "head/seo/head-card.html" . .Permalink -}}
 {{ end -}}

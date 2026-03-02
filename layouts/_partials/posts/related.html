@@ -1,7 +1,7 @@
 <!-- Reusable template for related posts (at the end of posts single pages) -->
 {{ $related := .Site.RegularPages.Related . | first 5 }}
 {{- with $related }}
-  <section class="related">
+  <section class="related no-print">
     <h2>{{ i18n "see-also" }}</h2>
     <ul class="related-posts">
       {{ range . }}

@@ -1,6 +1,6 @@
 <!-- Reusable template for table of contents (i.e. start or sidebar of posts single pages) -->
 {{- if and (ne .TableOfContents "<nav id=\"TableOfContents\"></nav>") .TableOfContents }}
-<aside class="toc">
+<aside class="toc no-print">
   <div id="js-toc-togle">
     <b class="toc-header">{{ i18n "table-of-contents" }}</b>
   </div>
