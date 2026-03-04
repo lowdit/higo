@@ -1,0 +1,212 @@
+{{ $title := .Get 0}}
+{{- with .Page.Params.slides }}
+<div class="container-snap container-full section-special">
+  {{ with $title }}<h2 class="center mt-0 mb-0">{{ .  }}</h2>{{ end }}
+  <div class="container--sm snap">
+    <nav id="controls" class="nav-snap-anchor" aria-label="expertises">
+      <ul>
+      {{- range $id, $value := . }}
+        <li><a href="#slide{{ add $id  1 }}">{{ add $id  1 }}</a></li>
+      {{ end -}}
+      </ul>
+    </nav>
+    {{- range $id, $value := . }}
+    <section id="slide{{ add $id  1 }}">
+      <div>
+      {{ with .title  }}<h2>{{ .  }}</h2>{{ end }}
+      {{ with .description  }}{{ . | markdownify }}{{ end }}
+      </div>
+    </section>
+    {{ end -}}
+  </div>
+</div>
+
+
+<style>
+  @supports (scroll-snap-align: start) {
+
+    :root {
+      --font-size: 1rem;
+    }
+
+    .container-snap {
+      position: relative;
+    }
+
+    .container-snap h2 {
+      position: absolute;
+      display: block;
+      padding: 0.5em 0;
+      top: 0;
+      left: 50%;
+      width: 100%;
+      transform: translateX(-50%);
+      font-size: 4rem;
+      font-variant: all-small-caps;
+      background: var(--color-special);
+      border-top: 1.5em solid #fff;
+    }
+
+    .nav-snap-anchor {
+      position: absolute;
+      bottom: 1em;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 112px;
+      border: 1px solid rgb(64, 50, 90);
+      background: rgb(255, 255, 255);
+      box-shadow: rgb(64, 50, 90) 5px 10px 0px 0px;
+    }
+
+    .nav-snap-anchor ul {
+      display: flex;
+      gap: 0.5em;
+      margin: 0.5em 0;
+      padding: 0 1em;
+      list-style: none;
+    }
+
+    .snap {
+      //display: flex;
+      scroll-snap-type: mandatory;
+      scroll-snap-points-x: repeat(300px);
+      scroll-snap-type: y mandatory;
+      height: 50vh;
+      overflow-x: auto;
+      margin: auto;
+    }
+
+    .snap::-webkit-scrollbar {
+      display: none;
+    }
+
+    nav:has(+ div :target) li:nth-child(1) a,
+    nav:has(+ div * + :target) li:nth-child(2) a,
+    nav:has(+ div * + * + :target) li:nth-child(3) a,
+    nav:has(+ div * + * + * +:target) li:nth-child(4) a,
+    nav:has(+ div * + * + * + * +:target) li:nth-child(5) a,
+    nav:has(+ div * + * + * + * + * +:target) li:nth-child(6) a {
+      //border-color: red;
+    }
+
+    .nav-snap-anchor a {
+      display: grid;
+      place-items: center;
+      padding: 0;
+      width: 1.5em;
+      height: 1.5em;
+      aspect-ratio: 1 / 1;
+      font-weight: bold;
+      color: #000;
+      border: 2px solid;
+      border-radius: 50%;
+      text-decoration: none;
+      transition:  1.06s linear(
+        0,
+        0.009,
+        0.035 2.1%,
+        0.141,
+        0.281 6.7%,
+        0.723 12.9%,
+        0.938 16.7%,
+        1.017,
+        1.077,
+        1.121,
+        1.149 24.3%,
+        1.159,
+        1.163,
+        1.161,
+        1.154 29.9%,
+        1.129 32.8%,
+        1.051 39.6%,
+        1.017 43.1%,
+        0.991,
+        1
+      );
+    }
+
+    .nav-snap-anchor a.active {
+      color: #fff;
+      border-color: #000;
+      background: var(--color-special);
+    }
+
+    @scope (.container-snap) {
+
+      section {
+        scroll-snap-align: center;
+        //min-height: calc(100vh - 30px);
+        min-height: 100%;
+        flex: 0 0 100%;
+        margin-left: auto;
+        margin-right: auto;
+        padding-top: 2em;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.5s ease;
+      }
+
+      section[id] {
+        scroll-margin-top: unset;
+      }
+
+      section div {
+        max-width: 80vw;
+      }
+
+      @media print and (max-width: 768px) {
+        section div {
+          min-width: 80%;
+        }
+      }
+    }
+  }
+
+  .select-section {
+    box-shadow: inset 0 0 0 rgba(255,255,255, 0);
+    //animation: select 0.8s ease forwards;
+  }
+
+  @keyframes select {
+    from {
+      box-shadow: inset 0 0 0 0 rgba(255,255,255, 0);
+    }
+
+    to {
+      box-shadow: inset 0 0 50px 10px rgba(255,255,255, 0.3);
+    }
+  }
+
+</style>
+<script>
+if (CSS.supports('scroll-snap-align: start')) {
+  document.querySelector("#controls").addEventListener("click", (event) => {
+    const $slide = document.querySelector(event.target.getAttribute("href"));
+    if (!$slide) return;
+    if ($slide.scrollIntoViewIfNeeded) {
+      $slide.scrollIntoViewIfNeeded();
+    } else if ($slide.scrollIntoView) {
+      $slide.scrollIntoView();
+    }
+  });
+
+  const mainElem = document.querySelector(".snap");
+  mainElem.addEventListener("scrollsnapchange", (event) => {
+    const currentlySnapped     = document.querySelector(".select-section");
+    if (currentlySnapped) {
+      console.log("currentlySnapped.id");
+      const linkActive = document.querySelectorAll("a[href='#" + currentlySnapped.id + "']")[0]
+      linkActive.classList.remove("active")
+      currentlySnapped.classList.remove("select-section");
+    }
+    event.snapTargetBlock.classList.add("select-section");
+    const linkActive = document.querySelectorAll("a[href='#" + event.snapTargetBlock.id + "']")[0]
+    linkActive.classList.add("active")
+  });
+}
+</script>
+{{ else }}
+  <p>Parameters in page frontmatter are missing.</p>
+{{ end -}}
