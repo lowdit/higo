@@ -137,6 +137,9 @@ hr {
   background: #8fc8e76f;
 }
 
+.p-relative {
+  position: relative;
+}
 
 .b-all {
   overflow: hidden;
@@ -181,16 +184,24 @@ hr {
   margin-top: calc(var(--baseline,1.5em) / 2);
 }
 
-.mb-1 {
-  margin-bottom: calc(var(--baseline,1.5em) / 2);
-}
-
 .mt-2 {
   margin-top: var(--baseline,1.5em);
 }
 
+.mt-4 {
+  margin-top: calc(var(--baseline,1.5em) * 4);
+}
+
+.mb-1 {
+  margin-bottom: calc(var(--baseline,1.5em) / 2);
+}
+
 .mb-2 {
   margin-bottom: var(--baseline,1.5em);
+}
+
+.mb-4 {
+  margin-bottom: calc(var(--baseline,1.5em) * 4);
 }
 
 .mt-n-2 {
@@ -217,8 +228,20 @@ hr {
   padding-top: var(--baseline,1.5em);
 }
 
+.pb-1 {
+  padding-bottom: calc(var(--baseline,1.5em) / 2);
+}
+
+.pb-2 {
+  padding-bottom: var(--baseline,1.5em);
+}
+
 .smaller {
   font-size: 80%;
+}
+
+.bigger {
+  font-size: 125%;
 }
 
 .crit {
@@ -266,7 +289,6 @@ hr {
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  margin-bottom: 4em;
 }
 
 .grid-card > * {
