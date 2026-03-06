@@ -29,15 +29,18 @@
     }
   }
 
+  body:has(#section-scroll) {
+    overflow-x: hidden;
+  }
+
   .title-scroll {
     background: color-mix(in srgb, var(--color-special), white 88%);
   }
 
   .down-arrow {
     position: absolute;
-    //top: calc(100vh - 60px);
     bottom: 40px;
-    left: calc(50% - 14px);
+    left: 50%;
     width: 0;
     height: 30px;
     border: 2px solid;
@@ -71,11 +74,14 @@
     }
   }
 
+  #section-scroll {
+    padding: 2em 0;
+  }
+
   .pin-wrap {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: 2em;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     padding: 1em 4vw;
   }
@@ -84,10 +90,20 @@
   @scope (#section-scroll) {
 
     .slide {
+      font-size: 110%;
       padding: 6em 3em;
+      min-width: 5dvw;
       background: rgba(255,255,255,0.05);
       border-radius: 2em;
       border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .slide h3 {
+      margin-top: 0;
+    }
+
+    .slide p {
+      font-size: 130%;
     }
 
     .slide h3 {
@@ -103,37 +119,44 @@
     }
   }
 
-  @media screen and (min-width: 40rem) {
-    #section-scroll {
-      /* Stretch it out, so that we create room for the horizontal scroll animation */
-      height: 300vh;
-      overflow: visible; /* To make position sticky work … */
+  @media screen and (min-width: 60rem) {
+    @supports (view-timeline-axis: block) {
+      #section-scroll {
+        /* Stretch it out, so that we create room for the horizontal scroll animation */
+        height: 300vh;
+        overflow: visible; /* To make position sticky work … */
 
-      view-timeline-name: --section-pin-tl;
-      view-timeline-axis: block;
-    }
+        view-timeline-name: --section-pin-tl;
+        view-timeline-axis: block;
+      }
 
-    .pin-wrap-sticky {
-      /* Stick to Top */
-      height: 100vh;
-      width: 100vw;
-      position: sticky;
-      top: 0;
-      width: 100vw;
-      overflow-x: hidden;
-    }
+      .pin-wrap-sticky {
+        /* Stick to Top */
+        height: 100dvh;
+        width: 100dvw;
+        position: sticky;
+        top: 0;
+        overflow-x: hidden;
+      }
 
-    .pin-wrap {
-      flex-direction: row;
-      height: 100vh;
-      width: 250vmax;
-      /* Hook animation */
-      will-change: transform;
-      animation: linear move forwards;
+      .pin-wrap {
+        grid-template-columns: repeat({{ len . }}, 1fr);
+        flex-direction: row;
+        justify-content: flex-start;
+        height: 100dvh;
+        width: 200vmax;
+        /* Hook animation */
+        will-change: transform;
+        animation: linear move forwards;
 
-      /* Link animation to view-timeline */
-      animation-timeline: --section-pin-tl;
-      animation-range: contain 0% contain 100%;
+        /* Link animation to view-timeline */
+        animation-timeline: --section-pin-tl;
+        animation-range: contain 0% contain 100%;
+      }
+
+      .slide {
+        min-height: 45vh;
+      }
     }
   }
 

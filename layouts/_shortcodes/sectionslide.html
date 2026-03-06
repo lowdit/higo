@@ -1,4 +1,4 @@
-{{ $title := .Get 0}}
+{{- $title := .Get 0 -}}
 {{- with .Page.Params.slides }}
 <div class="container-snap container-full section-special">
   {{ with $title }}<h2 class="center mt-0 mb-0">{{ .  }}</h2>{{ end }}

@@ -41,8 +41,8 @@
   {{- end -}}
 {{- end -}}
 {{- with ($.Scratch.Get "roadmap") }}
-<div>
-    <ul class='timeline'>
+  <div class="timeline-container">
+    <ul class="timeline">
     {{- range (sort . "startdateconverted" "asc") }}
       {{- if .startdate -}}
       <li class="work">
@@ -72,140 +72,155 @@
 /*
 /// Timeline
 */
+
+body:not(.print)  .timeline-container {
+  padding: 1em;
+  border: 1px solid #eee;
+  border-radius: 12px;
+}
+
 .timeline {
-margin-bottom: 5rem;
-padding-left: 30px;
-list-style: none;
-border-left: 8px solid #f2ffde;
-font-size: 90%;
+  width: 80%;
+  margin-bottom: 5rem;
+  padding-left: 30px;
+  list-style: none;
+  border-left: 8px solid #f2ffde;
+  font-size: 90%;
 }
 
 @media only screen and (min-width: 600px) {
-.timeline {
-margin: 50px 0 8rem 150px;
-padding-left: 30px;
-list-style: none;
-border-left: 8px solid #94f69e;
-}
+  .timeline {
+    margin: 50px 0 8rem 150px;
+    padding-left: 0px;
+    list-style: none;
+    border-left: 8px solid #f1f1f1;
+  }
 }
 
 .timeline a {
-color: var(--background-color-body, #fff);
+  color: var(--background-color-body, #fff);
 }
 
 .timeline li {
-position: relative;
-margin: 40px 0;
+  position: relative;
+  margin: 40px 0;
 }
 
 .timeline p {
-margin: 5px 0;
+  margin: 5px 0;
 }
 
 @media only screen and (min-width: 600px) {
-.timeline .date {
-font-family: "Futura", "Century Gothic";
-position: absolute;
-top: 35%;
-left: -258px;
-width: 200px;
-margin-top: -10px;
-line-height: 20px;
-font-size: 0.95em;
-text-align: right;
-font-weight: bold;
-}
+  .timeline .date {
+    font-family: "Futura", "Century Gothic";
+    position: absolute;
+    top: 35%;
+    left: -258px;
+    width: 200px;
+    margin-top: -10px;
+    line-height: 20px;
+    font-size: 0.95em;
+    text-align: right;
+    font-weight: bold;
+  }
 }
 
 .timeline .circle {
-position: absolute;
-top: 50%;
-left: -44px;
-display: block;
-margin-top: -10px;
-width: 20px;
-height: 20px;
-border: 1px solid #888;
-border-radius: 50%;
-background: #48b379;
+  position: absolute;
+  top: 50%;
+  left: -14px;
+  display: block;
+  margin-top: -10px;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #333;
+  border-radius: 50%;
+  background: #fafafa;
+}
+
+body:not(.print) .timeline .circle {
+  left: -24px;
+}
+body:not(.print) .timeline .date {
+  left: -234px;
 }
 
 .timeline .work {
-display: flex;
-align-items: center;
-min-height: 80px;
+  display: flex;
+  align-items: center;
+  min-height: 80px;
 }
 
 .timeline .work::before {
   display: none;
-  }
+}
 
 .timeline .content p {
-overflow: hidden;
-max-height: 200px;
-text-align: justify;
-word-break: break-word;
+  overflow: hidden;
+  max-height: 200px;
+  text-align: justify;
+  word-break: break-word;
 }
 
 .timeline .flex {
-display: flex;
-padding-left: 0px;
-flex-direction: column;
+  display: flex;
+  padding-left: 0px;
+  flex-direction: column;
 }
 
 .timeline label {
-font-size: 1.3em;
-font-weight: bold;
-cursor: auto;
+  font-size: 1.3em;
+  font-weight: bold;
+  cursor: auto;
 }
 
 .timeline .radio {
-display: none;
+  display: none;
 }
 
 @media only screen and (min-width: 600px) {
-.timeline .content {
-max-height: 180px;
-transform: translateX(20px);
-border-width: 2px;
-border-style: solid;
-border-color: var(--color-grey-light,transparent);
-border-radius: 0.5em;
-}
+  .timeline .content {
+    max-height: 180px;
+    transform: translateX(20px);
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--color-grey-light, transparent);
+    border-radius: 0.5em;
+  }
 
-.timeline label {
-z-index: 100;
-top: 20px;
-transform: translateX(22px);
-}
+  .timeline label {
+    z-index: 100;
+    top: 20px;
+    transform: translateX(22px);
+  }
 
-.timeline .content {
-position: relative;
-margin-right: 20px;
-}
+  .timeline .content {
+    position: relative;
+    margin-right: 20px;
+  }
 
-.timeline .content:before,
-.timeline .content:after {
-position: absolute;
-content: "";
-right: calc(100% + 1px);
-width: 0;
-height: 0;
-pointer-events: none;
-border: solid transparent;
-}
+  .timeline .content:before,
+  .timeline .content:after {
+    position: absolute;
+    content: "";
+    right: calc(100% + 1px);
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    border: solid transparent;
+  }
 
-.timeline .content:before {
-top: 50%;
-margin-top: -20px;
-border-width: 20px;
-border-right-color: inherit;
-}
+  .timeline .content:before {
+    top: 50%;
+    margin-top: -20px;
+    border-width: 20px;
+    border-right-color: inherit;
+  }
 
-.timeline .content:after {
-top: 50%;
-margin-top: -17px;
-border-width: 17px;
-}
+  .timeline .content:after {
+    top: 50%;
+    margin-top: -17px;
+    border-width: 17px;
+  }
 }
 </style>
