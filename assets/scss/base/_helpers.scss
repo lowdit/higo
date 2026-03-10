@@ -50,6 +50,10 @@
     @extend .container;
     max-width: 60rem;
   }
+  &--xl {
+    @extend .container;
+    max-width: 110rem;
+  }
 }
 
 .single-container.large {

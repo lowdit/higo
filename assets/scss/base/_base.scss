@@ -90,18 +90,17 @@ h6 {
 }
 
 dt {
-  @include font-size('xl');
   font-weight: 800;
   margin: 1em 0 0.1em;
   color: #085279;
 }
 
-dl dl dt { 
+dl dl dt {
   @include font-size('md');
   color: #111;
 }
 
-dl dl dl dt { 
+dl dl dl dt {
   @include font-size('base');
 }
 
