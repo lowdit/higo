@@ -1,13 +1,15 @@
 {{- $currentLang := site.Language.Lang }}
 {{- if eq $currentLang "fr" -}}
     {{- $content := . -}}
+    <!-- # Cite inline tag <q> -->
+    {{- $content = $content | replaceRE "&raquo;(.+?)&laquo;" "<q>$1</q>"  -}}
+    {{- $content = $content | replaceRE ">>(.+?)<<" "<q>$1</q>"  -}}
     <!-- # Ordinals -->
     {{- $content = $content | replaceRE "(\\s)(\\d+)(e|è)(r|me)?([\\s.,])" "$1$2<sup>$3$4</sup>$5" -}}
     <!-- # Num -->
     <!-- input.gsub!(%r!n°\s*(\d)!, 'n<sup>o</sup>&#8239;\1') -->
     {{- $content = $content | replaceRE "n°\\s*(\\d)" "n<sup>o</sup>&#8239;$1" -}}
 
-    
     <!-- # French Guillemets -->
     {{ $content = $content | replaceRE "(&rdquo;|”|»)&lt;a " "«&nbsp;&lt;a " }}
     {{- $content = $content | replaceRE "(&ldquo;|“|«)(^&#8239;)(\\s|&nbsp;| )*" "«&#8239;" -}}
