@@ -79,13 +79,13 @@ body {
     margin: -6px;
 
     display: block;
-    background: #ff02;
+    //background: #ff02;
     border: 2px solid blue;
     border-radius: 6px;
     pointer-events: none;
     z-index: 2147483647;
     opacity: 1;
-    transition: inset 0.2s linear, opacity 0.2s linear;
+    //transition: inset 0.2s linear, opacity 0.2s linear;
   }
 
   html:not(:focus-within)::before {
