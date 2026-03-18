@@ -1,12 +1,12 @@
 {{- $title := .Get 0 -}}
 {{- with .Page.Params.slides }}
 {{ with $title }}
-<div class="container-full mt-4 mb-0 p-relative ">
-  <h2 class="title-scroll center pt-1 pb-2 mb-0">{{ . }}</h2>
+<div class="container-full mt-2 mb-0 p-relative ">
+  <h2 class="title-scroll center pt-2 pb-2 mb-0">{{ . }}</h2>
   <div class="down-arrow"></div>
 </div>
 {{ end }}
-<section id="section-scroll" class="container-full section-special mb-4">
+<section id="section-scroll" class="container-full section-special mb-2">
   <div class="pin-wrap-sticky">
     <div class="pin-wrap">
     {{- range $id, $value := . }}

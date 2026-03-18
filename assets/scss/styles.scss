@@ -228,12 +228,20 @@ hr {
   padding-top: var(--baseline,1.5em);
 }
 
+.pt-4 {
+  padding-top: calc(var(--baseline,1.5em) * 4);
+}
+
 .pb-1 {
   padding-bottom: calc(var(--baseline,1.5em) / 2);
 }
 
 .pb-2 {
   padding-bottom: var(--baseline,1.5em);
+}
+
+.pb-4 {
+  padding-bottom: calc(var(--baseline,1.5em) * 4);
 }
 
 .smaller {
