@@ -14,7 +14,7 @@
     {{- $bundle := slice $style $custom | resources.Concat "css/main.css" }}
     {{- $style = $bundle }}
   {{- else }}
-    {{ $custom_no_bundle = true }}  
+    {{ $custom_no_bundle = true }}
   {{ end }}
 {{ end }}
 
@@ -30,7 +30,7 @@
   {{/*  Only minify in production to allow source maps  */}}
   {{- $final = $final | minify }}
 {{ end -}}
-<link rel="preload" href="{{ $final.Permalink }}" as="style">
+<link rel="preload" href="{{ $final.Permalink }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <link rel="stylesheet" href="{{ $final.Permalink }}" />
 {{/*  Custom goes last to preserve cascade in development  */}}
 {{- if $custom_no_bundle }}

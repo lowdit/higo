@@ -1,6 +1,12 @@
 .post-entry {
   margin: 20px 0;
   max-width: 750px;
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--color-contrast-low);
+  }
+  h2 + & {
+    border-top: 1px solid var(--color-contrast-low);
+  }
 }
 
 .post-entry:has(p) h3 {
