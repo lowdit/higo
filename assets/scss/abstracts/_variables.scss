@@ -18,13 +18,13 @@
 
   --color-text: var(--color-contrast-high);
 
-  --font-size-sm: clamp(0.9rem, 0.27vw + 0.86rem, 0.99rem);
-  --font-size-base: clamp(1rem, 0.34vw + 0.91rem, 1.19rem);
-  --font-size-md: clamp(1.25rem, 0.61vw + 1.1rem, 1.50rem);
-  --font-size-lg: clamp(1.56rem, 1vw + 1.31rem, 2.31rem);
-  --font-size-xl: clamp(1.95rem, 1.56vw + 1.56rem, 2.71rem);
-  --font-size-xxl: clamp(2.44rem, 2.38vw + 1.85rem, 3.81rem);
-  --font-size-xxxl: clamp(3.05rem, 3.54vw + 2.17rem, 4.75rem);
+  --font-size-sm: clamp(0.9em, 0.27vw + 0.86em, 0.99em);
+  --font-size-base: clamp(1em, 0.34vw + 0.91em, 1.19em);
+  --font-size-md: clamp(1.25em, 0.61vw + 1.1em, 1.50em);
+  --font-size-lg: clamp(1.56em, 1vw + 1.31em, 2.31em);
+  --font-size-xl: clamp(1.95em, 1.56vw + 1.56em, 2.71em);
+  --font-size-xxl: clamp(2.44em, 2.38vw + 1.85em, 3.81em);
+  --font-size-xxxl: clamp(3.05em, 3.54vw + 2.17em, 4.75em);
 }
 
 [data-theme] {
@@ -66,7 +66,7 @@ $code-font-stack: 'Courier New', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono',
 
 /// Container's maximum width
 /// @type Length
-$max-width: 73.75rem;
+$max-width: 73.75em;
 
 
 // Responsiveness

@@ -48,11 +48,11 @@
 
   &--sm {
     @extend .container;
-    max-width: 60rem;
+    max-width: 50em;
   }
   &--xl {
     @extend .container;
-    max-width: 110rem;
+    max-width: 100em;
   }
 }
 

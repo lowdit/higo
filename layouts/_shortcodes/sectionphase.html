@@ -1,0 +1,78 @@
+{{- $title := .Get 0 -}}
+{{- with .Page.Params.slides }}
+{{ with $title }}
+<div class="container-full mt-2 mb-0 p-relative ">
+  <h2 class="title-scroll center pt-2 pb-2 mb-0">{{ . }}</h2>
+  <div class="down-arrow"></div>
+</div>
+{{ end }}
+<section id="section-phase" class="container-full section-special mb-2">
+  <div class="grid">
+    {{- range $id, $value := . }}
+      <div class="slide">
+        <div>
+        {{ if .icon }}{{ (index (where site.Data.icons "title" .icon) 0).code | safeHTML }}{{ end }}
+        {{ with .title  }}<h2>{{ .  }}</h2>{{ end }}
+        {{ with .description  }}{{ . | markdownify }}{{ end }}
+        </div>
+      </div>
+    {{ end -}}
+  </div>
+</section>
+
+<style>
+  body:has(#section-phase) {
+    overflow-x: hidden;
+  }
+
+  #section-phase {
+    padding: 2em;
+  }
+
+  @scope (#section-phase) {
+
+    .grid {
+      grid-template-columns: repeat(auto-fit, minmax(20em, 1fr));
+      gap: 1.5em;
+      @media screen and (min-width: 50em) {
+        grid-template-columns: repeat(2,1fr);
+      }
+      @media screen and (min-width: 90em) {
+        grid-template-columns: repeat(4,1fr);
+      }
+    }
+    svg {
+      color: rgba(255,255,255,0.5);
+      width: 3.5em;
+      position: absolute;
+      top: 1.5em;
+      left: 2em;
+    }
+    .slide {
+      position: relative;
+      padding: 6em 3em;
+      //background: rgba(255,255,255,0.05);
+      border-radius: 15px;
+      border: 2px solid rgba(255,255,255,0.3);
+      &:has(svg) {
+        padding: 6em 3em 1em;
+      }
+    }
+
+    .slide h3 {
+      margin-top: 0;
+    }
+
+    .slide p {
+      font-size: 110%;
+    }
+
+    .slide h3 {
+      margin-top: 0;
+      font-size: 200%;
+    }
+
+  }
+
+</style>
+{{ end }}
