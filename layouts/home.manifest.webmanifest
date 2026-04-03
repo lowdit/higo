@@ -1,5 +1,5 @@
 {
-  "name": {{ site.Title | htmlUnescape | jsonify }},
+  "name": {{ site.Title | htmlUnescape | jsonify }}ss,
   {{ with site.LanguageCode }}"lang": {{ . | jsonify }},{{ end }}
   {{ with site.Params.shortTitle }}"short_name": {{ . | htmlUnescape | jsonify }},{{end}}
   {{with site.Params.description}}"description": {{ . | htmlUnescape | jsonify }},{{end}}

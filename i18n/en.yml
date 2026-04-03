@@ -13,6 +13,8 @@ title-taxonomies: Tags
 toc-title: Table of content
 original-link: Original link
 back-to: Back to
+text-original-link: Original link
+text-traduction-auto: Automatic Translation
 links-resources: Resources
 links-articles: Articles
 links-AI: AI
@@ -21,3 +23,4 @@ links-scripts: Scripts
 links-plugins: Plugins
 links-tutorials: Tutorials
 links-presentations: Presentations
+links-prompts: Prompts

@@ -14,7 +14,7 @@
     {{ end -}}
     {{- if $slides }}
     {{- if (eq .Format.BaseName "presentation") }}
-    <li>{{ if ge (len $range) 2 }}- {{ end }}<a href="{{ .Permalink | safeURL }}">Version présentation</a></li>
+    <li>{{ if ge (len $range) 2 }}{{ end }}<a href="{{ .Permalink | safeURL }}">Version présentation</a></li>
     {{ end -}}
     {{ end -}}
     {{- if $carousel }}

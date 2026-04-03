@@ -14,4 +14,8 @@
     {{- partial "footer/scripts.html" . -}}
     {{ end -}}
   </body>
+  <script type="module" defer>
+    import { hydratePretextAll } from '/assets/js/pretext-hydrator.js';
+    window.addEventListener('load', ()=> hydratePretextAll({ lineHeight: 22 }));
+</script>
 </html>
