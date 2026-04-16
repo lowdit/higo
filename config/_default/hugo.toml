@@ -72,7 +72,7 @@ weight = 60
     suffixes = ["webmanifest"]
 
 [outputs]
-    home                  = [ "HTML", "ATOM", "JSON", "FEED", "SITEMAP", "SEARCH"]
+    home                  = [ "HTML", "ATOM", "JSON", "FEED","FEEDJSON", "SITEMAP", "SEARCH"]
     section               = [ "HTML", "SITEMAP" ]
     page                  = [ "HTML" ]
     taxonomy              = [ "HTML" ]
@@ -84,7 +84,7 @@ weight = 60
       isHTML                 = true
       noUgly                 = true
       permalinkable          = true
-  [outputFormats.JSON]
+  [outputFormats.FEEDJSON]
       mediaType              = "application/json"
       baseName               = "index"
       path                   = "feed"
