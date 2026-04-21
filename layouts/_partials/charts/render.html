@@ -56,10 +56,10 @@
     {{- range $pages -}}
       {{ $pages := . }}
       {{- if eq (index .Params.data "real-knowledge-accessibility") $label }}
-      {{- $s.Add (printf "action-count-%s" $label) (index ($.Site.Data.level) (index .Params.data "real-knowledge-accessibility")) -}}
+      {{- $s.Add (printf "action-count-%s" $label) (index (hugo.Data.level) (index .Params.data "real-knowledge-accessibility")) -}}
       {{ end -}}
       {{- if eq (index .Params.data "estimated-knowledge-accessibility") $label }}
-      {{- $s.Add (printf "knowledge-count-%s" $label) (index ($.Site.Data.level) (index .Params.data "estimated-knowledge-accessibility")) -}}
+      {{- $s.Add (printf "knowledge-count-%s" $label) (index (hugo.Data.level) (index .Params.data "estimated-knowledge-accessibility")) -}}
       {{ end -}}
       {{- $s.SetInMap "MapCount" (string $label) (printf "%s" (string ($s.Get (printf "action-count-%s" $label)))) -}}
       {{- $s.SetInMap "MapKnowledge" (string $label) (printf "%s" (string ($s.Get (printf "knowledge-count-%s" $label)))) -}}
@@ -117,7 +117,7 @@
                         "external"      (uniq (sort ($s.Get "idea-external")))
                         "int"           (($s.Get "int"))
                         "ext"           (($s.Get "ext"))
-    ) 
+    )
     "level" (dict
                         "action"     (uniq (sort ($s.Get "estimated-action")))
                         "knowledge"  (uniq (sort ($s.Get "estimated-knowledge")))

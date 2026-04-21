@@ -5,7 +5,7 @@
     {{ range . }}
       {{ with .charge }}
         {{ range $key, $value := . }}
-          {{ $key := (string (index $.Site.Data.month $key)) }}
+          {{ $key := (string (index hugo.Data.month $key)) }}
           {{ $.Scratch.Set $key dict }}
           {{ $.Scratch.Set (printf "%s-time" $key) slice }}
         {{- end -}}
@@ -26,7 +26,7 @@
       {{- if .startdate }}{{ $startdate = time.AsTime .startdate }}{{ end }}
       {{- with .charge }}
         {{ range $key, $value := . }}
-        {{ $key := (string (index $.Site.Data.month $key)) }}
+        {{ $key := (string (index hugo.Data.month $key)) }}
         {{ $.Scratch.Set $key (merge (dict $nameactivities .) ($.Scratch.Get $key)) }}
         {{ $.Scratch.Add (printf "%s-%s-time" $key $nametheme) . }}
         {{ $.Scratch.Add (printf "%s-timetotal" $key) . }}

@@ -1,5 +1,5 @@
 {{ define "main" -}}
-{{ $people := .Site.Data.people }}
+{{ $people := hugo.Data.people }}
 {{ $data   := index $people (string .File) }}
 {{ $jobs   := slice "Digital Accessibility Officer" "Digital Sustainability Officer" }}
 <div class="container">

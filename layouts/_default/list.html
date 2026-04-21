@@ -58,7 +58,7 @@
               {{ add $id 1 }}. {{ .Title }}
               <a href="#{{ anchorize .Title | safeURL }}"></a>
             </h2>
-            <div class=title-increment>
+            <div class="title-increment">
             {{- partial "content.html" .Content .Content }}
             <br>
             <hr>

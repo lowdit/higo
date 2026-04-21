@@ -3,7 +3,7 @@
     <a class="logo" href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a>
     {{- if eq .Section "assessment" }}
 
-    <search class="search" role="search">
+    <search class="search" role="search" hidden>
       <div class="search-input-wrap">
         <input type="text" id="search-input" class="search-input" tabindex="0" placeholder="Search in Assessment" aria-label="Search" autocomplete="off">
         <label for="search-input" class="search-label"><svg viewBox="0 0 24 24" class="search-icon">

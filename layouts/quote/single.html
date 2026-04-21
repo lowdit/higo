@@ -6,7 +6,7 @@
 </div>
 <section class="generic-single">
     <div class="container">
-    {{ range $.Site.Data.quote }}
+    {{ range hugo.Data.quote }}
         <blockquote>
         {{ .citation | markdownify }}
         <footer>

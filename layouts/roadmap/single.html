@@ -1,5 +1,5 @@
 {{ define "main" }}
-{{- $roadmap    := cond (not .Params.roadmap) .Site.Data.roadmap .Params.roadmap }}
+{{- $roadmap    := cond (not .Params.roadmap) hugo.Data.roadmap .Params.roadmap }}
 {{- $percentage := cond (not $roadmap.percentage) .Params.percentage $roadmap.percentage }}
 {{- $timeline   := cond (not $roadmap.timeline) .Params.timeline $roadmap.timeline }}
 <div class="container">
@@ -151,7 +151,7 @@
           {{- range . }}
             {{- with .charge }}
               {{ range $key, $value := . }}
-                {{- $key := (string (index $.Site.Data.month $key)) }}
+                {{- $key := (string (index hugo.Data.month $key)) }}
                 {{- $.Scratch.Set $key dict }}
                 {{- $.Scratch.Set (printf "%s-time" $key) slice }}
               {{- end -}}
@@ -175,9 +175,9 @@
             {{- $values := . }}
             {{- if .startdate }}{{ $startdate = time.AsTime .startdate }}{{ end }}
             {{- if .deadline  }}{{ $enddate  = time.AsTime .deadline }}{{ end }}
-            {{- $startdatebest   = $startdatebest   | append $startdate }} 
+            {{- $startdatebest   = $startdatebest   | append $startdate }}
             {{- $enddatebest     = $enddatebest     | append $enddate }}
-            {{- $statusslice     = $statusslice     | append .status }} 
+            {{- $statusslice     = $statusslice     | append .status }}
             {{- $.Scratch.SetInMap (printf "roadmap%s" $nametopics) "startdate" (index $startdatebest 0) }}
             {{- $.Scratch.SetInMap (printf "roadmap%s" $nametopics) "enddate"   (index (last 1 $enddatebest) 0) }}
             {{- $.Scratch.SetInMap (printf "roadmap%s" $nametopics) "status"    (uniq $statusslice) }}
@@ -186,7 +186,7 @@
               {{- $keyname := (printf "%s£%s£%s" $nametheme $nametopics $nameactivities) }}
               {{- if .charge }}
                 {{- range $key, $value := .charge }}
-                  {{- $key := (string (index $.Site.Data.month $key)) }}
+                  {{- $key := (string (index hugo.Data.month $key)) }}
                   {{- $.Scratch.Set $key (merge (dict $nameactivities .) ($.Scratch.Get $key)) }}
                   {{- $.Scratch.Add (printf "%s-%s-time" $key $nametheme) . }}
                   {{- $.Scratch.Add (printf "%s-timetotal" $key) . }}
@@ -234,7 +234,7 @@
       </div>
 
       <h2>Tableau de tâches par missions</h2>
-      
+
       <table>
         <caption hidden>Tableau récapitulatif de la répartition</caption>
         <thead>
@@ -242,7 +242,7 @@
           <th  style="width:150px">Axes</th>
           <th  style="width:150px">Sujets</th>
           {{- range seq 8 12 }}
-            <th>{{ substr (index $.Site.Data.month (string .)) 0 }}</th>
+            <th>{{ substr (index hugo.Data.month (string .)) 0 }}</th>
           {{ end -}}
           </tr>
         </thead>
@@ -269,7 +269,7 @@
                     {{ if and (not $startdateactivities)  (le $seq ($deadlineactivities).Month | int) }} style="background: rgba(57, 22, 92, 0.8);"
                     {{ else }}
                     {{ if $startdateactivities }}
-                    {{ if and (ge $seq ($startdateactivities).Month | int)  (le $seq ($deadlineactivities).Month | int) }} style="background: rgba(57, 22, 92, 0.8);" 
+                    {{ if and (ge $seq ($startdateactivities).Month | int)  (le $seq ($deadlineactivities).Month | int) }} style="background: rgba(57, 22, 92, 0.8);"
                     {{- end -}}
                     {{- end -}}
                     {{- end -}}
@@ -282,7 +282,7 @@
             {{ end -}}
         </tbody>
       </table>
-      
+
       {{- range $roadmap.theme }}
         {{- $nametheme := .name }}
         <h3 class="mb-0">{{ .name }}</h3>
@@ -297,7 +297,7 @@
                 <th  style="width:100px">Echéance</th>
                 {{- if $percentage }}
                 {{- range seq 8 12 }}
-                  <th style="width:70px">{{ (substr (index $.Site.Data.month (string .)) 0 3)  }}</th>
+                  <th style="width:70px">{{ (substr (index hugo.Data.month (string .)) 0 3)  }}</th>
                 {{ end -}}
                 {{ end -}}
                 <th>Avancement</th>
@@ -316,8 +316,8 @@
                 {{- $comment              := .comment }}
                 {{- $status               := .status }}
                 {{- $values := . }}
-                {{- $cond := cond (and .charge $percentage) true (cond (not (and .charge $percentage)) true false) }}     
-                {{- with $cond }}    
+                {{- $cond := cond (and .charge $percentage) true (cond (not (and .charge $percentage)) true false) }}
+                {{- with $cond }}
                 <tr{{ if eq $status "closed" }} style="background: #dededebb;"{{ else if eq $status "waiting" }} style="background: #e4f7e4;"{{ end }}>
                     {{ if eq $id 0 }}<th style="font-size: 1rem; text-align: left;" rowspan="{{ $len }}"><strong>{{ $nametopics }}</strong></th>{{ end }}
                     {{- if ne $status "archived"}}

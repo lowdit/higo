@@ -54,10 +54,10 @@
     {{- range $pages -}}
       {{ $pages := . }}
       {{- if eq (index .Params.data "real-knowledge-accessibility") $label }}
-      {{- $s.Add (printf "action-count-%s" $label) (index ($.Site.Data.level) (index .Params.data "real-knowledge-accessibility")) -}}
+      {{- $s.Add (printf "action-count-%s" $label) (index (hugo.Data.level) (index .Params.data "real-knowledge-accessibility")) -}}
       {{ end -}}
       {{- if eq (index .Params.data "estimated-knowledge-accessibility") $label }}
-      {{- $s.Add (printf "knowledge-count-%s" $label) (index ($.Site.Data.level) (index .Params.data "estimated-knowledge-accessibility")) -}}
+      {{- $s.Add (printf "knowledge-count-%s" $label) (index (hugo.Data.level) (index .Params.data "estimated-knowledge-accessibility")) -}}
       {{ end -}}
       {{- $s.SetInMap "MapCount" (string $label) (printf "%s" (string ($s.Get (printf "action-count-%s" $label)))) -}}
       {{- $s.SetInMap "MapKnowledge" (string $label) (printf "%s" (string ($s.Get (printf "knowledge-count-%s" $label)))) -}}
@@ -151,7 +151,7 @@
       new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: [{{ range $id, $value := $issues -}}{{ $value := index (last 1 (split . "-")) 0 }}{{ if ne $id 0 }},{{ end }}{{- if (index ($.Site.Data.scores) (lower $value)) -}}{{ (index ($.Site.Data.scores) (lower $value)) }}{{ else }}{{ $value }}{{ end -}}{{ end -}}],
+          labels: [{{ range $id, $value := $issues -}}{{ $value := index (last 1 (split . "-")) 0 }}{{ if ne $id 0 }},{{ end }}{{- if (index (hugo.Data.scores) (lower $value)) -}}{{ (index (hugo.Data.scores) (lower $value)) }}{{ else }}{{ $value }}{{ end -}}{{ end -}}],
           datasets: [{
             label: 'Nombre de citation',
             backgroundColor: "{{ index $color 1 }}",
@@ -181,7 +181,7 @@
       new Chart(ctxsf, {
         type: 'pie',
         data: {
-          labels: [{{ range $id, $value := first 4  $successfactor -}}{{ $value := index (last 1 (split . "-")) 0 }}{{ if ne $id 0 }},{{ end }}{{- if (index ($.Site.Data.scores) (lower $value)) -}}{{ (index ($.Site.Data.scores) (lower $value)) }}{{ else }}{{ $value }}{{ end -}}{{ end -}}],
+          labels: [{{ range $id, $value := first 4  $successfactor -}}{{ $value := index (last 1 (split . "-")) 0 }}{{ if ne $id 0 }},{{ end }}{{- if (index (hugo.Data.scores) (lower $value)) -}}{{ (index (hugo.Data.scores) (lower $value)) }}{{ else }}{{ $value }}{{ end -}}{{ end -}}],
           datasets: [{
             label: 'Fréquence',
             backgroundColor: [{{ range $id, $value := $successfactor -}}{{ if ne $id 0 }},{{ end }}"{{ index $color $id }}"{{ end}}],
@@ -215,7 +215,7 @@
       new Chart(ctxdf, {
         type: 'pie',
         data: {
-          labels: [{{ range $id, $value := first 4 $developfactor -}}{{ $value := index (last 1 (split . "-")) 0 }}{{ if ne $id 0 }},{{ end }}{{- if (index ($.Site.Data.scores) (lower $value)) -}}{{ (index ($.Site.Data.scores) (lower $value)) }}{{ else }}{{ $value }}{{ end -}}{{ end -}}],
+          labels: [{{ range $id, $value := first 4 $developfactor -}}{{ $value := index (last 1 (split . "-")) 0 }}{{ if ne $id 0 }},{{ end }}{{- if (index (hugo.Data.scores) (lower $value)) -}}{{ (index (hugo.Data.scores) (lower $value)) }}{{ else }}{{ $value }}{{ end -}}{{ end -}}],
           datasets: [{
             label: 'Fréquence',
             backgroundColor: [{{ range $id, $value := $developfactor -}}{{ if ne $id 0 }},{{ end }}"{{ index $color $id }}"{{ end}}],

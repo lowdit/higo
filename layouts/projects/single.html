@@ -125,7 +125,7 @@
       <div class="list-indicators">
       {{ range $key, $value := .Params.scores }}
         <p>
-          <span>{{ index ($.Site.Data.scores) $key }}</span>
+          <span>{{ index (hugo.Data.scores) $key }}</span>
           <meter value="{{ . }}" min="0" max="5" low="2" high="4" optimum ="5" ></meter>
         </p>
       {{ end }}
@@ -136,7 +136,7 @@
 
 {{ if in .Permalink "ts/offers" }}
 {{ $offers    := .Params.offers }}
-{{ $modules   := .Site.Data.offers }}
+{{ $modules   := hugo.Data.offers }}
 {{ $prevtitle := "" }}
 {{ $color   := slice "starter" "essential" "professional" }}
 {{ if $offers }}

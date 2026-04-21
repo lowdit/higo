@@ -1,5 +1,5 @@
 
-{{ range where .context.Site.Data.quote "id" .value }}
+{{ range where .contexthugo.Data.quote "id" .value }}
     <blockquote>
     <p>{{ .citation | markdownify }}</p>
     <footer>
