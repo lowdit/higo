@@ -64,10 +64,14 @@
               {{- end }}
             {{- end }}
             {{- end }}
-        {{ end }}
-        {{- end }}
+        {{ end -}}
+        {{ end -}}
+    {{ end -}}
+    {{- if .Content }}
+    <h2>Questions semi-dirigées</h2>
+    {{- else }}
+    <p>Aucun contenu</p>
     {{ end }}
-    {{ if .Content }}<h2>Questions semi-dirigées</h2>{{ end }}
     {{ partialCached "content.html" .Content .Content }}
   </div>
 </section>
