@@ -120,7 +120,7 @@
 }
 
 .offers .project-list-summary p {
-  margin-top: 0; 
+  margin-top: 0;
 }
 
 .offers a:hover {
@@ -220,9 +220,10 @@
 }
 
 .project-entry-title {
-  margin: 0;
+  margin: 0 0 0.1em;
   font-weight: 600;
-  
+  line-height: 1.1;
+
   a {
     color: var(--color-contrast-high);
 
