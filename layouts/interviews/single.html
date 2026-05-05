@@ -22,6 +22,20 @@
 </div>
 <section class="generic-single container">
   <div class="single-container markdown">
+    {{- $raw := (transform.Unmarshal (readFile "contentform/enquetes/evaluation-atelier-2026/index.md")).form }}    
+    {{- range $raw }}
+      {{- range .questions }}
+        {{ site.Store.SetInMap "input" .name .label }}
+      {{ end -}}
+    {{ end -}}
+    {{ with .Params.data }}
+    <dl>
+      {{ range $key, $value := . }}
+      <dt>{{ (index (site.Store.Get "input") $key) | safeHTML }}</dt>
+      <dl>{{ $value }}</dl>
+      {{ end }}
+    </dl>
+    {{ end }}
     {{ if in .Permalink "ethiopy"}}
       {{- $path := "form/ATIethiopy" }}
       {{- $questions := slice "countries" "estimated-action-accessibility" "estimated-knowledge-accessibility" "first-block" "first-win" "first-word" "idea-external" "idea-internal" "jobtitle" "mission-issue-futur" "mission-issue-present" "sector" "successfactors" "developfactors" "issues" "accountability" "needexpert" -}}
@@ -70,7 +84,8 @@
     {{- if .Content }}
     <h2>Questions semi-dirigées</h2>
     {{- else }}
-    <p>Aucun contenu</p>
+    <hr>
+    <p>Aucun contenu dans le fichier (devrait afficher le contenu d'un interview semi-dirigée.</p>
     {{ end }}
     {{ partialCached "content.html" .Content .Content }}
   </div>

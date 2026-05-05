@@ -11,13 +11,34 @@
   </section>
   {{ if ge (len (split .Path "/")) 3 }}
     {{ $pagesstats := where $pages "Params.data.needexpert" "ne" "" }}
-    <h2>Statistiques générales</h2>
-    {{ partial "interviews/generalstats.html" $pages }}
-    <h2>Répartition des sujets clefs</h2>
-    {{ partial "interviews/topicsstats.html" (dict "context" . "pages" $pages) }}
+    {{ $radioEstimated := slice "aucune" "reduite" "moyenne" "importante" "majeure" }}
+    <h2 hidden>Statistiques générales</h2>
     {{- range $pages -}}
-    {{ debug.Dump .Params.data  }}<hr>
+      {{- range $key, $value := .Params.data }}
+        {{- site.Store.Set $key slice -}}
+      {{- end -}}
+    {{ end -}}
+    {{- range $pages -}}
+      {{- range $key, $value := .Params.data }}
+        {{- if in $radioEstimated $value }}
+          {{- site.Store.Add $key $value -}}
+          {{- site.Store.SetInMap "allKeys" $key (site.Store.Get $key) }}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+    {{ range $key, $value := (site.Store.Get "allKeys") }}
+      {{ range $radioEstimated }}
+        {{ $estimated := . }}
+          {{ range $value }}
+            {{ if eq . $estimated }}
+              
+            {{ end }}
+          {{ end }}
+        {{ end }}
     {{ end }}
+    {{ partial "interviews/generalstats.html" $pages }}
+    <h2 hidden>Répartition des sujets clefs</h2>
+    {{ partial "interviews/topicsstats.html" (dict "context" . "pages" $pages) }}
   {{ end }}
     <h2>Liste des interviews</h2>
     <section class="list list-interview">
