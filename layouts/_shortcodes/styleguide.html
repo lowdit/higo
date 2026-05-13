@@ -1,0 +1,208 @@
+{{- with .Page.Params }}
+    {{- with .styleguide }}
+    {{- with .colors }}
+    <h4>Liste des couleurs</h4>
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(12em, 1fr));gap: 1em">
+        {{- range . }}
+        <div style="min-height: 100px;border: 1px solid #000;display:grid;place-items: center;text-align:center;background:{{ .value }};color:contrast-color({{ .value }});padding:1em;font-weight:bold;">
+            {{ .name }}<br>{{ .value }}
+        </div>
+        {{ end -}}
+    {{ end -}}
+    </div>
+    {{ end -}}
+{{ end -}}
+
+{{- if .Page.Params }}
+{{- if .Page.Params.styleguide }}
+{{- if .Page.Params.styleguide.contrasts }}
+<h4>Contrastes entre couleurs</h4>
+<div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(17em, 1fr));gap: 1em">
+{{- range .Page.Params.styleguide.contrasts }}
+    {{ $foreground := (index (where $.Page.Params.styleguide.colors "name" .foreground) 0).value }}
+    {{ $foregroundname := (index (where $.Page.Params.styleguide.colors "name" .foreground) 0).name }}
+    {{ $background := cond (not .background) "#ffffff" (index (where $.Page.Params.styleguide.colors "name" .background) 0).value }}
+    {{ $backgroundname := cond (not .background) "Blanc" (index (where $.Page.Params.styleguide.colors "name" .background) 0).name }}
+    {{ template "contrast" (dict "foreground" $foreground "background" $background "foregroundname" $foregroundname "backgroundname" $backgroundname) }}
+{{ end -}}
+</div>
+
+<style>
+    p {
+        margin: 0;
+    }
+    .contrast-preview {
+        margin-bottom: 1em;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+.contrast-block {
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  border: 1px solid;
+}
+
+.contrast-block .large {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.contrast-ratio {
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 20px;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.contrast-results {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.result {
+  padding: 10px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.result.pass {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.result.fail {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.result .icon {
+  font-weight: bold;
+}
+
+</style>
+{{ end -}}
+{{ end -}}
+{{ end -}}
+
+{{ define "contrast" }}
+    {{- /* Shortcode: {{< contrast fg="#123abc" bg="#ffffff" >}} */ -}}
+    {{- $fg := .foreground | default "#000000" -}}
+    {{- $bg := .background | default "#ffffff" -}}
+
+    {{- /* Normaliser les couleurs hex */ -}}
+    {{- $hexF := lower (replace $fg "#" "") -}}
+    {{- $hexB := lower (replace $bg "#" "") -}}
+
+    {{- /* Étendre les codes courts (#abc -> #aabbcc) */ -}}
+    {{- if eq (len $hexF) 3 -}}
+    {{- $hexF = printf "%c%c%c%c%c%c" (index $hexF 0) (index $hexF 0) (index $hexF 1) (index $hexF 1) (index $hexF 2) (index $hexF 2) -}}
+    {{- end -}}
+    {{- if eq (len $hexB) 3 -}}
+    {{- $hexB = printf "%c%c%c%c%c%c" (index $hexB 0) (index $hexB 0) (index $hexB 1) (index $hexB 1) (index $hexB 2) (index $hexB 2) -}}
+    {{- end -}}
+
+    {{- /* Fonction utilitaire : convertir hex char en nombre */ -}}
+    {{- $hexToInt := dict "0" 0 "1" 1 "2" 2 "3" 3 "4" 4 "5" 5 "6" 6 "7" 7 "8" 8 "9" 9 "a" 10 "b" 11 "c" 12 "d" 13 "e" 14 "f" 15 -}}
+
+    {{- /* Extraire chaque paire de hex */ -}}
+    {{- $hex1 := substr $hexF 0 2 -}}
+    {{- $hex2 := substr $hexF 2 2 -}}
+    {{- $hex3 := substr $hexF 4 2 -}}
+
+    {{- $hexB1 := substr $hexB 0 2 -}}
+    {{- $hexB2 := substr $hexB 2 2 -}}
+    {{- $hexB3 := substr $hexB 4 2 -}}
+
+    {{- /* Convertir chaque pair hex en décimal */ -}}
+    {{- $rF := float (add (mul (index $hexToInt (substr $hex1 0 1)) 16) (index $hexToInt (substr $hex1 1 1))) -}}
+    {{- $gF := float (add (mul (index $hexToInt (substr $hex2 0 1)) 16) (index $hexToInt (substr $hex2 1 1))) -}}
+    {{- $bF := float (add (mul (index $hexToInt (substr $hex3 0 1)) 16) (index $hexToInt (substr $hex3 1 1))) -}}
+
+    {{- $rB := float (add (mul (index $hexToInt (substr $hexB1 0 1)) 16) (index $hexToInt (substr $hexB1 1 1))) -}}
+    {{- $gB := float (add (mul (index $hexToInt (substr $hexB2 0 1)) 16) (index $hexToInt (substr $hexB2 1 1))) -}}
+    {{- $bB := float (add (mul (index $hexToInt (substr $hexB3 0 1)) 16) (index $hexToInt (substr $hexB3 1 1))) -}}
+
+    {{- /* Normaliser RGB en 0..1 */ -}}
+    {{- $srF := div (float $rF) 255.0 -}}
+    {{- $sgF := div (float $gF) 255.0 -}}
+    {{- $sbF := div (float $bF) 255.0 -}}
+
+    {{- $srB := div (float $rB) 255.0 -}}
+    {{- $sgB := div (float $gB) 255.0 -}}
+    {{- $sbB := div (float $bB) 255.0 -}}
+
+
+    {{- /* Lineariser sRGB (formule WCAG) */ -}}
+    {{- $lrF := cond (le $srF 0.03928) (div $srF 12.92) (pow (div (add $srF 0.055) 1.055) 2.4) -}}
+    {{- $lgF := cond (le $sgF 0.03928) (div $sgF 12.92) (pow (div (add $sgF 0.055) 1.055) 2.4) -}}
+    {{- $lbF := cond (le $sbF 0.03928) (div $sbF 12.92) (pow (div (add $sbF 0.055) 1.055) 2.4) -}}
+
+    {{- $lrB := cond (le $srB 0.03928) (div $srB 12.92) (pow (div (add $srB 0.055) 1.055) 2.4) -}}
+    {{- $lgB := cond (le $sgB 0.03928) (div $sgB 12.92) (pow (div (add $sgB 0.055) 1.055) 2.4) -}}
+    {{- $lbB := cond (le $sbB 0.03928) (div $sbB 12.92) (pow (div (add $sbB 0.055) 1.055) 2.4) -}}
+
+
+    {{- /* Calculer la luminance relative (formule WCAG) */ -}}
+    {{- $LF := add (add (mul 0.2126 $lrF) (mul 0.7152 $lgF)) (mul 0.0722 $lbF) -}}
+    {{- $LB := add (add (mul 0.2126 $lrB) (mul 0.7152 $lgB)) (mul 0.0722 $lbB) -}}
+
+    {{- /* Déterminer la plus lumineuse et la plus sombre */ -}}
+    {{- $L1 := cond (ge $LF $LB) $LF $LB -}}
+    {{- $L2 := cond (ge $LF $LB) $LB $LF -}}
+
+    {{- /* Calculer le contraste : (L1 + 0.05) / (L2 + 0.05) */ -}}
+    {{- $contrast := div (add $L1 0.05) (add $L2 0.05) -}}
+
+    {{- /* Vérifier chaque niveau WCAG */ -}}
+    {{- $normalAA := cond (ge $contrast 4.5) "✓" "✗" -}}
+    {{- $normalAAA := cond (ge $contrast 7) "✓" "✗" -}}
+    {{- $largeAA := cond (ge $contrast 3) "✓" "✗" -}}
+    {{- $largeAAA := cond (ge $contrast 4.5) "✓" "✗" -}}
+
+    {{- /* Classes CSS pour les résultats */ -}}
+    {{- $classNA := cond (ge $contrast 4.5) "pass" "fail" -}}
+    {{- $classNAAA := cond (ge $contrast 7) "pass" "fail" -}}
+    {{- $classLA := cond (ge $contrast 3) "pass" "fail" -}}
+    {{- $classLAAA := cond (ge $contrast 4.5) "pass" "fail" -}}
+
+    <div class="contrast-preview">
+        <b class="small">{{ .foregroundname }} ({{ .foreground }}) sur {{ .backgroundname }} ({{ .background }})</b>
+        <div class="contrast-block" style="background-color: {{ $bg }}; color: {{ $fg }};">
+            <p>Normal text</p>
+            <p class="large">Large text (18px+)</p>
+        </div>
+        
+        <div class="contrast-ratio">
+            <strong>Contrast ratio: {{ printf "%.2f:1" $contrast }}</strong>
+        </div>
+    
+        <div class="contrast-results">
+            <div class="result {{ $classNA }}">
+            <span>Normal AA</span>
+            <span class="icon">{{ $normalAA }}</span>
+            </div>
+            <div class="result {{ $classNAAA }}">
+            <span>Normal AAA</span>
+            <span class="icon">{{ $normalAAA }}</span>
+            </div>
+            <div class="result {{ $classLA }}">
+            <span>Large AA</span>
+            <span class="icon">{{ $largeAA }}</span>
+            </div>
+            <div class="result {{ $classLAAA }}">
+            <span>Large AAA</span>
+            <span class="icon">{{ $largeAAA }}</span>
+            </div>
+        </div>
+   </div>
+{{ end }}
