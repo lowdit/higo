@@ -1,0 +1,47 @@
+{{- $currentLang := site.Language.Lang -}}
+{{- if eq $currentLang "fr" -}}
+
+    {{- $content := .RawContent -}}  <!-- <-- contenu brut Markdown -->
+
+    <!-- # Convert Obsidian [[link]] -->
+    {{- $content = replaceRE `\.md(\)|$)` `$1` $content -}}
+    {{- $content = replaceRE `\.md\]\]` `]]` $content -}}
+    {{- $content = $content | replaceRE `\[\[([^\]|#]+)(?:#([^\]|]+))?(?:\|([^\]]+))?\]\]` `[$3$1$2]($1$2)` -}}
+
+    <!-- # Cite inline tag <q> -->
+    {{- $content = $content | replaceRE "&raquo;(.+?)&laquo;" "<q>$1</q>" -}}
+    {{- $content = $content | replaceRE ">>(.+?)<<" "<q>$1</q>" -}}
+
+    <!-- # Ordinals -->
+    {{- $content = $content | replaceRE "(\\s)(\\d+)(e|è)(r|me)?([\\s.,])" "$1$2<sup>$3$4</sup>$5" -}}
+
+    <!-- # Num -->
+    {{- $content = $content | replaceRE "n°\\s*(\\d)" "n<sup>o</sup>&#8239;$1" -}}
+
+    <!-- # French Guillemets -->
+    {{- $content = $content | replaceRE "(&rdquo;|”|»)&lt;a " "«&nbsp;&lt;a " -}}
+    {{- $content = $content | replaceRE "(&ldquo;|“|«)(^&#8239;)(\\s|&nbsp;| )*" "«&#8239;" -}}
+    {{- $content = $content | replaceRE "(\\s|&nbsp;| )*(\\?C!&nbsp;)(&rdquo;|”|»)" "&#8239;»" -}}
+
+    <!-- # Times -->
+    {{- $content = $content | replaceRE "(\\s)+(\\d+)(\\s)*x(\\s)*(^\\d)" "$1$2&nbsp;&times;&nbsp;$5" -}}
+
+    <!-- # Non-breaking space before '%' and units (< 4 letters) -->
+    {{- $content = $content | replaceRE "(\\s)+(\\d+)(\\s)+([a-zA-Z]|%)" "$1$2&nbsp;$4$5" -}}
+
+    <!-- # Thin non-breaking space before punctuation -->
+    {{- $content = $content | replaceRE "( )([;?!])" "&#8239;$2" -}}
+    {{- $content = $content | replaceRE "( )([:])" "&nbsp;$2" -}}
+
+    <!-- # Currencies -->
+    {{- $content = $content | replaceRE "(\\d+)\\s*(\\$|€)" "$1&nbsp;$2" -}}
+
+    <!-- # nbsp after middle dash -->
+    {{- $content = $content | replaceRE "(—|&mdash;)(\\s)" "$1&nbsp;" -}}
+
+    <!-- # Render -->
+    {{- $content | markdownify | safeHTML -}}
+
+{{- else -}}
+    {{ . | safeHTML }}
+{{- end -}}

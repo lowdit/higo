@@ -4,14 +4,15 @@
 {{- $dot.Scratch.Set "path" "" -}}
 {{- $dot.Scratch.Set "breadcrumb" slice -}}
 
+{{- $title :=  .Title -}}
 {{- $url := replace .Permalink ( printf "%s" .Site.BaseURL) "" -}}
 {{- $.Scratch.Add "path" .Site.BaseURL -}}
 
 {{- $.Scratch.Add "breadcrumb" (slice (dict "url" .Site.BaseURL "name" "home" "position" 1 )) -}}
-  {{- range $index, $element := split $url "/" -}}
-    {{- $dot.Scratch.Add "path" $element -}}
-    {{- $.Scratch.Add "path" "/" -}}
-    {{- if ne $element "" -}}
+{{- range $index, $element := split $url "/" -}}
+  {{- $dot.Scratch.Add "path" $element -}}
+  {{- $.Scratch.Add "path" "/" -}}
+  {{- if ne $element "" -}}
     {{ $.Scratch.Add "breadcrumb" (slice (dict "url" ($.Scratch.Get "path") "name" . "position" (add $index 2))) -}}
   {{ end -}}
 {{ end -}}
@@ -101,17 +102,13 @@
         "@type": "ListItem",
         "position": {{ .position }},
         "item": {
-          {{ if ne (add $index 1) $len -}}
           "@type": "WebPage",
           "@id": {{ .url }},
           "url": {{ .url }},
-          "name": {{ .name | humanize | title }}
-          {{ else -}}
-          "@id": {{ .url }}
-          {{ end -}}
+          "name": {{ if $title }}{{ $title }}{{ else }}{{ .name | humanize | title }}{{ end }}
         }
         }{{ end }}]
-    },
+    }
     {{ if and (eq .Kind "page") (eq .Section "posts") -}}
     {
       "@context": "https://schema.org",

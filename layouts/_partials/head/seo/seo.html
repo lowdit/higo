@@ -17,7 +17,7 @@
     {{ if (or (and (ne .Type "posts") (ne .Type "projects") (not .IsHome)) (and (not .IsPage) (not .IsHome))) }} | {{ .Site.Title -}}{{ end -}}
   </title>
 <!-- Author from config -->
-{{- with .Params.authors -}}
+{{- with .Params.authors }}
   <meta name="author" content="{{ . }}">
 {{ else -}}
   <meta name="author" content="{{ site.Params.author.name }}">
@@ -25,9 +25,15 @@
 <!-- Description from config or front matter  -->
 {{- with .Description -}}
   <meta name="description" content="{{ . }}">
-{{ else -}}
-  <meta name="description" content="{{ .Site.Params.description }}">
-{{ end -}}
+{{- else -}}
+  {{- if .IsPage}}
+    <meta name="description" content="{{ .Summary | truncate 80 }}">
+  {{- else -}}
+    {{- with .Site.Params.description }}
+      <meta name="description" content="{{ . }}">
+    {{ end -}}
+  {{ end -}}
+{{ end }}
 <!-- Robots meta -->
 {{- if eq .Kind "404" -}}
   <meta name="robots" content="noindex, follow">

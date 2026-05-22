@@ -1,1 +1,66 @@
-<a href="{{ .Destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}{{ if strings.HasPrefix .Destination "http" }} target="_blank" rel="noopener"{{ end }}>{{ .Text | safeHTML }}</a>
+{{- $dest := .Destination -}}
+{{- $text := .Text -}}
+
+{{/* -----------------------------
+  EXTERNAL LINKS
+------------------------------ */}}
+
+{{- $isExternal := or
+  (strings.HasPrefix $dest "http://")
+  (strings.HasPrefix $dest "https://")
+  (strings.HasPrefix $dest "//")
+-}}
+
+{{- if or $isExternal (strings.Contains $dest ".com") -}}
+
+<a href="{{ $dest | safeURL }}"
+   {{ with .Title }}title="{{ . }}"{{ end }}
+   target="_blank" rel="noopener">
+  {{ $text | safeHTML }}
+</a>
+
+{{- else -}}
+
+{{/* -----------------------------
+  CLEAN DEST
+------------------------------ */}}
+
+{{- $clean := strings.TrimSuffix "/" $dest -}}
+{{- $slug := path.Base $clean -}}
+
+{{- $url := "" -}}
+
+{{/* -----------------------------
+  1. TRY DIRECT MATCH (Hugo native)
+------------------------------ */}}
+
+{{- with .Page.GetPage $dest -}}
+  {{- $url = .RelPermalink -}}
+
+{{- else -}}
+
+{{/* -----------------------------
+  2. MATCH BY FILE BASENAME
+------------------------------ */}}
+
+  {{- range site.RegularPages -}}
+    {{- if or
+      (eq .File.BaseFileName $slug)
+      (hasSuffix .File.BaseFileName $slug)
+    -}}
+      {{- $url = .RelPermalink -}}
+    {{- end -}}
+  {{- end -}}
+
+{{- end -}}
+
+{{/* -----------------------------
+  3. FALLBACK SAFE (NO WARNINGS)
+------------------------------ */}}
+
+<a href="{{ if $url }}{{ $url }}{{ else }}{{ $dest }}{{ end }}"
+   {{ with .Title }}title="{{ . }}"{{ end }}>
+  {{ $text | safeHTML }}
+</a>
+
+{{- end -}}

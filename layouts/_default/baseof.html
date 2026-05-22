@@ -14,8 +14,15 @@
     {{- partial "footer/scripts.html" . -}}
     {{ end -}}
   </body>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+          navigator.serviceWorker.register('/sw.js')
+      });
+    }
+  </script>
   <script type="module" defer>
     import { hydratePretextAll } from '/assets/js/pretext-hydrator.js';
     window.addEventListener('load', ()=> hydratePretextAll({ lineHeight: 22 }));
-</script>
+  </script>
 </html>

@@ -43,23 +43,32 @@ self.addEventListener('fetch', function (event) { // executed when a user reques
   );
 });
 
-function fetchAndUpdateCache(request) { // fetch the requested page, store it in cache and return it
+function fetchAndUpdateCache(request) {
   return fetch(request)
-  .then(function (networkResponse) {
-    if (networkResponse && networkResponse.status === 200) {
-      const clonedResponse = networkResponse.clone();
-      caches.open(CACHE_NAME)
-      .then(function (cache) {
-        // add the fetched page in cache only if the requested page has been successfully fetched
-        // in other words, we don't add the page if we received a 404
-        cache.put(request, clonedResponse);
-      });
-    }
-    return networkResponse; // return the page fetched
-  })
-  .catch(function () {
-    // if we didn't succeed to fetch the page (in case of a loss of connection for example)
-    // then we serve the offline page
-    return caches.match('/offline/');
-  });
+    .then(function (networkResponse) {
+      if (networkResponse && networkResponse.status === 200) {
+        const clonedResponse = networkResponse.clone();
+        
+        // Add explicit cache-control header if missing
+        const headers = new Headers(clonedResponse.headers);
+        if (!headers.has('cache-control')) {
+          headers.set('cache-control', `max-age=${CACHE_DURATION}`);
+        }
+        
+        const responseWithHeaders = new Response(clonedResponse.body, {
+          status: clonedResponse.status,
+          statusText: clonedResponse.statusText,
+          headers: headers
+        });
+        
+        caches.open(CACHE_NAME).then(function (cache) {
+          cache.put(request, responseWithHeaders);
+        });
+      }
+      return networkResponse;
+    })
+    .catch(function () {
+      return caches.match('/offline/');
+    });
 }
+
