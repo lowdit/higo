@@ -108,7 +108,7 @@
           "name": {{ if $title }}{{ $title }}{{ else }}{{ .name | humanize | title }}{{ end }}
         }
         }{{ end }}]
-    }
+    },
     {{ if and (eq .Kind "page") (eq .Section "posts") -}}
     {
       "@context": "https://schema.org",
