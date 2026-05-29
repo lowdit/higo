@@ -1,0 +1,14 @@
+{{- /* params: vals (slice), target (valeur) */ -}}
+{{- $vals := .vals -}}
+{{- $target := .target -}}
+{{- $c := 0 -}}
+{{ if eq (reflect.IsSlice .vals) true }}
+  {{- range $vals -}}
+  {{- if eq . $target -}}
+      {{- $c = add $c 1 -}}
+  {{- end -}}
+  {{- end -}}
+{{- else -}}
+  {{- $c := "Value should be an Array"  -}}
+{{- end -}}
+{{- return $c -}}

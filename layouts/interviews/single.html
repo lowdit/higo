@@ -22,7 +22,7 @@
 </div>
 <section class="generic-single container">
   <div class="single-container markdown">
-    {{- $raw := (transform.Unmarshal (readFile "contentform/enquetes/evaluation-atelier-2026/index.md")).form }}    
+    {{- $raw := (transform.Unmarshal (readFile (printf "contentform/enquetes/evaluation-atelier-2026/index.md"))).form }}    
     {{- range $raw }}
       {{- range .questions }}
         {{ site.Store.SetInMap "input" .name .label }}

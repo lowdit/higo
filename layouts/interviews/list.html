@@ -41,12 +41,57 @@
     {{ partial "interviews/topicsstats.html" (dict "context" . "pages" $pages) }}
   {{ end }}
     <h2>Liste des interviews</h2>
+    {{- $raw := (transform.Unmarshal (readFile (printf "contentform/enquetes/evaluation-atelier-2026/index.md"))).form }}    
+    {{- range $raw }}
+      {{- range .questions }}
+        {{ site.Store.SetInMap "input" .name .label }}
+      {{ end -}}
+    {{ end -}}
+    {{- $s := newScratch -}}
+    {{- $knowledge := slice "aucune" "réduite" "moyenne" "importante" "majeure" -}}
+    {{- $s.Set "sector" slice -}}
+    {{- range .Pages }}
+      {{ range $key, $value := .Params.data }}
+        {{- if in $key "own-" -}}
+          {{- $s.Set (printf "%s" $key) slice -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- range .Pages }}
+      {{ range $key, $value := .Params.data }}
+      {{- if eq $key "sector" -}}
+        {{ $s.Add "sector" . }}
+      {{- end -}}
+      {{- if in $key "own-" -}} 
+        {{- $s.Add (printf "%s" $key) . -}}
+        {{- $s.SetInMap "own" (printf "%s" $key) ($s.Get (printf "%s" $key)) -}}
+      {{- end -}}
+      {{- end -}}
+    {{- end -}}
+    <h3>Statistiques</h3>
+    {{- range $key, $value := $s.Get "own" -}}
+      {{ $lenArray := len $value }}
+      <h4 class="m-0">{{ index (site.Store.Get "input") $key | safeHTML }}</h4>
+      <div style="display: flex; margin:0 0 1em;width: 100%; border: 2px solid;">
+      {{- range $knowledge }}
+        {{ $count := partial "utils/arraycount.html" (dict "vals" $value "target" .) }}
+         {{ if gt $count 0 }}
+          <div style="text-align: center;padding: 6px 0;background:#dbf0f9;border: 1px solid;width:{{  (div (mul (float $count) 100) (float $lenArray)) }}%;">
+            <b>{{ div (mul $count 100) $lenArray }}%</b><br>
+            {{ humanize . }}
+          </div>
+        {{ end -}}
+      {{ end -}}
+      </div>
+    {{ end -}}
+    <hr>
+    <br>
     <section class="list list-interview">
       {{- range .Pages }}
       <div class="enlarge-link">
         <div class="project-entry-info">
           <h3 class="project-entry-title">
-            <a href="{{ .Permalink }}">
+            <a href="{{ .Permalink }}"> 
               {{ with .Title }}{{ . }}{{ else }}{{ .Params.name }}{{ end }}
             </a>
             <sup>{{ partial "general/label-drafts.html" . }}</sup>
@@ -54,11 +99,11 @@
           </h3>
           {{ with .Params.date }}<time>{{ time.Format "2 Jan 2006" . | safeHTML }}</time>{{ end }}
           <div class="project-list-meta">
-            {{ with .Params.techstack }}
-            {{ range . }}
-              <span>{{ . }}</span>
-            {{ end }}
-            {{ end }}
+            {{- with .Params.techstack }}
+              {{- range . }}
+                <span>{{ . }}</span>
+              {{ end -}}
+            {{ end -}}
           </div>
           {{- if (index .Params.data "first-win") -}}
           <p class="project-list-summary">
