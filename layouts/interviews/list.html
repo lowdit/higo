@@ -39,8 +39,6 @@
     {{ partial "interviews/generalstats.html" $pages }}
     <h2 hidden>Répartition des sujets clefs</h2>
     {{ partial "interviews/topicsstats.html" (dict "context" . "pages" $pages) }}
-  {{ end }}
-    <h2>Liste des interviews</h2>
     {{- $raw := (transform.Unmarshal (readFile (printf "contentform/enquetes/evaluation-atelier-2026/index.md"))).form }}    
     {{- range $raw }}
       {{- range .questions }}
@@ -86,6 +84,8 @@
     {{ end -}}
     <hr>
     <br>
+  {{ end }}
+    <h2>Liste des interviews</h2>
     <section class="list list-interview">
       {{- range .Pages }}
       <div class="enlarge-link">
