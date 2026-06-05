@@ -1,0 +1,55 @@
+{{- $pole := slice -}}
+{{- range ($.Site.GetPage "type" "canvas").RegularPagesRecursive }}
+{{- $pole = $pole | append .Title -}}
+{{- site.Store.Set "keys" slice }}
+{{- site.Store.SetInMap "whyglobal" .Title .Params.why_global }}
+{{- site.Store.SetInMap "whyteam"   .Title .Params.why_team }}
+{{- site.Store.SetInMap "tools"     .Title .Params.tools }}
+{{- site.Store.SetInMap "bloquants" .Title .Params.bloquants }}
+{{- site.Store.SetInMap "actions"   .Title .Params.actions }}
+{{- end -}}
+
+{{ $data := dict 
+    "Pourquoi pour le PS" (site.Store.Get "whyglobal")
+    "Pourquoi pour l'équipe" (site.Store.Get "whyteam")
+    "Les outils" (site.Store.Get "tools")
+    "Ce qui empêche de prendre en compte l'accessibilité" (site.Store.Get "bloquants")
+    "Actions à mener" (site.Store.Get "actions") 
+}}
+
+{{- range $key, $value := $data }}
+{{- range $key, $value := . }}
+{{- range $key, $value := . }}
+    {{- site.Store.Set (string $value) 0 }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{- range $key, $value := $data }}
+{{- range $key, $value := . }}
+{{- range $key, $value := . }}
+    {{ site.Store.Add $value 1 }}
+    {{- site.Store.SetInMap "all" $value (site.Store.Get $value) }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{- range $key, $value := site.Store.Get "all" }}
+{{ $key }}{{ . }}<hr>
+{{ end }}
+
+{{ range $key, $value := $data }}
+{{ with . }}
+    <h3>{{ $key }}</h3>
+    {{ range $key, $value := . }}
+    {{- with $value }}
+    <h4>{{ $key }}</h4>
+    <ul>
+        {{ range . }}
+            <li>{{ . }}</li>
+        {{- end -}}
+    </ul>
+    {{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
