@@ -4,7 +4,7 @@
     <title>{{ with .Site.Title }}{{ . }}{{ else }}{{ .Title }}{{ end }}</title>
     <link>{{ .Permalink }}</link>
     <description>Recent content {{ if ne  .Title  .Site.Title }}{{ with .Title }}in {{.}} {{ end }}{{ end }}on {{ .Site.Title }}</description>
-    <generator>Hugo -- gohugo.io</generator>{{ with .Site.LanguageCode }}
+    <generator>Hugo -- gohugo.io</generator>{{ with .Site.Language.Locale }}
     <language>{{.}}</language>{{end}}{{ with site.Params.author.email }}
     <managingEditor>{{.}}{{ with site.Params.author.email }} ({{.}}){{end}}</managingEditor>{{end}}{{ with site.Params.author.email }}
     <webMaster>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}</webMaster>{{end}}{{ with .Site.Copyright }}
