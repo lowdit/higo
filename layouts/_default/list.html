@@ -33,7 +33,6 @@
       </div>
       {{- end }}
     {{- end }}
-    {{ with .Content }}{{ partial "content.html" . . }}{{- end }}
       {{- if eq .Type "study" }}
         {{- if .Param "autonumbering" }}
         <style>
@@ -69,14 +68,14 @@
       {{- else }}
         {{ $range2 := cond (ne (len .Sections) 0) .RegularPages .Sections }}
         {{ with $range2 }}
-          <h3 hidden>Articles</h3>
+          <h2 {{ if not $.Content }} hidden{{ end }}>Sections</h2>
           {{- range $id, $value := . }}
             {{ partial "posts/post-entry.html" . }}
           {{- end }}
         {{ end -}}
         {{ $range1 := cond (ne (len .Sections) 0) .Sections .RegularPages }}
         {{ with $range1 }}
-          <h3 hidden>Sections</h3>
+          <h2 {{ if not $.Content }} hidden{{ end }}>Articles</h2>
           {{- range $id, $value := . }}
             {{ partial "posts/post-entry.html" . }}
           {{- end }}
@@ -85,6 +84,7 @@
 
       {{- $pages := where (where (.GetPage "interviews").RegularPagesRecursive "Params.slugpath" "eq" "digital-accessibility") "Title" "ne" "Model" }}
       {{ template "_internal/pagination.html" . }}
+      {{ with .Content }}{{ partial "content.html" . . }}{{- end }}
   </section>
 </div>
 {{ end }}
