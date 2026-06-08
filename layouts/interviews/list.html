@@ -74,7 +74,7 @@
       {{- range $knowledge }}
         {{ $count := partial "utils/arraycount.html" (dict "vals" $value "target" .) }}
          {{ if gt $count 0 }}
-          <div style="text-align: center;padding: 6px 0;background:#dbf0f9;border: 1px solid;width:{{  (div (mul (float $count) 100) (float $lenArray)) }}%;">
+          <div style="text-align: center;padding: 6px 0;background:#dbf0f9;border: 1px solid;width:{{  (div (mul (float $count) 100) (float $lenArray)) }}%;min-width: 200px;">
             <b>{{ div (mul $count 100) $lenArray }}%</b><br>
             {{ humanize . }}
           </div>

@@ -1,14 +1,16 @@
 {{- $pole := slice -}}
+{{- $questions := slice "Pourquoi pour le PS" "Pourquoi pour l'équipe" "Les outils" "Ce qui empêche de prendre en compte l'accessibilité" "Actions à mener" -}}
 {{- range ($.Site.GetPage "type" "canvas").RegularPagesRecursive }}
-{{- $pole = $pole | append .Title -}}
-{{- site.Store.Set "keys" slice }}
-{{- site.Store.SetInMap "whyglobal" .Title .Params.why_global }}
-{{- site.Store.SetInMap "whyteam"   .Title .Params.why_team }}
-{{- site.Store.SetInMap "tools"     .Title .Params.tools }}
-{{- site.Store.SetInMap "bloquants" .Title .Params.bloquants }}
-{{- site.Store.SetInMap "actions"   .Title .Params.actions }}
+  {{- $pole = $pole | append .Title -}}
+  {{- site.Store.Set "keys" slice }}
+  {{- site.Store.SetInMap "whyglobal" .Title .Params.why_global }}
+  {{- site.Store.SetInMap "whyteam"   .Title .Params.why_team }}
+  {{- site.Store.SetInMap "tools"     .Title .Params.tools }}
+  {{- site.Store.SetInMap "bloquants" .Title .Params.bloquants }}
+  {{- site.Store.SetInMap "actions"   .Title .Params.actions }}
 {{- end -}}
 
+{{/* Build a map with result for each topics */}}
 {{ $data := dict 
     "Pourquoi pour le PS" (site.Store.Get "whyglobal")
     "Pourquoi pour l'équipe" (site.Store.Get "whyteam")
@@ -17,26 +19,43 @@
     "Actions à mener" (site.Store.Get "actions") 
 }}
 
-{{- range $key, $value := $data }}
-{{- range $key, $value := . }}
-{{- range $key, $value := . }}
-    {{- site.Store.Set (string $value) 0 }}
+{{/* Range all value for init all slice */}}
+{{- range $key1, $value := $data }}
+{{- range $key2, $value := . }}
+{{- range $key3, $value := . }}
+  {{- site.Store.Set (string $value) 0 }}
 {{- end -}}
 {{- end -}}
 {{- end -}}
 
-{{- range $key, $value := $data }}
-{{- range $key, $value := . }}
-{{- range $key, $value := . }}
-    {{ site.Store.Add $value 1 }}
-    {{- site.Store.SetInMap "all" $value (site.Store.Get $value) }}
+{{/* Range all value for populate map */}}
+{{- range $key1, $value := $data }}
+{{- range $key2, $value := . }}
+{{- range $key3, $value := . }}
+  {{- site.Store.Add $value 1 -}}
+  {{- site.Store.SetInMap (string $key1) $value (site.Store.Get $value) }}
 {{- end -}}
 {{- end -}}
 {{- end -}}
 
-{{- range $key, $value := site.Store.Get "all" }}
-{{ $key }}{{ . }}<hr>
-{{ end }}
+<h2>Analyse brute</h2>
+
+{{- range $questions }}
+  {{- $key1 := . -}}
+  <h3>{{ $key1 }}</h3>
+  <div class="flex" style="flex-wrap: wrap; gap: 0;border: 3px solid #888;">
+  {{- range $key2, $value := site.Store.Get (string $key1) }}
+    <div style="position: relative;text-align: center;padding: 1em;background:#dbf0f9;border: 1px solid #999;min-height: 200px;flex-grow: {{ . }};{{ if lt . 2 }}flex-basis: min-content;{{ else }}font-weight: bold;{{ end }}{{ if gt . 2 }}min-width: 20%;background:#ebf9ff;{{ end }}{{ if gt . 4 }}min-width: 40%;background:#ebf9ff;{{ end }}display: grid;place-items: center;">
+      <span{{ if (gt ($key2  | strings.Count "") 50 ) }} style="font-size: 85%;"{{ end }}>{{ $key2 }}
+      <span style="position: absolute; top: .1em; right: .5em; font-family: helvetica;display: grid;font-weight: bold;place-items: center;line-height:1.6em;margin: 1em auto;font-size: 0.8em;background: #121212; color: #fff;border-radius:50%;aspect-ratio: 1/1;width: 1.8rem;height: 1.8rem;text-align:middle;">{{ . }}</span>
+    </span>
+    </div>
+  {{ end -}}
+  </div>
+  <hr>  
+{{- end -}}
+
+<h2>Réponses par services</h2>
 
 {{ range $key, $value := $data }}
 {{ with . }}
@@ -52,4 +71,5 @@
     {{- end -}}
 {{- end -}}
 {{- end -}}
+<hr>
 {{- end -}}

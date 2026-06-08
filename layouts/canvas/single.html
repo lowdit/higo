@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ .Title }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #3b82f6;
+      --success: #10b981;
+      --danger: #ef4444;
+      --dark: #1f2937;
+      --light: #f9fafb;
+      --border: #e5e7eb;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: 'Inter', sans-serif;
+      background: #f3f4f6;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      font-size: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .card-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: white;
+      font-size: 14px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .card-primary .card-icon { background: var(--primary); }
+    .card-success .card-icon { background: var(--success); }
+    .card-danger .card-icon { background: var(--danger); }
+
+    .card-primary .card-header { border-color: var(--primary-light); }
+    .card-success .card-header { border-color: var(--success); }
+    .card-danger .card-header { border-color: var(--danger); }
+
+    .editable {
+      color: #4b5563;
+    }
+
+    .editable ul {
+      padding-left: 20px;
+      margin: 0;
+    }
+
+    .editable li {
+      margin-bottom: 8px;
+    }
+
+    .editable p {
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      body {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>{{ .Title | default "Analyse des Processus Métiers Éditoriaux" }}</h1>
+      <p class="subtitle">Document de travail collaboratif</p>
+    </header>
+
+    <div class="grid">
+      <!-- Section 1 : Les pourquoi -->
+      <div class="card card-primary">
+        <div class="card-header">
+          <div class="card-icon">1</div>
+          <h2 class="card-title">Les pourquoi</h2>
+        </div>
+        <div class="editable">
+          <!-- Pourquoi globaux -->
+          <div style="margin-bottom: 20px;">
+            <h3 style="font-size: 16px; font-weight: 600; color: var(--primary); margin-bottom: 8px;">
+              🌍 Pourquoi globaux à l’organisme
+            </h3>
+            {{ with .Params.why_global }}
+              {{ if reflect.IsSlice . }}
+                <ul>
+                  {{ range $id, $value := . }}
+                    <li>{{ $value }}</li>
+                  {{ end }}
+                </ul>
+              {{ else }}
+                <p>{{ . | default "Décrivez les objectifs globaux de l’organisme." }}</p>
+              {{ end }}
+            {{ end }}
+          </div>
+
+          <!-- Pourquoi équipe -->
+          <div>
+            <h3 style="font-size: 16px; font-weight: 600; color: var(--primary); margin-bottom: 8px;">
+              👥 Pourquoi spécifiques à l’équipe
+            </h3>
+            {{ with .Params.why_team }}
+              {{ if reflect.IsSlice . }}
+                <ul>
+                  {{ range $id, $value := . }}
+                    <li>{{ $value }}</li>
+                  {{ end }}
+                </ul>
+              {{ else }}
+                <p>{{ . | default "Décrivez les enjeux propres à votre équipe." }}</p>
+              {{ end }}
+            {{ end }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2 : Activité et outils -->
+      <div class="card card-primary">
+        <div class="card-header">
+          <div class="card-icon">2</div>
+          <h2 class="card-title">Activité et outils utilisés</h2>
+        </div>
+        <div class="editable">
+          {{ with .Params.tools }}
+            {{ if reflect.IsSlice . }}
+              <ul>
+                {{ range $id, $value := . }}
+                  <li>{{ $value }}</li>
+                {{ end }}
+              </ul>
+            {{ else }}
+              <p>{{ . | default "Listez les outils et activités clés." }}</p>
+            {{ end }}
+          {{ end }}
+        </div>
+      </div>
+
+      <!-- Section 4 : Points bloquants -->
+      <div class="card card-danger">
+        <div class="card-header">
+          <div class="card-icon">!</div>
+          <h2 class="card-title">Points bloquants</h2>
+        </div>
+        <div class="editable">
+          {{ with .Params.bloquants }}
+            {{ if reflect.IsSlice . }}
+              <ul>
+                {{ range $id, $value := . }}
+                  <li>{{ $value }}</li>
+                {{ end }}
+              </ul>
+            {{ else }}
+              <p>{{ . | default "Identifiez les obstacles récurrents." }}</p>
+            {{ end }}
+          {{ end }}
+        </div>
+      </div>
+
+      <!-- Section 5 : Plan d'action -->
+      <div class="card card-success">
+        <div class="card-header">
+          <div class="card-icon">✓</div>
+          <h2 class="card-title">Plan d'action concret</h2>
+        </div>
+        <div class="editable">
+          {{ with .Params.actions }}
+            {{ if reflect.IsSlice . }}
+              <ul>
+                {{ range $id, $value := . }}
+                  <li>{{ $value }}</li>
+                {{ end }}
+              </ul>
+            {{ else }}
+              <p>{{ . | default "Proposez des actions prioritaires." }}</p>
+            {{ end }}
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
