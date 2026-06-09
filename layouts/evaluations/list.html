@@ -1,7 +1,7 @@
 {{ define "main" -}}
 {{- $data := hugo.Data.people.accessibility }}
 {{- $dataentity := .Params.data }}
-
+{{- partial "utils/nav-depth" . -}}
 <div class="container--sm">
   <section class="page-header">
     <h1 class="page-header-title">{{ .Title }}</h1>

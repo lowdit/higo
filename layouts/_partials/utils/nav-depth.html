@@ -1,0 +1,6 @@
+<div class="container nav-back">
+{{- $DepthNav := sub (len (split .RelPermalink "/")) 2 -}}
+{{- if ge $DepthNav 2 }}
+  <p class="smaller"><span aria-hidden="true">⭠&nbsp;</span><a href="{{ .Parent.Permalink }}">{{ i18n "back-to" }} {{ .Parent.Title }}</a></p>
+{{ end -}}
+</div>

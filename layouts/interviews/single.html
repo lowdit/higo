@@ -1,4 +1,5 @@
 {{ define "main" }}
+{{- partial "utils/nav-depth" . -}}
 <div class="container">
   {{ $path := index (split .RelPermalink "/") 2 }}
   {{ $pages := where (where .Parent.RegularPagesRecursive "Params.slugpath" "eq" $path) "Title" "ne" "Model" }}
