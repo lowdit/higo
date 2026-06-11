@@ -1,1 +1,373 @@
+<style>
+/* =============================================
+   CLASSE PRINCIPALE : .a11y-highlight
+   ============================================= */
+.a11y-highlight {
+    position: relative;
+}
+
+/* =============================================
+   1. IMAGES
+   ============================================= */
+.a11y-highlight img:not([alt]) {
+    outline: 3px solid red !important;
+    background-color: rgba(255, 0, 0, 0.1) !important;
+    position: relative;
+}
+.a11y-highlight img:not([alt])::after {
+    content: "❌ Image sans ALT";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: rgba(255, 0, 0, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 9999;
+    margin-top: 5px;
+}
+
+.a11y-highlight img[alt=""] {
+    outline: 3px solid orange !important;
+    background-color: rgba(255, 165, 0, 0.1) !important;
+    position: relative;
+}
+.a11y-highlight *:has(img[alt=""]) {
+  position: relative;
+}
+.a11y-highlight *:has( > img[alt=""])::after {
+    content: "⚠️ ALT vide";
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: rgba(255, 165, 0, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 9999;
+    margin-top: 5px;
+}
+
+/* =============================================
+   2. LIENS
+   ============================================= */
+.a11y-highlight a:empty {
+    outline: 3px solid red !important;
+    position: relative;
+}
+.a11y-highlight a:empty::after {
+    content: "❌ Lien vide";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: rgba(255, 0, 0, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 9999;
+    margin-top: 5px;
+}
+
+.a11y-highlight a[href*="cliquez ici"],
+.a11y-highlight a[href*="ici"],
+.a11y-highlight a[href*="plus"],
+.a11y-highlight a[href*="lire la suite"] {
+    outline: 3px dashed orange !important;
+    position: relative;
+}
+.a11y-highlight a[href*="cliquez ici"]::after,
+.a11y-highlight a[href*="ici"]::after,
+.a11y-highlight a[href*="plus"]::after,
+.a11y-highlight a[href*="lire la suite"]::after {
+    content: "⚠️ Texte non descriptif";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: rgba(255, 165, 0, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 9999;
+    margin-top: 5px;
+}
+
+/* =============================================
+   3. FORMULAIRES
+   ============================================= */
+.a11y-highlight input:not([type="hidden"]):not([aria-label]):not([aria-labelledby]):not([id^="label-"]) {
+    outline: 3px solid blue !important;
+    position: relative;
+}
+.a11y-highlight input:not([type="hidden"]):not([aria-label]):not([aria-labelledby]):not([id^="label-"])::after {
+    content: "❌ Champ sans label";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: rgba(0, 0, 255, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 9999;
+    margin-top: 5px;
+}
+
+.a11y-highlight button:empty,
+.a11y-highlight input[type="submit"]:empty,
+.a11y-highlight input[type="button"]:empty {
+    outline: 3px solid red !important;
+    position: relative;
+}
+.a11y-highlight button:empty::after,
+.a11y-highlight input[type="submit"]:empty::after,
+.a11y-highlight input[type="button"]:empty::after {
+    content: "❌ Bouton vide";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: rgba(255, 0, 0, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 9999;
+    margin-top: 5px;
+}
+
+/* =============================================
+   4. STRUCTURE HTML
+   ============================================= */
+.a11y-highlight h1:empty,
+.a11y-highlight h2:empty,
+.a11y-highlight h3:empty,
+.a11y-highlight h4:empty,
+.a11y-highlight h5:empty,
+.a11y-highlight h6:empty {
+    outline: 3px solid orange !important;
+    position: relative;
+}
+.a11y-highlight h1:empty::after,
+.a11y-highlight h2:empty::after,
+.a11y-highlight h3:empty::after,
+.a11y-highlight h4:empty::after,
+.a11y-highlight h5:empty::after,
+.a11y-highlight h6:empty::after {
+    content: "❌ Titre vide";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: rgba(255, 165, 0, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 9999;
+    margin-top: 5px;
+}
+
+.a11y-highlight h1 + h3,
+.a11y-highlight h2 + h4,
+.a11y-highlight h3 + h5,
+.a11y-highlight h4 + h6 {
+    outline: 3px solid red !important;
+    position: relative;
+}
+.a11y-highlight h1 + h3::after,
+.a11y-highlight h2 + h4::after,
+.a11y-highlight h3 + h5::after,
+.a11y-highlight h4 + h6::after {
+    content: "❌ Hiérarchie de titres incorrecte";
+    position: absolute;
+    left: 0;
+    top: -25px;
+    background: rgba(255, 0, 0, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 9999;
+}
+
+/* =============================================
+   5. TABLEAUX
+   ============================================= */
+/* 
+.a11y-highlight table:not(:has(> thead > tr > th)) {
+    outline: 3px solid red !important;
+    position: relative;
+}
+
+.a11y-highlight table:not(:has(> thead > tr > th))::after {
+    content: "❌ Tableau sans en-tête (th)";
+    position: absolute;
+    left: 0;
+    top: -25px;
+    background: rgba(255, 0, 0, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 9999;
+}
+
+.a11y-highlight th:not([scope]) {
+    outline: 3px dashed orange !important;
+    position: relative;
+}
+.a11y-highlight th:not([scope])::after {
+    content: "⚠️ En-tête sans scope";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: rgba(255, 165, 0, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 9999;
+    margin-top: 5px;
+}
+ */
+/* =============================================
+   6. ÉLÉMENTS INTERACTIFS
+   ============================================= */
+.a11y-highlight [role="button"]:not([tabindex="0"]) {
+    outline: 3px dashed red !important;
+    position: relative;
+}
+.a11y-highlight [role="button"]:not([tabindex="0"])::after {
+    content: "❌ Bouton ARIA non focusable";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: rgba(255, 0, 0, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 9999;
+    margin-top: 5px;
+}
+
+.a11y-highlight [aria-hidden="true"]:not([style*="display: none"]):not([style*="visibility: hidden"]) {
+    outline: 3px solid purple !important;
+    position: relative;
+}
+.a11y-highlight [aria-hidden="true"]:not([style*="display: none"]):not([style*="visibility: hidden"])::after {
+    content: "⚠️ Élément masqué aux technologies d'assistance";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: rgba(128, 0, 128, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 9999;
+    margin-top: 5px;
+}
+
+/* =============================================
+   7. IFRAMES
+   ============================================= */
+.a11y-highlight iframe:not([title]) {
+    outline: 3px solid red !important;
+    position: relative;
+}
+.a11y-highlight iframe:not([title])::after {
+    content: "❌ Iframe sans titre";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: rgba(255, 0, 0, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 9999;
+    margin-top: 5px;
+}
+
+/* =============================================
+   8. ÉLÉMENTS FOCUS
+   ============================================= */
+.a11y-highlight button:focus:not([style*="outline"]),
+.a11y-highlight a:focus:not([style*="outline"]) {
+    outline: 3px solid blue !important;
+}
+
+/* =============================================
+   9. ÉLÉMENTS AVEC TABINDEX NÉGATIF
+   ============================================= */
+.a11y-highlight [tabindex="-1"] {
+    outline: 2px dashed gray !important;
+    position: relative;
+}
+.a11y-highlight [tabindex="-1"]::after {
+    content: "⚠️ Tabindex=-1 (non focusable par Tab)";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: rgba(128, 128, 128, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 9999;
+    margin-top: 5px;
+}
+/* Style du bouton */
+  #toggleA11y {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      padding: 10px 15px;
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      transition: all 0.3s ease;
+  }
+
+  /* Effet au survol */
+  #toggleA11y:hover {
+      background: #ff4444;
+      transform: scale(1.05);
+  }
+</style>
+<button id="toggleA11y" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; padding: 10px; background: #000; color: #fff; border: none; border-radius: 5px; cursor: pointer;">
+    Activer le mode accessibilité
+</button>
 {{ .Content }}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('toggleA11y').addEventListener('click', function() {
+            document.body.classList.toggle('a11y-highlight');
+            this.textContent = document.body.classList.contains('a11y-highlight')
+                ? 'Désactiver le mode accessibilité'
+                : 'Activer le mode accessibilité';
+        });
+    });
+</script>
