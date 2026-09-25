@@ -8,7 +8,7 @@
 {{- end }}
 <feed xmlns="http://www.w3.org/2005/Atom"
       xmlns:media="http://search.yahoo.com/mrss/"
-      xml:lang="{{ site.LanguageCode }}"
+      xml:lang="{{ site.Language.Locale }}"
       xml:base="{{ site.BaseURL }}" >
     <title>{{ site.Title }} ATOM</title>
     {{ with site.Params.description}}<subtitle>{{site.Params.description }}</subtitle>{{end}}
@@ -50,6 +50,6 @@
             <a href="{{ $url }}">Jetzt den ganzen Artikel lesen...</a>
           </div>
         </summary>
-      <!-- <content type="application/xhtml+xml" src="{{ .RelPermalink }}" {{ with site.LanguageCode }} xml:lang="{{ . }}"{{ end }} /> -->
+      <!-- <content type="application/xhtml+xml" src="{{ .RelPermalink }}" {{ with .Site.Language.Locale }} xml:lang="{{ . }}"{{ end }} /> -->
     </entry>{{ end }}
 </feed>

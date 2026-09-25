@@ -11,7 +11,7 @@
     {{- range $id, $value := . }}
       <div class="slide">
         <div>
-        {{ if .icon }}{{ (index (where site.Data.icons "title" .icon) 0).code | safeHTML }}{{ end }}
+        {{ if .icon }}{{ (index (where hugo.Data.icons "title" .icon) 0).code | safeHTML }}{{ end }}
         {{ with .title  }}<h2>{{ .  }}</h2>{{ end }}
         {{ with .description  }}{{ . | markdownify }}{{ end }}
         </div>

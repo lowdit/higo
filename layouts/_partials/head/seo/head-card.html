@@ -32,6 +32,7 @@
   "y" 300
 )) -}}
 {{/* Nom du site */}}
+{{ if $.Site.Params.moto }}
 {{- $mainTitle := $.Site.Params.moto -}}
 {{- $textsize := cond (ne $mainTitle "") 250 (cond (gt (len $mainTitle) 60) (cond (gt (len $mainTitle) 80) 200 250) 300) }}
 {{- $img = $img.Filter (images.Text $mainTitle (dict
@@ -43,6 +44,7 @@
   "y" 500
 )) -}}
 {{- warnf "%s %s %s %s" (int $textsize) .Title .Title . }}
+{{ end }}
 {{- $img = $img.Resize "x600" -}}
 <meta property="og:image" content="{{ $img.Permalink }}">
 <meta property="og:image:height" content="">

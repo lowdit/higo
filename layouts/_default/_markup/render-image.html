@@ -1,78 +1,185 @@
-<!-- GET Ordinal and IsBlock -->
 {{- $Ordinal := $.Ordinal -}}
 {{- $IsBlock := $.IsBlock -}}
-<!-- get image URL from Markdown tag -->
-{{- $src := (.Destination | safeURL) -}}
-<!-- split # fragment (used for CSS classes) and keep clean URL -->
-{{- $fragments := (split $src "#") -}}
-{{- $src = index ($fragments) 0 -}}
-<!-- resize if wider than .Scratch.Get "imgwidth" -->
+
+{{/* URL originale et suppression du fragment CSS */}}
+{{- $srcOriginal := .Destination | safeURL -}}
+{{- $fragments := split $srcOriginal "#" -}}
+{{- $srcWithoutFragment := index $fragments 0 -}}
+
+{{/* Nom du fichier et extension */}}
+{{- $filename := path.Base $srcWithoutFragment -}}
+{{- $ext := lower (path.Ext $filename) -}}
+
+{{/* Largeur maximale par défaut */}}
 {{- $imgwidth := .Page.Scratch.Get "imgwidth" | default 800 -}}
-<!-- get actual filename -->
-{{- $src = path.Base $src -}}
-{{- $images := union (union (.Page.Parent.Resources.ByType "image") (.Page.Resources.ByType "image")) (resources.ByType "image") -}}
-<!-- check if it exists as a page resource -->
-{{- with $images.GetMatch (printf "**/%s" $src) -}}
-{{- $imgwidth := cond (gt .Height .Width) "600" $imgwidth -}}
-  {{ $resized := . }}
-  {{ if (gt .Width $imgwidth) }}
-    {{ if hugo.IsExtended }}
-      {{- $resized = .Resize (print $imgwidth "x webp") -}}
-    {{ else }}
-      {{- $resized = .Resize (print $imgwidth "x") -}}
-    {{ end }}
-  {{ end }}
-  <!-- if a JPEG (certain to be opaque) generate a low resolution placeholder to use as background -->
-  {{ $placeholder := "" }}
-  {{- if or (eq .MediaType.SubType "jpg") (eq .MediaType.SubType "jpeg") }}
-    {{ $placeholder = .Resize "48x q20 jpg Gaussian" }}
-  {{ end -}}
-  <!-- if a GIF file, then revert to original to avoid resizing animations; WebP animations don’t work -->
-  {{- if (eq .MediaType.SubType "gif") }}
-    {{ $resized = . }}
-  {{ end -}}
-  <div class="single-feature-img single-post-image-block">
-  {{- if $.Title -}}
-    <figure>
-    <img src="{{ $resized.RelPermalink }}"
-      width="{{ $resized.Width }}"
-      height="{{ $resized.Height }}"
-      {{ with $placeholder }}style="
-        background-image: url('data:image/jpg;base64,{{ .Content | base64Encode }}');
-        background-position: 50% 50%;
-        background-repeat: no-repeat;
-        background-size: cover;"{{ end }}
-      alt="{{ $.Text }}"
-      {{ with index ($fragments ) 1 }}class="{{ . }}" {{ else }}class="single-post-image" {{ end }}
-      {{ if ne $Ordinal 0 }}loading="lazy"{{- end -}}
-      decoding="async"
-    >
-    {{- with $.Title }}<figcaption>{{ . }}</figcaption>{{ end -}}
-  </figure>
+
+{{/* Recherche dans les ressources Hugo disponibles */}}
+{{- $images := union
+    (union
+      (.Page.Parent.Resources.ByType "image")
+      (.Page.Resources.ByType "image")
+    )
+    (resources.ByType "image")
+-}}
+
+{{- $image := $images.GetMatch (printf "**/%s" $filename) -}}
+
+{{/*
+  Les images utilisées comme blocs peuvent être redimensionnées.
+  Les images inline sont simplement affichées avec leur URL originale.
+*/}}
+
+{{- if $IsBlock -}}
+
+  {{/*
+    SVG :
+    Ne pas utiliser .Width, .Height ou .Resize,
+    car ces propriétés peuvent provoquer une erreur avec certains SVG.
+  */}}
+  {{- if eq $ext ".svg" -}}
+
+    <div class="single-post-image-block">
+      <img
+        src="{{ if $image }}{{ $image.RelPermalink }}{{ else }}{{ $srcWithoutFragment }}{{ end }}"
+        alt="{{ .Text }}"
+        {{ with .Title }}title="{{ . }}"{{ end }}
+        {{ with index $fragments 1 }}
+          class="{{ . }}"
+        {{ else }}
+          class="single-post-image"
+        {{ end }}
+        loading="lazy"
+        decoding="async"
+      >
+    </div>
+
+  {{/*
+    Image raster trouvée dans les ressources Hugo :
+    JPG, JPEG, PNG, WebP, GIF, etc.
+  */}}
+  {{- else if $image -}}
+
+    {{- $resized := $image -}}
+    {{- $resizeWidth := $imgwidth -}}
+
+    {{/* Les images portraitives sont limitées à 600 px de largeur */}}
+    {{- if gt $image.Height $image.Width -}}
+      {{- $resizeWidth = 600 -}}
+    {{- end -}}
+
+    {{/* Redimensionnement uniquement si nécessaire */}}
+    {{- if gt $image.Width $resizeWidth -}}
+      {{- if hugo.IsExtended -}}
+        {{- $resized = $image.Resize (print $resizeWidth "x webp") -}}
+      {{- else -}}
+        {{- $resized = $image.Resize (print $resizeWidth "x") -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{/*
+      Les GIF animés ne doivent pas être redimensionnés,
+      sinon l'animation peut être perdue.
+    */}}
+    {{- if eq $image.MediaType.SubType "gif" -}}
+      {{- $resized = $image -}}
+    {{- end -}}
+
+    {{/*
+      Placeholder basse résolution pour les JPEG opaques.
+    */}}
+    {{- $placeholder := "" -}}
+
+    {{- if or
+        (eq $image.MediaType.SubType "jpg")
+        (eq $image.MediaType.SubType "jpeg")
+    -}}
+      {{- $placeholder = $image.Resize "48x q20 jpg Gaussian" -}}
+    {{- end -}}
+
+    <div class="single-feature-img single-post-image-block">
+
+      {{- if $.Title -}}
+        <figure>
+      {{- end -}}
+
+      <img
+        src="{{ $resized.RelPermalink }}"
+        width="{{ $resized.Width }}"
+        height="{{ $resized.Height }}"
+
+        {{- with $placeholder }}
+        style="
+          background-image: url('data:image/jpg;base64,{{ .Content | base64Encode }}');
+          background-position: 50% 50%;
+          background-repeat: no-repeat;
+          background-size: cover;"
+        {{- end }}
+
+        alt="{{ $.Text }}"
+
+        {{- with index $fragments 1 }}
+          class="{{ . }}"
+        {{- else }}
+          class="single-post-image"
+        {{- end }}
+
+        {{- if ne $Ordinal 0 }}
+          loading="lazy"
+        {{- end }}
+
+        decoding="async"
+      >
+
+      {{- with $.Title }}
+        <figcaption>{{ . }}</figcaption>
+      {{- end -}}
+
+      {{- if $.Title -}}
+        </figure>
+      {{- end -}}
+
+    </div>
+
+  {{/*
+    Fichier non trouvé dans les ressources Hugo :
+    on utilise directement l'URL fournie dans le Markdown.
+  */}}
   {{- else -}}
-    <img src="{{ $resized.RelPermalink }}"
-    width="{{ $resized.Width }}"
-    height="{{ $resized.Height }}"
-    {{ with $placeholder }}style="
-      background-image: url('data:image/jpg;base64,{{ .Content | base64Encode }}');
-      background-position: 50% 50%;
-      background-repeat: no-repeat;
-      background-size: cover;"{{ end }}
-    alt="{{ $.Text }}"
-    {{ with index ($fragments ) 1 }}class="{{ . }}" {{ else }}class="single-post-image" {{ end }}
-    {{ if ne $Ordinal 0 }}loading="lazy"{{ end }}
-    decoding="async"
-    >
+
+    <div class="single-post-image-block">
+      <img
+        src="{{ $srcWithoutFragment }}"
+        alt="{{ .Text }}"
+        {{ with .Title }}title="{{ . }}"{{ end }}
+        {{ with index $fragments 1 }}
+          class="{{ . }}"
+        {{ else }}
+          class="single-post-image"
+        {{ end }}
+        loading="lazy"
+        decoding="async"
+      >
+    </div>
+
   {{- end -}}
-  </div>
-<!-- or otherwise simply load the URL -->
+
+{{/*
+  Image inline :
+  pas de traitement Hugo, pas de redimensionnement.
+*/}}
 {{- else -}}
-  <div class="single-post-image-block">
-    <img src="{{ .Destination | safeURL }}"
-    alt="{{ .Text }}" {{ with .Title }} title="{{ . }}" {{ end }}
-    {{ with index ($fragments ) 1 }}class="{{ . }}" {{ else }}class="single-post-image" {{ end }}
+
+  <img
+    src="{{ $srcOriginal }}"
+    alt="{{ .Text }}"
+    {{ with .Title }}title="{{ . }}"{{ end }}
+    {{ with index $fragments 1 }}
+      class="{{ . }}"
+    {{ else }}
+      class="single-post-image"
+    {{ end }}
     loading="lazy"
     decoding="async"
-    >
-  </div>
+  >
+
 {{- end -}}

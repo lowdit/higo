@@ -51,7 +51,6 @@
         {{- $range := cond (ne (len .Sections) 0) .Sections .RegularPages }}
             {{- range $id, $value := $range }}
             {{ partial "posts/post-entry.html" . }}
-            <div class="post-entry-divider"></div>
             {{- end }}
         {{ end -}}
   </section>

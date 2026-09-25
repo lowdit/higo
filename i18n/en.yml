@@ -25,6 +25,6 @@ links-plugins: Plugins
 links-tutorials: Tutorials
 links-presentations: Presentations
 links-prompts: Prompts
-nav-main: principal
-nav-mobile: principal
-nav-search: recherche
+nav-main: main
+nav-mobile: main
+nav-search: search
