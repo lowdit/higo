@@ -17,6 +17,10 @@
   --color-contrast-higher: black;
 
   --color-text: var(--color-contrast-high);
+  /* Titres / termes (dt, h2) — surchargeable par site (ex. FNE) */
+  --color-heading: var(--color-contrast-high);
+  --color-heading-accent: var(--color-primary);
+  --color-rule: color-mix(in srgb, var(--color-heading) 25%, transparent);
 
   --font-size-sm: clamp(0.9em, 0.27vw + 0.86em, 0.99em);
   --font-size-base: clamp(1em, 0.34vw + 0.91em, 1.19em);

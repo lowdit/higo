@@ -3,7 +3,7 @@
 <!-- Site title gets added EXCEPT on single post and project pages -->
 */}}
   {{- $SectionsSlice := slice "posts" "home" -}}
-  {{- $IsPaginator := and (and .Page.IsNode .Page.Paginator) (not (or (in $SectionsSlice .Section) (eq "home" .Kind))) -}}
+  {{- $IsPaginator := and (and .Page.IsBranch .Page.Paginator) (not (or (in $SectionsSlice .Section) (eq "home" .Kind))) -}}
   <title>
     {{- with .Params.seo_title -}}
       {{- . -}}

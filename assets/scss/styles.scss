@@ -117,7 +117,7 @@ body {
 }
 
 h2 {
-  color: #085279;
+  color: var(--color-heading);
 }
 
 hr {
@@ -130,7 +130,7 @@ hr {
   width: 95%;
   position: relative;
   margin: 2rem auto 1rem;
-  background: #8fc8e76f;
+  background: var(--color-rule);
 }
 
 .p-relative {

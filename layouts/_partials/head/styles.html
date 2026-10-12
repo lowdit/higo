@@ -1,4 +1,7 @@
 {{- $sass := resources.Get "scss/main.scss" }}
+{{- if not $sass }}
+  {{ errorf "head/styles.html: assets/scss/main.scss introuvable (montage assets ou thème higo)." }}
+{{- end }}
 {{- $options := (dict
     "enableSourceMap" (not hugo.IsProduction)
     "targetPath" "css/main.css"
@@ -22,7 +25,6 @@
 {{/* Only enable PostCSS in production to allow source maps  */}}
 {{- if and (eq $.Site.Params.enable_postcss true) (hugo.IsProduction) }}
   {{- $final = $style | postCSS (dict "config" "postcss.config.js") }}
-  {{ warnf "%saaa" ($final) }}
 {{- end }}
 
 {{- if hugo.IsProduction }}
@@ -34,6 +36,6 @@
 <link rel="stylesheet" href="{{ .Permalink }}" />
 {{/*  Custom goes last to preserve cascade in development  */}}
 {{ end -}}
-{{- if $custom_no_bundle }}
+{{- if and $custom_no_bundle $custom }}
 <link rel="stylesheet" href="{{ $custom.Permalink }}" />
 {{ end -}}

@@ -43,7 +43,6 @@
   "x" 100
   "y" 500
 )) -}}
-{{- warnf "%s %s %s %s" (int $textsize) .Title .Title . }}
 {{ end }}
 {{- $img = $img.Resize "x600" -}}
 <meta property="og:image" content="{{ $img.Permalink }}">

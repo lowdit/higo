@@ -4,7 +4,7 @@
 
 .medal {
   padding: 0 0.3em 0 0;
-  border: 2px solid #085279;
+  border: 2px solid var(--color-heading);
   border-radius: 4px;
 }
 
@@ -30,8 +30,8 @@
   font-weight: 700;
   color: var(--background-color-body, #f5f5f5);
   border-radius: 4px;
-  border: 1.5pt solid #085279;
-  background: #085279;
+  border: 1.5pt solid var(--color-heading);
+  background: var(--color-heading);
   text-align: center;
 }
 
@@ -46,5 +46,5 @@
   color: var(--background-color-body, #f5f5f5);
   border-radius: 50%;
   border: 2px solid #333;
-  background: #085279;
+  background: var(--color-heading);
 }

@@ -3,7 +3,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {{ partial "head/seo/seo.html" . }}
   {{ partial "head/resource-hints.html" . }}
-  {{ partialCached "head/styles.html" . }}
+  {{/* Resource pipelines must not use partialCached: stale CSS resources break .Permalink on rebuild. */}}
+  {{ partial "head/styles.html" . }}
   {{ partialCached "head/favicons.html" . }}
   {{ partial "head/scripts.html" . }}
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
