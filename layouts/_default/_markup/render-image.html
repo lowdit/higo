@@ -23,6 +23,7 @@
 -}}
 
 {{- $image := $images.GetMatch (printf "**/%s" $filename) -}}
+{{- $isSVG := or (eq $ext ".svg") (and $image (strings.Contains (lower $image.MediaType.Type) "svg")) -}}
 
 {{/*
   Les images utilisées comme blocs peuvent être redimensionnées.
@@ -32,11 +33,9 @@
 {{- if $IsBlock -}}
 
   {{/*
-    SVG :
-    Ne pas utiliser .Width, .Height ou .Resize,
-    car ces propriétés peuvent provoquer une erreur avec certains SVG.
+    SVG : pas de .Width / .Height / .Resize (Hugo ≥ 0.167).
   */}}
-  {{- if eq $ext ".svg" -}}
+  {{- if $isSVG -}}
 
     <div class="single-post-image-block">
       <img
@@ -57,18 +56,19 @@
     Image raster trouvée dans les ressources Hugo :
     JPG, JPEG, PNG, WebP, GIF, etc.
   */}}
-  {{- else if $image -}}
+  {{- else if and $image (not $isSVG) -}}
 
     {{- $resized := $image -}}
     {{- $resizeWidth := $imgwidth -}}
+    {{- $hasMeta := and $image.Width $image.Height -}}
 
-    {{/* Les images portraitives sont limitées à 600 px de largeur */}}
-    {{- if gt $image.Height $image.Width -}}
+    {{/* Portrait : limite 600 px si métadimensions disponibles */}}
+    {{- if and $hasMeta (gt $image.Height $image.Width) -}}
       {{- $resizeWidth = 600 -}}
     {{- end -}}
 
     {{/* Redimensionnement uniquement si nécessaire */}}
-    {{- if gt $image.Width $resizeWidth -}}
+    {{- if and $hasMeta (gt $image.Width $resizeWidth) -}}
       {{- if hugo.IsExtended -}}
         {{- $resized = $image.Resize (print $resizeWidth "x webp") -}}
       {{- else -}}
@@ -104,8 +104,8 @@
 
       <img
         src="{{ $resized.RelPermalink }}"
-        width="{{ $resized.Width }}"
-        height="{{ $resized.Height }}"
+        {{- with $resized.Width }} width="{{ . }}"{{ end }}
+        {{- with $resized.Height }} height="{{ . }}"{{ end }}
 
         {{- with $placeholder }}
         style="
