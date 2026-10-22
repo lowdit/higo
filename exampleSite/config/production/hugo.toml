@@ -1,3 +1,2 @@
-### Config for production environment
-# Includes but overwrites anything in _default/config.toml
-# Excludes anything in _development/config.toml if it exists
+# Production / CI : module explicite (CI sans replace local).
+baseURL = 'https://lowdit.github.io/higo/'

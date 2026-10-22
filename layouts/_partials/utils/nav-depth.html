@@ -1,4 +1,4 @@
-<div class="container nav-back">
+<div class="container nav-back{{ if or (eq .Section "posts") (eq .Section "projects") }} container--post{{ end }}">
 {{- $DepthNav := sub (len (split .RelPermalink "/")) 2 -}}
 {{- if ge $DepthNav 2 }}
   <p class="smaller"><span aria-hidden="true">⭠&nbsp;</span><a href="{{ .Parent.Permalink }}">{{ i18n "back-to" }} {{ .Parent.Title }}</a></p>

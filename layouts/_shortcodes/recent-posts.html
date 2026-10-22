@@ -7,9 +7,9 @@
         Recent Posts
       {{- end -}}
     </h2>
-    <select name="choice" id="select-posts">
+    <select name="choice" id="select-posts" class="higo-select" aria-label="{{ i18n "home-filter-posts" | default "Filter posts by section" }}">
       {{ range (where site.Sections "Section" "posts") }}
-      <option value="all-{{ .Name | lower }}" selected>All {{ .Name | lower }}</option>
+      <option value="all-{{ .Name | lower }}" selected>{{ i18n "home-all-posts" | default "All" }} {{ .Name | lower }}</option>
       {{ range .Sections }}
       {{ if .CurrentSection.Pages }}
       <option value="{{ replace .CurrentSection.RelPermalink "/" "" | lower }}">{{ .CurrentSection.Name }}</option>
@@ -29,5 +29,5 @@
   {{ else }}
     {{ partial "general/fallback-text.html" . }}
   {{ end }}
-  <a class="btn-secondary see-more" href="{{ "posts/" | relURL }}">More Posts</a>
+  <a class="btn-secondary see-more" href="{{ "posts/" | relURL }}">{{ i18n "home-more-posts" | default "More Posts" }}</a>
 </section>

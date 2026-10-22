@@ -39,6 +39,12 @@
   'components/markdown',
   'components/toc',
   'components/page-header',
+  'components/nav-back',
+  'components/forms',
+  'components/measure',
+  'components/tables',
+  'components/nav-transverse',
+  'components/a11y',
   'components/medals';
 
 // 6. Page-specific styles
@@ -51,7 +57,11 @@
   'pages/post-list',
   'pages/project-list';
 
-// 7. Print styles
+// 7. Skins (optionnel via data-higo-skin sur <html>)
+@import
+  'skin/agence-lowdit';
+
+// 8. Print styles
 @import
   'print/print';
 
@@ -439,16 +449,6 @@ hr {
 .list-inline > li {
   display: inline-block;
 }
-.nav-transverse {
-  display: block;
-  margin-bottom: 2rem;
-  text-align: left;
-}
-.nav-transverse li:not(:last-child):after {
-  content: " - ";
-  display: inline-block;
-}
-
 /*
 /// Table of content
 */

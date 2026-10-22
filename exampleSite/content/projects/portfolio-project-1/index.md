@@ -1,8 +1,8 @@
 ---
-title: Portfolio Project 1
-seo_title: Portfolio Project 1
-summary: Portfolio Project 1 is my first portfolio project.
-description: Portfolio Project 1 is my first portfolio project.
+title: Projet vitrine — design web (démo)
+seo_title: Projet vitrine Higo
+summary: Exemple de fiche projet Liftoff, reliée au parcours éditorial Lowdit.
+description: Projet de démonstration pour la section portfolio du thème Higo.
 slug: portfolio-project-1
 author: John Doe
 

@@ -4,29 +4,21 @@
       {{- with $.Page.Params.projects_section_heading -}}
         {{- . -}}
       {{- else -}}
-        My Projects
+        {{ i18n "home-projects-heading" | default "My Projects" }}
       {{- end -}}
     </h2>
-    <a class="see-more-projects" href="{{ "projects/" | relURL }}">View all &raquo;</a>
+    <a class="see-more-projects" href="{{ "projects/" | relURL }}">{{ i18n "home-view-all-projects" | default "View all »" }}</a>
   </div>
   {{ $num := .Get 0 }}
   {{ if not $num }}
     {{ $num = 6 }}
   {{ end }}
-  {{ $projects := where site.Pages "Section" "projects" | first $num }}
+  {{ $projects := where site.RegularPages "Section" "projects" | first $num }}
   {{ with $projects }}
     <div class="project-list">
       {{- range . }}
-      {{- $path := "" }}
-      {{- with .File }}
-        {{ $path = .Path }}
-        {{ else }}{{ $path := .Path }}
-      {{ end }}
-      {{ $path }}
-      {{ if (and (eq (len (split (path.Dir $path) "/")) 2) (eq (path.BaseName $path) "_index")) }} 
         {{ partial "projects/project-entry.html" . }}
-        {{ end }}
-      {{ end }}
+      {{- end }}
     </div>
   {{ else }}
     {{ partial "general/fallback-text.html" . }}

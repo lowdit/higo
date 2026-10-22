@@ -1,10 +1,10 @@
 ---
-title: Portfolio Project 4
-seo_title: Portfolio Project 4
-summary: Portfolio Project 4 is my fourth portfolio project.
-description: Portfolio Project 4 is my fourth portfolio project.
+title: Référence Markdown & HTML (démo)
+seo_title: Gabarit contenu riche — Higo
+summary: Page bac à sable Liftoff pour titres, tableaux, citations et blocs de code.
+description: Vérifie le rendu typographique du thème ; contenu EN legacy conservé comme spec.
 slug: portfolio-project-4
-author: John Doe
+author: Lowdit · démo Higo
 
 draft: false
 date: 2022-02-20T03:52:30-05:00
@@ -63,12 +63,18 @@ The blockquote element represents content that is quoted from another source, op
 
 ## Tables
 
-Tables aren't part of the core Markdown spec, but Hugo supports supports them out-of-the-box.
+Tables aren't part of the core Markdown spec, but Hugo supports them out-of-the-box.
 
-   Name | Age
---------|------
-    Bob | 27
-  Alice | 23
+<table>
+  <caption>Exemple avec légende (caption)</caption>
+  <thead>
+    <tr><th>Name</th><th>Age</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Bob</td><td>27</td></tr>
+    <tr><td>Alice</td><td>23</td></tr>
+  </tbody>
+</table>
 
 ### Inline Markdown within tables
 

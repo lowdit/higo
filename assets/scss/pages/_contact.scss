@@ -1,10 +1,56 @@
-#contact-form {
+.contact-form-section {
+  margin: 2rem 0 3rem;
+}
+
+.higo-form {
+  display: flex;
   flex-direction: column;
-  row-gap: 15px;
-  max-width: 500px;
-  margin-top: 30px;
-  
+  gap: 1rem;
+  max-width: 75ch;
+  margin-top: 1rem;
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+
+  input[type='text'],
+  input[type='email'],
+  textarea {
+    width: 100%;
+    padding: 0.55rem 0.65rem;
+    border: 1px solid color-mix(in srgb, var(--color-contrast-high) 22%, transparent);
+    border-radius: 0.25rem;
+    font: inherit;
+    background: #fff;
+    color: var(--color-contrast-high);
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 1px;
+      border-color: var(--color-primary);
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 8rem;
+  }
+
   button {
     align-self: flex-start;
   }
+}
+
+.higo-form__honeypot {
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  width: 1px;
+}
+
+#contact-form {
+  @extend .higo-form;
 }

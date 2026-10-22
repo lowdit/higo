@@ -17,11 +17,18 @@
     {{ if (or (and (ne .Type "posts") (ne .Type "projects") (not .IsHome)) (and (not .IsPage) (not .IsHome))) }} | {{ .Site.Title -}}{{ end -}}
   </title>
 <!-- Author from config -->
-{{- with .Params.authors }}
-  <meta name="author" content="{{ . }}">
-{{ else -}}
-  <meta name="author" content="{{ site.Params.author.name }}">
-{{ end -}}
+{{- if .Params.authors -}}
+  <meta name="author" content="{{ .Params.authors }}">
+{{- else if .Params.author -}}
+  <meta name="author" content="{{ .Params.author }}">
+{{- else -}}
+  {{- $a := site.Params.author -}}
+  {{- if reflect.IsMap $a -}}
+    {{- with $a.name -}}<meta name="author" content="{{ . }}">{{- end -}}
+  {{- else if $a -}}
+    <meta name="author" content="{{ $a }}">
+  {{- end -}}
+{{- end -}}
 <!-- Description from config or front matter  -->
 {{- with .Description -}}
   <meta name="description" content="{{ . }}">

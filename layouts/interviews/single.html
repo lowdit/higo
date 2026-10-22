@@ -5,7 +5,6 @@
   {{ $pages := where (where .Parent.RegularPagesRecursive "Params.slugpath" "eq" $path) "Title" "ne" "Model" }}
   <section class="page-header--c">
     <nav class="nav-transverse">
-      <strong>Menu interviews :</strong>
       {{ $title := cond (ne .Params.name "") .Params.name .Title }}
       <ul class="list-unstyled list-inline">
       {{ range $pages }}

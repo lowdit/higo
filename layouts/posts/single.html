@@ -1,10 +1,18 @@
 {{ define "main" }}
 {{- partial "utils/nav-depth" . -}}
-<div class="container">
+<div class="container container--post">
   <section class="page-header">
-    <h1 class="page-header-title">
-      {{- .Title -}}
-    </h1>
+    <header{{ with .Params.image }} class="header-split"{{ end }}>
+      {{- $TitleWordCount := cond (and .Params.image (gt (.Title | strings.Count "") 50 )) " smaller" "" -}}
+      <h1 class="page-header-title{{- $TitleWordCount -}}">
+        {{- .Title -}}
+      </h1>
+      {{- with .Params.image }}
+      <div>
+        {{ partial "general/feature-image-header.html" (dict "context" $ "src" (replace . "/assets/" "")) }}
+      </div>
+      {{ end -}}
+    </header>
     <div class="post-list-meta">
       {{ partial "posts/post-meta.html" . }}
       {{ with .Params.categories }}
@@ -14,6 +22,7 @@
         {{ end }}
       </div>
       {{ end }}
+      {{- partial "print/links" (dict "context" .) -}}
       {{ partial "general/label-drafts.html" . }}
     </div>
     <p class="page-header-desc">
@@ -23,13 +32,6 @@
         {{- .Description -}}
       {{- end -}}
     </p>
-    <div class="single-terms">
-      {{ with .Params.tags }}
-      {{ range . }}
-      <a class="term" href="{{ "tags" | absURL }}/{{ . | urlize }}/">{{ . }}</a></li>
-      {{ end }}
-      {{ end }}
-    </div>
   </section>
 </div>
 <div class="single-container-post">
@@ -38,7 +40,7 @@
     {{- if .Params.series }}
       <div class="series">
         {{- $name := index .Params.series 0 }}
-        <p>Part of the <a href="{{ "series" | absURL }}/{{ $name | urlize }}/">{{$name}}</a> series:</p>
+        <p>{{ i18n "series-part-of" }} <a href="{{ "series" | absURL }}/{{ $name | urlize }}/">{{ $name }}</a> :</p>
         {{- $name := $name | urlize }}
         {{- $series := index .Site.Taxonomies.series $name }}
         {{ $curtitle := .Title }}
@@ -47,24 +49,46 @@
             <li>
               {{- if eq .Title $curtitle -}}
                 {{- .Title -}}
-                <span class="series-this-post">This post!</span>
+                <span class="series-this-post">{{ i18n "series-this-post" }}</span>
               {{ else }}
-                <a href="{{.Permalink}}">{{ .Title }}</a>
+                <a href="{{ .Permalink }}">{{ .Title }}</a>
               {{ end }}
             </li>
           {{- end }}
         </ol>
       </div>
     {{ end }}
-    <div class="single-feature-img">{{ partial "general/feature-image.html" . }}</div>
+    {{- $headerImage := .Params.image -}}
+    <div class="single-feature-img">
+      {{- if and (not $headerImage) (not .Params.media_url) -}}
+        {{ partial "general/feature-image.html" . }}
+      {{- else if and .Params.media_url (ne .Params.media_url "nan") -}}
+        <div class="single-post-image-block">
+          {{ with try (resources.GetRemote .Params.media_url) }}
+            {{ with .Err }}
+              {{ warnf "media_url: %s" . }}
+            {{ else with .Value }}
+              <img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="">
+            {{ end }}
+          {{ end }}
+        </div>
+      {{- end -}}
+    </div>
     <article class="markdown">
-        {{ partialCached "content.html" .Content .Content }}
+      {{- $source := .Params.link }}
+      {{- with .Params.source }}
+        {{- $source = . }}
+      {{- end -}}
+      {{- if $source -}}
+        <p><strong>{{ i18n "text-original-link" }} :</strong> <a href="{{ $source }}">{{ $source }}</a>{{ if and .Params.traduction (eq .Params.traduction "auto") }} ({{ i18n "text-traduction-auto" }}){{ end }}</p>
+      {{- end -}}
+      {{ partialCached "content.html" .Content .Content }}
     </article>
     <aside>
       <div class="single-terms">
         {{ with .Params.tags }}
           {{ range . }}
-          <a class="term" href="{{ "tags" | absURL }}/{{ . | urlize }}/">{{ . }}</a></li>
+          <a class="term" href="{{ "tags" | absURL }}/{{ . | urlize }}/">{{ . }}</a>
           {{ end }}
         {{ end }}
       </div>
@@ -72,7 +96,7 @@
       {{- if .Params.series }}
         <div class="series">
           {{- $name := index .Params.series 0 }}
-          <p>Part of the <a href="{{ "series" | absURL }}/{{ $name | urlize }}/">{{$name}}</a> series:</p>
+          <p>{{ i18n "series-part-of" }} <a href="{{ "series" | absURL }}/{{ $name | urlize }}/">{{ $name }}</a> :</p>
           {{- $name := $name | urlize }}
           {{- $series := index .Site.Taxonomies.series $name }}
           {{ $curtitle := .Title }}
@@ -81,9 +105,9 @@
               <li>
                 {{- if eq .Title $curtitle -}}
                 {{- .Title -}}
-                  <span class="series-this-post">This post!</span>
+                  <span class="series-this-post">{{ i18n "series-this-post" }}</span>
                 {{ else }}
-                  <a href="{{.Permalink}}">{{ .Title }}</a>
+                  <a href="{{ .Permalink }}">{{ .Title }}</a>
                 {{ end }}
               </li>
             {{- end }}

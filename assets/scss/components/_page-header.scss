@@ -2,6 +2,10 @@
   margin: 0 0 5rem 0;
 }
 
+.container--post .page-header {
+  margin-top: 0;
+}
+
 .page-header--c {
   @extend .page-header;
   text-align: center;
@@ -18,4 +22,55 @@
   color: var(--color-contrast-medium);
   font-weight: 400;
   @include font-size('base');
+}
+
+// Titre + vignette en en-tête d’article (aligné bertrandkeller.github.io).
+.header-split {
+  display: grid;
+  position: relative;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "title"
+    "image";
+  margin-inline: auto;
+  margin-block-end: 2em;
+  column-gap: 2.25em;
+
+  h1 {
+    grid-area: title;
+  }
+
+  & > div {
+    grid-area: image;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+    max-height: 20em;
+    margin: 0;
+    object-fit: cover;
+    width: auto;
+    height: auto;
+  }
+
+  @include respond-to('m-large') {
+    grid-template-columns: minmax(10em, 3fr) minmax(0, 2fr);
+    grid-template-areas: "title image";
+    align-items: center;
+    padding-block-end: 1.5em;
+
+    img {
+      justify-self: end;
+    }
+  }
+}
+
+.container--post {
+  max-width: var(--higo-post-layout-max, #{$max-width});
 }

@@ -131,39 +131,44 @@ td, th {
   font-weight: normal;
 }
 
-th {
-  border-color: rgb(57, 22, 92) !important;
-}
+// Tableaux legacy (charts, etc.) — le contenu Markdown utilise components/_tables.scss
+:not(.markdown):not(article) table {
+  th {
+    border-color: rgb(57, 22, 92) !important;
+  }
 
-th, tfoot td {
-  border: 1px solid var(--color-contrast-medium);
-  background-color: var(--color-ui);
-  color: #fff;
-  font-size: 1em;
-}
+  th,
+  tfoot td {
+    border: 1px solid var(--color-contrast-medium);
+    background-color: var(--color-ui);
+    color: #fff;
+    font-size: 1em;
+  }
 
-tbody th {
-  font-size: 0.7em;
-  background-color: rgba(57, 22, 92, 0.8);
-}
+  tbody th {
+    font-size: 0.7em;
+    background-color: rgba(57, 22, 92, 0.8);
+  }
 
-tfoot td, tfoot tr {
-  color: #111;
-  background-color:#dedede ;
-  border: 1px solid #111;
-}
+  tfoot td,
+  tfoot tr {
+    color: #111;
+    background-color: #dedede;
+    border: 1px solid #111;
+  }
 
-thead td {
-  border: none !important;
-  background: none !important;
-}
+  thead td {
+    border: none !important;
+    background: none !important;
+  }
 
-tr:last-child td {
-  border-bottom: 1px solid #111;
-}
+  tr:last-child td {
+    border-bottom: 1px solid #111;
+  }
 
-td {
-  text-align: center;
+  td {
+    text-align: center;
+  }
 }
 
 blockquote {

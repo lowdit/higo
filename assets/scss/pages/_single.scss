@@ -31,23 +31,62 @@
 
 .single-container {
   @extend .container;
-  max-width: 900px;
+  width: 100%;
+  max-width: 75ch;
 }
 
 .single-container-post {
   @extend .container;
-  max-width: 900px;
+  width: 100%;
+  max-width: var(--higo-post-layout-max, calc(#{$prose-measure} + #{$sidebar-column} + 1.5rem));
 
   @include respond-to('x-large') {
-    max-width: $max-width;
     display: grid;
-    grid-template-columns: 4fr minmax(19rem,1fr);
-    gap: 1rem;
+    grid-template-columns: minmax(0, #{$prose-measure}) minmax(14rem, #{$sidebar-column});
+    column-gap: 2rem;
+    align-items: start;
+  }
+
+  > .toc {
+    @include respond-to('x-large') {
+      grid-column: 2;
+      grid-row: 1;
+      order: unset;
+    }
   }
 }
 
 .single-post-contents {
   overflow: auto;
+  min-width: 0;
+
+  @include respond-to('x-large') {
+    display: contents;
+  }
+
+  > .series,
+  > .single-feature-img,
+  > article,
+  > .markdown {
+    min-width: 0;
+    max-width: $prose-measure;
+
+    @include respond-to('x-large') {
+      grid-column: 1;
+    }
+  }
+
+  > aside {
+    @include respond-to('x-large') {
+      grid-column: 2;
+      grid-row: 2;
+      align-self: start;
+    }
+  }
+}
+
+.single-post-contents > aside .single-terms {
+  margin-top: 0;
 }
 
 .series {

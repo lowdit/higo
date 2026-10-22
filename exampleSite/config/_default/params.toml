@@ -3,21 +3,27 @@ netlify_forms = true # add data-netlify attribute to contact and newsletter form
 # gtm_id = '' # GTM tracking (leave blank to use GA)
 disallow_search_engines = false # Disallow search engine crawling in robots.txt
 
+### Higo — peau éditoriale Lowdit (hors sync-brand)
+higo_skin = 'agence-lowdit'
+higo_eyebrow = 'Higo · Lowdit'
+
 ### Content
 favicon = true # Enable favicon, add your favicon files to /static/ directory
 # avatar = 'avatar.png' # Custom avatar image in /assets/
-grayscale_avatar = true # Add a grayscale filter to the avatar image
-author = 'John Doe' # Default author for <head> meta
-description = "Personal blog and portfolio site of John Doe." # Add a global meta description to <head>
-footer_text = "Built with [Hugo Liftoff](https://github.com/wjh18/hugo-liftoff) theme." # Customize footer text
+grayscale_avatar = false
+# Default author for <head> meta and feeds (table attendue par les layouts Higo).
+[author]
+  name = 'Lowdit · démo Higo'
+description = "Démonstration du thème Higo (Lowdit) : articles, ressources et projets — fil éditorial sans catalogue Minigo."
+footer_text = "Built with [Higo](https://github.com/lowdit/higo) (from [Hugo Liftoff](https://github.com/wjh18/hugo-liftoff))." # Customize footer text
 fallback_text = "No content available yet. Coming soon." # Fallback text for empty content
 label_drafts = true # Add a label indicator next to the title of any built drafts (dev only)
 
 # Customize newsletter text
-newsletter_header = "This is my custom newsletter header with a captivating title."
-newsletter_description = "This is my custom newsletter description that tells you why you should sign up."
-newsletter_submit = "Join now"
-global_newsletter = true # Enable newsletter site-wide
+newsletter_header = "Veille éditoriale (démo)"
+newsletter_description = "Exemple de bloc newsletter Liftoff — désactivé sur la démo pour alléger le pied de page."
+newsletter_submit = "S'inscrire"
+global_newsletter = false
 
 # CSS / JavaScript
 enable_postcss = false # Enable if you're using npm and want to utilize PostCSS processing

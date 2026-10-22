@@ -1,0 +1,48 @@
+// Navigation latérale entre pages sœurs (projets / évaluations).
+.nav-transverse {
+  margin: 0 0 1.25rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--color-contrast-high) 12%, transparent);
+  border-radius: 0.375rem;
+  background: color-mix(in srgb, var(--color-bg) 92%, #fff);
+  font-size: 0.95rem;
+
+  ul {
+    margin: 0.35rem 0 0;
+    padding: 0;
+  }
+
+  li::after {
+    content: none !important;
+  }
+
+  .list-inline > li {
+    margin: 0;
+  }
+
+  .list-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.65rem;
+    align-items: center;
+  }
+
+  a {
+    display: inline-block;
+    padding: 0.2rem 0.55rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    color: var(--color-heading-accent, var(--color-contrast-high));
+
+    &:hover {
+      background: color-mix(in srgb, var(--color-primary) 18%, transparent);
+      text-decoration: underline;
+      text-underline-offset: 0.12em;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+  }
+}

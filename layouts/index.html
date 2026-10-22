@@ -2,45 +2,45 @@
 <div class="container">
   <section class="section hero">
     <div class="hero-info">
+      <p class="hero-eyebrow">{{ with site.Params.higo_eyebrow }}{{ . }}{{ else }}Lowdit · site éditorial{{ end }}</p>
       <h1 class="hero-title">{{ .Title }}</h1>
       {{ with .Params.subtitle }}
-      <p class="hero-subtitle">{{ . | markdownify}}</p>
+      <p class="hero-subtitle">{{ . | markdownify }}</p>
       {{ end }}
-      <nav class="btn-group">
-        <ul class="menu" id="js-menu">
-          {{ $currentPage := . }}
-          {{ range .Site.Menus.main }}
-          <li class="menu-item">
-            <a href="{{ .URL }}" class="btn-primary">{{ .Name }}</a>&nbsp;
-          </li>
-          {{ end }}
-        </ul>
+      <nav class="btn-group hero-cta" aria-label="{{ i18n "home-hero-cta" | default "Actions principales" }}">
+        {{ with .Params.primary_cta_page }}
+          <a class="btn-primary" href="{{ . | relURL }}">{{ $.Params.primary_cta_label | default (i18n "home-cta-primary") }}</a>
+        {{ end }}
+        {{ with .Params.secondary_cta_page }}
+          <a class="btn-secondary" href="{{ . | relURL }}">{{ $.Params.secondary_cta_label | default (i18n "home-cta-secondary") }}</a>
+        {{ end }}
       </nav>
     </div>
     <div class="hero-owner">
-      {{ $avatar := .Site.Params.avatar }}
-      {{ $cite   := .Params.blockquote }}
+      {{ $cite := .Params.blockquote }}
       {{ with $cite }}
-        <blockquote>
+        <blockquote class="hero-quote">
           <p>{{ . | markdownify }}</p>
         </blockquote>
       {{ end }}
       {{ $default_image := "images/default.png" }}
       {{ $image := "" }}
-      {{ with $avatar }}
-        {{ $image = resources.Get $avatar }}
+      {{ with .Site.Params.avatar }}
+        {{ $image = resources.Get . }}
       {{ else }}
         {{ $image = resources.Get $default_image }}
       {{ end }}
       {{ if eq .Site.Params.grayscale_avatar true }}
         {{ $image = $image | images.Filter (images.Grayscale)  }}
       {{ end }}
+      {{ with $image }}
+      <img class="hero-avatar" src="{{ .RelPermalink }}" alt="" width="{{ .Width }}" height="{{ .Height }}" loading="lazy">
+      {{ end }}
       {{ if eq .Site.Params.home_hero_socials true }}
         {{ partial "general/social-links.html" . }}
       {{ end }}
     </div>
   </section>
-  {{/* Shortcodes from page content  */}}
   {{ partialCached "content.html" .Content .Content }}
 </div>
 {{ end }}

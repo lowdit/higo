@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ .Site.Language.Locale | default "en-US" }}">
+<html lang="{{ .Site.Language.Locale | default "en-US" }}"{{ with site.Params.higo_skin }} data-higo-skin="{{ . }}"{{ end }}>
   {{ partial "head/head.html" . }}
   <body>
     <div class="skip-links" role="navigation">

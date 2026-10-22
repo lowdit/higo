@@ -1,0 +1,10 @@
+// Colonne de lecture (~75ch). Token : abstracts/_variables.scss ($prose-measure).
+
+.prose-measure {
+  max-width: $prose-measure;
+}
+
+.single-post-contents > article.markdown {
+  max-width: $prose-measure;
+  width: 100%;
+}

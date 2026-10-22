@@ -1,0 +1,15 @@
+{{ define "main" }}
+{{- partial "utils/nav-depth" . -}}
+<div class="container">
+  <section class="page-header--c">
+    <h1 class="page-header-title">{{ .Title }}</h1>
+    {{ with .Description }}<p class="page-header-desc">{{ . }}</p>{{ end }}
+  </section>
+</div>
+<div class="contact">
+  <div class="single-container markdown prose-measure">
+    {{ partialCached "content.html" .Content .Content }}
+  </div>
+  {{ partial "forms/contact-netlify.html" . }}
+</div>
+{{ end }}

@@ -1,0 +1,25 @@
+// Retour au parent (partial utils/nav-depth) — styles de base ; le site peut surcharger.
+.nav-back {
+  margin-bottom: 0.25rem;
+  padding-top: 0.5rem;
+
+  &.container--post {
+    padding-left: 16px;
+    padding-right: 16px;
+
+    @include respond-to('small') {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+
+  p {
+    margin: 0 0 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  a {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+}

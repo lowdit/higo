@@ -1,33 +1,54 @@
 .terms {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 15px 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 0.65rem 0.85rem;
+  margin: 1.5rem 0 2rem;
+  padding: 0;
+  list-style: none;
 }
 
 .term {
-  border: 1px solid var(--color-primary);
-  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--color-contrast-high) 20%, transparent);
+  border-radius: 0.375rem;
   @include font-size('sm');
-  padding: 0.4rem 0.6rem;
+  padding: 0.55rem 0.75rem;
   text-decoration: none;
+  color: var(--color-contrast-high);
+  background: #fff;
+  min-height: 2.75rem;
 
   &:hover {
     text-decoration: none;
-    border: 1px solid var(--color-contrast-high);
-    color: #fff;
-    background-color: var(--color-contrast-high);
+    border-color: var(--color-primary);
+    color: var(--color-heading-accent, var(--color-contrast-high));
+    background: color-mix(in srgb, var(--color-primary) 10%, #fff);
+
     .term-count {
       color: inherit;
+      background: color-mix(in srgb, var(--color-primary) 22%, transparent);
     }
   }
 
-  @include respond-to('small') {
-    padding: 0.5rem 0.7rem;
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
   }
 }
 
 .term-count {
-  color: var(--color-contrast-high);
-  margin-left: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.75rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 999px;
+  font-size: 0.85em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-contrast-medium-high);
+  background: color-mix(in srgb, var(--color-contrast-high) 8%, transparent);
 }

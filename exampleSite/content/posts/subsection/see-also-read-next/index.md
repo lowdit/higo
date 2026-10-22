@@ -6,7 +6,6 @@ description: 'Sample article showcasing the "See Also" and "Read Next" features.
 slug: see-also-read-next
 author: John Doe
 
-draft: true
 date: 2020-11-17T21:21:46-05:00
 lastmod: 
 expiryDate: 
