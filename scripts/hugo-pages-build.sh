@@ -14,12 +14,13 @@ resolve_site_dir() {
     tr -d ' \n\r' < .github/hugo-site-dir
     return
   fi
-  if [ -f hugo.toml ] || [ -f config.toml ] || [ -f config/_default/hugo.toml ]; then
-    echo "."
-    return
-  fi
+  # exampleSite avant la racine : config thème à la racine ≠ site à publier.
   if [ -f exampleSite/config/_default/hugo.toml ]; then
     echo "exampleSite"
+    return
+  fi
+  if [ -f hugo.toml ] || [ -f config.toml ] || [ -f config/_default/hugo.toml ]; then
+    echo "."
     return
   fi
   echo "ERROR: No Hugo config at repo root or exampleSite/" >&2

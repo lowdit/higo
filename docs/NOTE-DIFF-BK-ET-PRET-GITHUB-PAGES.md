@@ -68,15 +68,13 @@ Ordre suggéré, **avec `hugo build` BK après chaque étape** :
 | **Doc** | `exampleSite/README.md`, vitrine `demo_url` (à confirmer dans `lowdit.github.io/data/modules.yaml`) |
 | **Artefacts ignorés** | `public/`, `resources/` dans `.gitignore` racine |
 
-### Bloquant / à corriger **avant** ou **dans** le commit Pages
+### Racine Hugo (corrigé 2026-10-22)
 
-1. **Racine Hugo détectée par le script**  
-   `scripts/hugo-pages-build.sh` choisit `.` si `config/_default/hugo.toml` existe à la **racine du dépôt** (config thème Liftoff, ~**13 pages** EN).  
-   **Sans correctif**, le job CI ne publie **pas** l’exampleSite.  
-   **Correctifs possibles** (un seul suffit) :
-   - fichier **`.github/hugo-site-dir`** contenant `exampleSite` ;
-   - ou variable d’environnement **`HUGO_SITE_DIR=exampleSite`** dans `gh-pages.yml` ;
-   - ou retirer/déplacer la config racine du chemin de détection (plus invasif).
+1. **`.github/hugo-site-dir`** → `exampleSite`
+2. **`HUGO_SITE_DIR=exampleSite`** dans `gh-pages.yml`
+3. **`hugo-pages-build.sh`** : `exampleSite` prioritaire sur la config racine du thème
+
+Sans cela, CI buildait `.` (~13 pages EN) et l’artifact `exampleSite/public` manquait.
 
 2. **Fichiers à inclure dans le commit** (état `git status` local, branche `master`)  
    - **Modifiés** : SCSS, layouts, i18n, exampleSite content/config, etc. (~30 fichiers).  

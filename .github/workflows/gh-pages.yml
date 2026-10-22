@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HUGO_VERSION: "0.167.0"
+      HUGO_SITE_DIR: exampleSite
     steps:
       - uses: actions/checkout@v4
       - name: Install Hugo
