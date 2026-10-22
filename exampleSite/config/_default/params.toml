@@ -8,8 +8,9 @@ higo_skin = 'agence-lowdit'
 higo_eyebrow = 'Higo · Lowdit'
 
 ### Content
-favicon = true # Enable favicon, add your favicon files to /static/ directory
-# avatar = 'avatar.png' # Custom avatar image in /assets/
+favicon = true # Favicons Lowdit dans exampleSite/static/assets/favicons/
+avatar = 'images/hero-lowdit.svg'
+hero_image_alt = 'Illustration éditoriale Lowdit — fil de publication statique'
 grayscale_avatar = false
 # Default author for <head> meta and feeds (table attendue par les layouts Higo).
 [author]
@@ -32,17 +33,17 @@ custom_js = 'custom.js' # Add the specified file to assets before setting this p
 
 ### Web schemas
 # Open Graph
-images = ['images/default.png'] # Fallback for Open Graph and Twitter Cards images if none are present in front matter. Enter path to the image.
-ogLocale = "en_US" # Open graph locale
+images = ['images/hero-lowdit.svg']
+ogLocale = "fr_FR"
 
-# Twitter Cards
-twitterSite = "johndoestwitter" # Enter your twitter handle without the @
-twitterCreator = "johndoestwitter" # Enter your twitter handle without the @
+# Twitter Cards (démo — laisser vides si pas de compte dédié)
+twitterSite = ""
+twitterCreator = ""
 
 # JSON-LD structured data schemas
-schemaName = "John Doe" # Enter your name
-schemaLocale = "en-US" # Structured data locale
-schemaImage = "images/default.png" # Image for Person structured data schema. Enter path to the image.
+schemaName = "Lowdit"
+schemaLocale = "fr-FR"
+schemaImage = "images/hero-lowdit.svg"
 schemaImageWidth = 453 # Width of the above image
 schemaImageHeight = 455 # Height of the above image
 

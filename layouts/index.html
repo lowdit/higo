@@ -22,19 +22,20 @@
         <blockquote class="hero-quote">
           <p>{{ . | markdownify }}</p>
         </blockquote>
-      {{ end }}
-      {{ $default_image := "images/default.png" }}
-      {{ $image := "" }}
-      {{ with .Site.Params.avatar }}
-        {{ $image = resources.Get . }}
       {{ else }}
-        {{ $image = resources.Get $default_image }}
-      {{ end }}
-      {{ if eq .Site.Params.grayscale_avatar true }}
-        {{ $image = $image | images.Filter (images.Grayscale)  }}
-      {{ end }}
-      {{ with $image }}
-      <img class="hero-avatar" src="{{ .RelPermalink }}" alt="" width="{{ .Width }}" height="{{ .Height }}" loading="lazy">
+        {{ $default_image := "images/hero-lowdit.svg" }}
+        {{ $image := "" }}
+        {{ with .Site.Params.avatar }}
+          {{ $image = resources.Get . }}
+        {{ else }}
+          {{ $image = resources.Get $default_image }}
+        {{ end }}
+        {{ if eq .Site.Params.grayscale_avatar true }}
+          {{ $image = $image | images.Filter (images.Grayscale)  }}
+        {{ end }}
+        {{ with $image }}
+        <img class="hero-avatar" src="{{ .RelPermalink }}" alt="" width="{{ .Width }}" height="{{ .Height }}" loading="lazy">
+        {{ end }}
       {{ end }}
       {{ if eq .Site.Params.home_hero_socials true }}
         {{ partial "general/social-links.html" . }}
