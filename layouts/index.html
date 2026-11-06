@@ -30,11 +30,11 @@
         {{ else }}
           {{ $image = resources.Get $default_image }}
         {{ end }}
-        {{ if eq .Site.Params.grayscale_avatar true }}
+        {{ if and (eq .Site.Params.grayscale_avatar true) (reflect.IsImageResourceProcessable $image) }}
           {{ $image = $image | images.Filter (images.Grayscale)  }}
         {{ end }}
         {{ with $image }}
-        <img class="hero-avatar" src="{{ .RelPermalink }}" alt="" width="{{ .Width }}" height="{{ .Height }}" loading="lazy">
+        <img class="hero-avatar" src="{{ .RelPermalink }}" alt=""{{ if reflect.IsImageResourceWithMeta . }} width="{{ .Width }}" height="{{ .Height }}"{{ end }} loading="lazy">
         {{ end }}
       {{ end }}
       {{ if eq .Site.Params.home_hero_socials true }}
